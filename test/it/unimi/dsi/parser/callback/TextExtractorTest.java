@@ -21,11 +21,13 @@ package it.unimi.dsi.parser.callback;
 
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import it.unimi.dsi.parser.BulletParser;
 
 @Deprecated
+@Ignore
 public class TextExtractorTest {
 
 	@Test

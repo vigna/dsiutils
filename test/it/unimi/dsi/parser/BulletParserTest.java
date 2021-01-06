@@ -29,6 +29,7 @@ import java.lang.reflect.Proxy;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.io.ByteStreams;
@@ -38,6 +39,7 @@ import it.unimi.dsi.parser.callback.Callback;
 import it.unimi.dsi.parser.callback.DefaultCallback;
 
 @Deprecated
+@Ignore
 public class BulletParserTest {
 
 	@Test
