@@ -1,0 +1,9 @@
+.classpath
+.project
+coverage/
+dist/
+reports/
+bin/
+build/
+pom.xml
+perf/
