@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import it.unimi.dsi.parser.BulletParser;
 
+@Deprecated
 public class TextExtractorTest {
 
 	@Test

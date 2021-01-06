@@ -26,17 +26,22 @@ import it.unimi.dsi.parser.Attribute;
 import it.unimi.dsi.parser.BulletParser;
 import it.unimi.dsi.parser.Element;
 
-/** A callback for the {@linkplain it.unimi.dsi.parser.BulletParser bullet parser}.
+/**
+ * A callback for the {@linkplain it.unimi.dsi.parser.BulletParser bullet parser}.
  *
- * <P>This interface is very loosely inspired to the SAX2 interface. However, it
- * strives to be simple, and to be StringFree&trade;.
+ * <P>
+ * This interface is very loosely inspired to the SAX2 interface. However, it strives to be simple,
+ * and to be StringFree&trade;.
  *
- * <P>By contract, all implementations of this interface are bound to be <em>reusable</em>:
- * by calling {@link #startDocument()}, a callback can be used again.
- * It <strong>must</strong> be safe to call {@link #startDocument()} any number of times.
+ * <P>
+ * By contract, all implementations of this interface are bound to be <em>reusable</em>: by calling
+ * {@link #startDocument()}, a callback can be used again. It <strong>must</strong> be safe to call
+ * {@link #startDocument()} any number of times.
  *
+ * @deprecated This class is obsolete and kept around for backward compatibility only.
  */
 
+@Deprecated
 public interface Callback {
 
 	/** A singleton empty callback array. */

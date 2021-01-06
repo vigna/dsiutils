@@ -24,7 +24,11 @@ import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
 import it.unimi.dsi.lang.MutableString;
 
 
-/** An HTML element type. */
+/**
+ * An HTML element type. * @deprecated This class is obsolete and kept around for backward
+ * compatibility only.
+ */
+@Deprecated
 public final class Element {
 
     /** The name of the type of this element. */

@@ -1,5 +1,5 @@
 /**
- * <p>Miscellaneaous utility classes.
+ * Miscellaneous utility classes
  *
  * <h2>Pseudorandom number generators</h2>
  *

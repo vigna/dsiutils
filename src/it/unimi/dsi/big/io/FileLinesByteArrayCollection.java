@@ -111,13 +111,22 @@ public class FileLinesByteArrayCollection extends AbstractCollection<byte[]> imp
 	}
 
 
-	/** An iterator over the lines of a {@link FileLinesByteArrayCollection}.
+	/**
+	 * An iterator over the lines of a {@link FileLinesByteArrayCollection}.
 	 *
-	 * <p>Instances of this class open an {@link java.io.InputStream}, and thus should be {@linkplain Closeable#close() closed} after
-	 * usage. A &ldquo;safety-net&rdquo; finaliser tries to take care of the cases in which
-	 * closing an instance is impossible. An exhausted iterator, however, will be closed automagically.
+	 * <p>
+	 * Instances of this class open an {@link java.io.InputStream}, and thus should be
+	 * {@linkplain Closeable#close() closed} after usage. A &ldquo;safety-net&rdquo; finaliser tries to
+	 * take care of the cases in which closing an instance is impossible. An exhausted iterator,
+	 * however, will be closed automagically.
+	 *
+	 * @deprecated Please use
+	 *             {@link FileLinesByteArrayIterable#iterator(java.io.InputStream, Class, EnumSet)}; the
+	 *             {@code zipped} option of this class can be simulated by passing a
+	 *             {@link GZIPInputStream} as decompressor.
 	 */
 
+	@Deprecated
 	public static final class FileLinesIterator implements Iterator<byte[]>, SafelyCloseable {
 		private FastBufferedInputStream fbis;
 		byte[] buffer = new byte[1024];
@@ -181,7 +190,6 @@ public class FileLinesByteArrayCollection extends AbstractCollection<byte[]> imp
 			}
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		protected synchronized void finalize() throws Throwable {
 			try {

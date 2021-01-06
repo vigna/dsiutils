@@ -107,13 +107,22 @@ public class FileLinesCollection extends AbstractCollection<MutableString> {
 	}
 
 
-	/** An iterator over the lines of a {@link FileLinesCollection}.
+	/**
+	 * An iterator over the lines of a {@link FileLinesCollection}.
 	 *
-	 * <p>Instances of this class open an {@link java.io.InputStream}, and thus should be {@linkplain Closeable#close() closed} after
-	 * usage. A &ldquo;safety-net&rdquo; finaliser tries to take care of the cases in which
-	 * closing an instance is impossible. An exhausted iterator, however, will be closed automagically.
+	 * <p>
+	 * Instances of this class open an {@link java.io.InputStream}, and thus should be
+	 * {@linkplain Closeable#close() closed} after usage. A &ldquo;safety-net&rdquo; finaliser tries to
+	 * take care of the cases in which closing an instance is impossible. An exhausted iterator,
+	 * however, will be closed automagically.
+	 *
+	 * @deprecated Please use
+	 *             {@link FileLinesMutableStringIterable#iterator(java.io.InputStream, java.nio.charset.Charset, Class)};
+	 *             the {@code zipped} option of this class can be simulated by passing a
+	 *             {@link GZIPInputStream} as decompressor.
 	 */
 
+	@Deprecated
 	public static final class FileLinesIterator implements Iterator<MutableString>, SafelyCloseable {
 		private FastBufferedReader fbr;
 		MutableString s = new MutableString(), next;

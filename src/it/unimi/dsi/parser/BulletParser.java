@@ -29,104 +29,107 @@ import it.unimi.dsi.parser.callback.Callback;
 import it.unimi.dsi.util.TextPattern;
 
 
-/** A fast, lightweight, on-demand (X)HTML parser.
+/**
+ * A fast, lightweight, on-demand (X)HTML parser.
  *
- * <p>The bullet parser has been written with two specific goals in mind:
- * web crawling and targeted data extraction from massive web data sets.
- * To be usable in such environments, a parser must obey a number of
- * restrictions:
+ * <p>
+ * The bullet parser has been written with two specific goals in mind: web crawling and targeted
+ * data extraction from massive web data sets. To be usable in such environments, a parser must obey
+ * a number of restrictions:
  * <ul>
- * <li>it should avoid excessive object creation (which, for instance,
- * forbids a significant usage of Java strings);
- * <li>it should tolerate invalid syntax and recover reasonably; in fact,
- * it should never throw exceptions;
- * <li>it should perform actual parsing only on a settable feature subset:
- * there is no reason to parse the attributes of a <code>P</code>
- * element while searching for links;
- * <li>it should parse HTML as a <em>regular language</em>, and leave context-free
- * properties (e.g., stack maintenance and repair) to suitably designed callbacks.
+ * <li>it should avoid excessive object creation (which, for instance, forbids a significant usage
+ * of Java strings);
+ * <li>it should tolerate invalid syntax and recover reasonably; in fact, it should never throw
+ * exceptions;
+ * <li>it should perform actual parsing only on a settable feature subset: there is no reason to
+ * parse the attributes of a <code>P</code> element while searching for links;
+ * <li>it should parse HTML as a <em>regular language</em>, and leave context-free properties (e.g.,
+ * stack maintenance and repair) to suitably designed callbacks.
  * </ul>
  *
- * <p>Thus, in fact the bullet parser is not a parser. It is a bunch of
- * spaghetti code that analyses a stream of characters pretending that
- * it is an (X)HTML document. It has a very defensive attitude against
- * the stream character it is parsing, but at the same time it is
- * forgiving with all typical (X)HTML mistakes.
+ * <p>
+ * Thus, in fact the bullet parser is not a parser. It is a bunch of spaghetti code that analyses a
+ * stream of characters pretending that it is an (X)HTML document. It has a very defensive attitude
+ * against the stream character it is parsing, but at the same time it is forgiving with all typical
+ * (X)HTML mistakes.
  *
- * <p>The bullet parser is officially StringFree&trade;.
- * <a href="http://dsiutils.di.unimi.it/docs/it/unimi/dsi/lang/MutableString.html"><code>MutableString</code>s</a>
- * are used for internal processing, and Java strings are used only to return attribute
- * values. All internal maps are {@linkplain it.unimi.dsi.fastutil.objects.Reference2ObjectMap reference-based maps}
- * from <a href="http://fastutil.di.unimi.it/"><code>fastutil</code></a>, which
- * helps to accelerate further the parsing process.
+ * <p>
+ * The bullet parser is officially StringFree&trade;. <a href=
+ * "http://dsiutils.di.unimi.it/docs/it/unimi/dsi/lang/MutableString.html"><code>MutableString</code>s</a>
+ * are used for internal processing, and Java strings are used only to return attribute values. All
+ * internal maps are {@linkplain it.unimi.dsi.fastutil.objects.Reference2ObjectMap reference-based
+ * maps} from <a href="http://fastutil.di.unimi.it/"><code>fastutil</code></a>, which helps to
+ * accelerate further the parsing process.
  *
  * <h2>HTML data</h2>
  *
- * <p>The bullet parser uses attributes and methods of {@link it.unimi.dsi.parser.HTMLFactory},
- * {@link it.unimi.dsi.parser.Element}, {@link it.unimi.dsi.parser.Attribute}
- * and {@link it.unimi.dsi.parser.Entity}.
- * Thus, for instance, whenever an element is to be passed around it is one
- * of the shared objects contained in {@link it.unimi.dsi.parser.Element}
- * (e.g., {@link it.unimi.dsi.parser.Element#BODY}).
+ * <p>
+ * The bullet parser uses attributes and methods of {@link it.unimi.dsi.parser.HTMLFactory},
+ * {@link it.unimi.dsi.parser.Element}, {@link it.unimi.dsi.parser.Attribute} and
+ * {@link it.unimi.dsi.parser.Entity}. Thus, for instance, whenever an element is to be passed
+ * around it is one of the shared objects contained in {@link it.unimi.dsi.parser.Element} (e.g.,
+ * {@link it.unimi.dsi.parser.Element#BODY}).
  *
  * <h2>Callbacks</h2>
  *
- * <p>The result of the parsing process is the invocation of a callback.
- * The {@linkplain it.unimi.dsi.parser.callback.Callback callback interface}
- * of the bullet parser remembers closely SAX2, but it has some additional
- * methods targeted at (X)HTML, such as {@link it.unimi.dsi.parser.callback.Callback#cdata(it.unimi.dsi.parser.Element,char[],int,int)},
+ * <p>
+ * The result of the parsing process is the invocation of a callback. The
+ * {@linkplain it.unimi.dsi.parser.callback.Callback callback interface} of the bullet parser
+ * remembers closely SAX2, but it has some additional methods targeted at (X)HTML, such as
+ * {@link it.unimi.dsi.parser.callback.Callback#cdata(it.unimi.dsi.parser.Element,char[],int,int)},
  * which returns characters found in a CDATA section (e.g., a stylesheet).
  *
- * <p>Each callback must configure the parser, by requesting to perform
- * the analysis and the callbacks it requires. A callback that wants to
- * extract and tokenise text, for instance, will certainly require
- * {@link #parseText(boolean) parseText(true)}, but not {@link #parseTags(boolean) parseTags(true)}.
- * On the other hand, a callback wishing to extract links will require
- * to {@linkplain #parseAttribute(Attribute) parse selectively} certain attribute types.
+ * <p>
+ * Each callback must configure the parser, by requesting to perform the analysis and the callbacks
+ * it requires. A callback that wants to extract and tokenise text, for instance, will certainly
+ * require {@link #parseText(boolean) parseText(true)}, but not {@link #parseTags(boolean)
+ * parseTags(true)}. On the other hand, a callback wishing to extract links will require to
+ * {@linkplain #parseAttribute(Attribute) parse selectively} certain attribute types.
  *
- * <p>A more precise description follows.
+ * <p>
+ * A more precise description follows.
  *
  * <h2>Writing callbacks</h2>
  *
- * <p>The first important issue is what has to be required to the parser. A newly
- * created parser does not invoke any callback. It is up to every callback
- * to add features so that it can do its job. Remember that since many
- * callbacks can be {@linkplain it.unimi.dsi.parser.callback.ComposedCallbackBuilder composed},
- * you must always <em>add</em> features, never <em>remove</em> them, and moreover
- * your callbacks must be ready to be invoked with features they did not
- * request (e.g., attribute types added by another callback).
+ * <p>
+ * The first important issue is what has to be required to the parser. A newly created parser does
+ * not invoke any callback. It is up to every callback to add features so that it can do its job.
+ * Remember that since many callbacks can be
+ * {@linkplain it.unimi.dsi.parser.callback.ComposedCallbackBuilder composed}, you must always
+ * <em>add</em> features, never <em>remove</em> them, and moreover your callbacks must be ready to
+ * be invoked with features they did not request (e.g., attribute types added by another callback).
  *
- * <p>The following parse features
- * may be configured; most of them are just boolean features, a.k.a. flags:
- * unless otherwise specified, by default all flags are set to false (e.g., by
- * the default the parser will <em>not</em> parse tags):
+ * <p>
+ * The following parse features may be configured; most of them are just boolean features, a.k.a.
+ * flags: unless otherwise specified, by default all flags are set to false (e.g., by the default
+ * the parser will <em>not</em> parse tags):
  * <ul>
- * <li><em>tags</em> ({@link #parseTags(boolean)} method): whether tags
- * should be parsed;
- * <li><em>attributes</em> ({@link #parseAttributes(boolean)} and
- * {@link #parseAttribute(Attribute) methods)}:
- * whether attributes should be parsed (of course, setting this flag is useless
- * if you are not parsing tags); note that setting this flag will just
- * activate the attribute parsing feature, but you must also
- * {@linkplain #parseAttribute(Attribute) register} every attribute
- * whose value you want to obtain.
- * <li><em>text</em> ({@link #parseText(boolean)}method): whether text
- * should be parsed; if this flag is set, the parser will call the
- * {@link it.unimi.dsi.parser.callback.Callback#characters(char[], int, int, boolean)}
- * method for every text chunk found.
- * <li><em>CDATA sections</em> ({@link #parseCDATA(boolean)}method): whether CDATA
- * sections (stylesheets &amp; scripts)
- * should be parsed; if this flag is set, the parser will call the
- * {@link it.unimi.dsi.parser.callback.Callback#cdata(Element,char[],int,int)}
- * method for every CDATA section found.
+ * <li><em>tags</em> ({@link #parseTags(boolean)} method): whether tags should be parsed;
+ * <li><em>attributes</em> ({@link #parseAttributes(boolean)} and {@link #parseAttribute(Attribute)
+ * methods)}: whether attributes should be parsed (of course, setting this flag is useless if you
+ * are not parsing tags); note that setting this flag will just activate the attribute parsing
+ * feature, but you must also {@linkplain #parseAttribute(Attribute) register} every attribute whose
+ * value you want to obtain.
+ * <li><em>text</em> ({@link #parseText(boolean)}method): whether text should be parsed; if this
+ * flag is set, the parser will call the
+ * {@link it.unimi.dsi.parser.callback.Callback#characters(char[], int, int, boolean)} method for
+ * every text chunk found.
+ * <li><em>CDATA sections</em> ({@link #parseCDATA(boolean)}method): whether CDATA sections
+ * (stylesheets &amp; scripts) should be parsed; if this flag is set, the parser will call the
+ * {@link it.unimi.dsi.parser.callback.Callback#cdata(Element,char[],int,int)} method for every
+ * CDATA section found.
  * </ul>
  *
  * <h2>Invoking the parser</h2>
  *
- * <p>After {@linkplain #setCallback(Callback) setting the parser callback},
- * you just call {@link #parse(char[], int, int)}.
+ * <p>
+ * After {@linkplain #setCallback(Callback) setting the parser callback}, you just call
+ * {@link #parse(char[], int, int)}.
+ *
+ * @deprecated This class is obsolete and kept around for backward compatibility only.
  */
 
+@Deprecated
 public class BulletParser {
 
 	private static final boolean DEBUG = false;

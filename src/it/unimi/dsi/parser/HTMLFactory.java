@@ -23,31 +23,36 @@ import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.lang.MutableString;
 
-/** A parsing factory for (X)HTML.
+/**
+ * A parsing factory for (X)HTML.
  *
- * <p><strong>Warning:</strong> for maximum flexibility, the methods of this factory
- * do <em>not</em> perform case normalisation. If you are parsing HTML, you are invited
- * to downcase your names before accessing {@link #getElement(MutableString)}
- * and {@link #getAttribute(MutableString)}.
+ * <p>
+ * <strong>Warning:</strong> for maximum flexibility, the methods of this factory do <em>not</em>
+ * perform case normalisation. If you are parsing HTML, you are invited to downcase your names
+ * before accessing {@link #getElement(MutableString)} and {@link #getAttribute(MutableString)}.
  *
- * <p>This class is a singleton, and its only instance is accessible using the public field
+ * <p>
+ * This class is a singleton, and its only instance is accessible using the public field
  * {@link #INSTANCE}.
  *
- * <p>The relationship between this class and {@link Element}/{@link Attribute} is a bit
- * twisted due to the need to accomodate two features:
+ * <p>
+ * The relationship between this class and {@link Element}/{@link Attribute} is a bit twisted due to
+ * the need to accomodate two features:
  * <ul>
  * <li>(X)HTML interned objects must be accessible directly (see, e.g., {@link Element#A});
  * <li>(X)HTML interned objects must be put into suitable name-to-object maps.
  * </ul>
  *
- * <p>To this purpose, this class exports packagewise some static factory methods that create {@link Element}s and
- * {@link Attribute}s and register them locally. The static initialisation code in
- * {@link Element} and {@link Attribute} creates elements such as {@link Element#A} using the abovementioned
- * factory methods.
+ * <p>
+ * To this purpose, this class exports packagewise some static factory methods that create
+ * {@link Element}s and {@link Attribute}s and register them locally. The static initialisation code
+ * in {@link Element} and {@link Attribute} creates elements such as {@link Element#A} using the
+ * abovementioned factory methods.
  *
- * <p>An alternative implementation could use reflection, but I don't see great advantages.
+ * @deprecated This class is obsolete and kept around for backward compatibility only.
  */
 
+@Deprecated
 public class HTMLFactory implements ParsingFactory {
 
 	private HTMLFactory() {}

@@ -29,11 +29,16 @@ import it.unimi.dsi.parser.Element;
 /**
  * A default, do-nothing-at-all callback.
  *
- * <P>Callbacks can inherit from this class and forget about methods they are not interested in.
+ * <P>
+ * Callbacks can inherit from this class and forget about methods they are not interested in.
  *
- * <P>This class has a protected constructor. If you need an instance of this class, use
+ * <P>
+ * This class has a protected constructor. If you need an instance of this class, use
  * {@link #getInstance()}.
+ *
+ * @deprecated This class is obsolete and kept around for backward compatibility only.
  */
+@Deprecated
 public class DefaultCallback implements Callback {
 	private static final DefaultCallback SINGLETON = new DefaultCallback();
 

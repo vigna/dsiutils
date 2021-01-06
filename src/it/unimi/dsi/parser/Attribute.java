@@ -21,7 +21,12 @@ package it.unimi.dsi.parser;
 
 import it.unimi.dsi.lang.MutableString;
 
-/** An SGML attribute. */
+/**
+ * An SGML attribute.
+ *
+ * @deprecated This class is obsolete and kept around for backward compatibility only.
+ */
+@Deprecated
 public final class Attribute {
 
     /** The name of this attribute. */

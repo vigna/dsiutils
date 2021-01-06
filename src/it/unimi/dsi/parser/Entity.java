@@ -21,8 +21,13 @@ package it.unimi.dsi.parser;
 
 import it.unimi.dsi.lang.MutableString;
 
-/** An SGML character entity. */
+/**
+ * An SGML character entity.
+ *
+ * @deprecated This class is obsolete and kept around for backward compatibility only.
+ */
 
+@Deprecated
 public final class Entity {
 
     /** The name of this entity. */

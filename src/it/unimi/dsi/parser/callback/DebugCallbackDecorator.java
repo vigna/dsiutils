@@ -26,8 +26,12 @@ import it.unimi.dsi.parser.Attribute;
 import it.unimi.dsi.parser.BulletParser;
 import it.unimi.dsi.parser.Element;
 
-/** A decorator that prints on standard error all calls to the underlying callback.
+/**
+ * A decorator that prints on standard error all calls to the underlying callback.
+ *
+ * @deprecated This class is obsolete and kept around for backward compatibility only.
  */
+@Deprecated
 public class DebugCallbackDecorator implements Callback {
 
 	/** The underlying callback. */

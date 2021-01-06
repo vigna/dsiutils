@@ -23,16 +23,19 @@ import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.lang.MutableString;
 
-/** A factory for well-formed XML documents.
+/**
+ * A factory for well-formed XML documents.
  *
- * <p>This factory assumes that every new name of an element type or of an
- * attribute is new valid name. For entities, instead, resolution is
- * deferred to {@link it.unimi.dsi.parser.HTMLFactory}.
+ * <p>
+ * This factory assumes that every new name of an element type or of an attribute is new valid name.
+ * For entities, instead, resolution is deferred to {@link it.unimi.dsi.parser.HTMLFactory}.
  *
  * @author Sebastiano Vigna
  * @since 1.0.2
+ * @deprecated This class is obsolete and kept around for backward compatibility only.
  */
 
+@Deprecated
 public class WellFormedXmlFactory implements ParsingFactory {
 	/** The load factor for all maps. */
 	private static final float ONE_HALF = .5f;

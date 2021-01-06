@@ -83,7 +83,7 @@ public class XorShiftPoly928 {
 		// Check factors
 		BigInteger prod = BigInteger.ONE;
 		for(final BigInteger f : factor) prod = prod.multiply(f);
-		if (! prod.equals(BigInteger.TWO.pow(BITS).subtract(BigInteger.ONE))) {
+		if (!prod.equals(BigInteger.valueOf(2).pow(BITS).subtract(BigInteger.ONE))) {
 			System.err.println("Factors do not match");
 			return;
 		}

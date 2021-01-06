@@ -46,7 +46,7 @@ public class FileLinesMutableStringIterableTest {
 	public void test() throws IOException, SecurityException {
 		final File file = File.createTempFile(FastBufferedReaderTest.class.getSimpleName(), "tmp");
 		file.deleteOnExit();
-		final List<String> l = List.of("ciao", "mamma", "guarda");
+		final List<String> l = new ObjectArrayList<>(new String[] { "ciao", "mamma", "guarda" });
 		final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file), Charsets.US_ASCII);
 		for (final String s : l) outputStreamWriter.append(s + "\n");
 		outputStreamWriter.close();
@@ -73,7 +73,7 @@ public class FileLinesMutableStringIterableTest {
 	public void testZipped() throws IOException, NoSuchMethodException, SecurityException {
 		final File file = File.createTempFile(FastBufferedReaderTest.class.getSimpleName(), "tmp");
 		file.deleteOnExit();
-		final List<String> l = List.of("ciao", "mamma", "guarda");
+		final List<String> l = new ObjectArrayList<>(new String[] { "ciao", "mamma", "guarda" });
 		final GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
 		final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(gzipOutputStream, Charsets.US_ASCII);
 		for(final String s: l) outputStreamWriter.append(s + "\n");

@@ -38,6 +38,7 @@ import it.unimi.dsi.parser.Element;
  * actual callback invocations are the same.
  */
 
+@Deprecated
 public class BulletParserCallbackContentHandler extends DefaultHandler {
 	/** The delegated callback. */
 	private final Callback callback;

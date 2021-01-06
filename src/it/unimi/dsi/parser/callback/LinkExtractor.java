@@ -32,14 +32,16 @@ import it.unimi.dsi.util.TextPattern;
 /**
  * A callback extracting links.
  *
- * <P>This callbacks extracts links existing in the web page. The
- * links are then accessible in {@link #urls} (a set of {@link String}s). Note that
- * we guarantee that the iteration order in the set is exactly
- * the order in which links have been met (albeit copies appear
- * just once).
+ * <P>
+ * This callbacks extracts links existing in the web page. The links are then accessible in
+ * {@link #urls} (a set of {@link String}s). Note that we guarantee that the iteration order in the
+ * set is exactly the order in which links have been met (albeit copies appear just once).
+ *
+ * @deprecated This class is obsolete and kept around for backward compatibility only.
  */
 
 
+@Deprecated
 public class LinkExtractor extends DefaultCallback {
 	/** The pattern prefixing the URL in a <code>META </code> <code>HTTP-EQUIV </code> element of refresh type. */
 	private static final TextPattern URLEQUAL_PATTERN = new TextPattern("URL=", TextPattern.CASE_INSENSITIVE);

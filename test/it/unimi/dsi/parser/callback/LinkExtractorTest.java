@@ -32,6 +32,7 @@ import com.google.common.io.ByteStreams;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.parser.BulletParser;
 
+@Deprecated
 public class LinkExtractorTest {
 
 	@Test

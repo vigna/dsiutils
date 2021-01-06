@@ -26,16 +26,21 @@ import it.unimi.dsi.parser.Attribute;
 import it.unimi.dsi.parser.BulletParser;
 import it.unimi.dsi.parser.Element;
 
-/** A callback extracting text and titles.
+/**
+ * A callback extracting text and titles.
  *
- * <P>This callbacks extracts all text in the page, and the title.
- * The resulting
- * text is available through {@link #text}, and the title through {@link #title}.
+ * <P>
+ * This callbacks extracts all text in the page, and the title. The resulting text is available
+ * through {@link #text}, and the title through {@link #title}.
  *
- * <P>Note that {@link #text} and {@link #title} are never trimmed.
+ * <P>
+ * Note that {@link #text} and {@link #title} are never trimmed.
+ *
+ * @deprecated This class is obsolete and kept around for backward compatibility only.
  */
 
 
+@Deprecated
 public class TextExtractor extends DefaultCallback {
 
 	/** The text resulting from the parsing process. */

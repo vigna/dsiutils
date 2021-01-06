@@ -37,6 +37,7 @@ import it.unimi.dsi.lang.MutableString;
 import it.unimi.dsi.parser.callback.Callback;
 import it.unimi.dsi.parser.callback.DefaultCallback;
 
+@Deprecated
 public class BulletParserTest {
 
 	@Test

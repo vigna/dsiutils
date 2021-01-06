@@ -27,14 +27,18 @@ import it.unimi.dsi.parser.Attribute;
 import it.unimi.dsi.parser.BulletParser;
 import it.unimi.dsi.parser.Element;
 
-/** A builder for composed callbacks.
+/**
+ * A builder for composed callbacks.
  *
- * <P>To compose a series of callbacks, you must first create an instance
- * of this class, {@linkplain #add(Callback) add all required callbacks}, and
- * finally {@linkplain #compose() get the composed callback}, which will invoke (in order)
- * the callbacks.
+ * <P>
+ * To compose a series of callbacks, you must first create an instance of this class,
+ * {@linkplain #add(Callback) add all required callbacks}, and finally {@linkplain #compose() get
+ * the composed callback}, which will invoke (in order) the callbacks.
+ *
+ * @deprecated This class is obsolete and kept around for backward compatibility only.
  */
 
+@Deprecated
 public class ComposedCallbackBuilder {
 
 	/** A sequence of callbacks to be called int turn. */

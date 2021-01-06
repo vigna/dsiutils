@@ -21,27 +21,33 @@ package it.unimi.dsi.parser;
 
 import it.unimi.dsi.lang.MutableString;
 
-/** A set of coherent methods to turn element-type, attribute and entity names to unique interned instances.
+/**
+ * A set of coherent methods to turn element-type, attribute and entity names to unique interned
+ * instances.
  *
- * <p>The {@link it.unimi.dsi.parser.BulletParser} needs a way to turn
- * a name (for an element type, attribute, or entity) into a corresponding object
- * of type {@link it.unimi.dsi.parser.Element}, {@link it.unimi.dsi.parser.Attribute}
- * or {@link it.unimi.dsi.parser.Entity}, respectively. The returned element must
- * be an interned, unique representation.
+ * <p>
+ * The {@link it.unimi.dsi.parser.BulletParser} needs a way to turn a name (for an element type,
+ * attribute, or entity) into a corresponding object of type {@link it.unimi.dsi.parser.Element},
+ * {@link it.unimi.dsi.parser.Attribute} or {@link it.unimi.dsi.parser.Entity}, respectively. The
+ * returned element must be an interned, unique representation.
  *
- * <P>For instance, the {@linkplain it.unimi.dsi.parser.HTMLFactory standard factory for
- * HTML} parsing has ready-made interned versions of all names in the (X)HTML specification,
- * and returns them upon request, but other policies are possible. For instance, instances of
- * {@link WellFormedXmlFactory} intern every seen name, without reference to a data type (except
- * for entities, in which case the HTML set is used).
+ * <P>
+ * For instance, the {@linkplain it.unimi.dsi.parser.HTMLFactory standard factory for HTML} parsing
+ * has ready-made interned versions of all names in the (X)HTML specification, and returns them upon
+ * request, but other policies are possible. For instance, instances of {@link WellFormedXmlFactory}
+ * intern every seen name, without reference to a data type (except for entities, in which case the
+ * HTML set is used).
  *
- * <P>The idea of factoring out the creation of interned counterparts of
- * SGML/XML syntactical objects is due to Fabien Campagne.
+ * <P>
+ * The idea of factoring out the creation of interned counterparts of SGML/XML syntactical objects
+ * is due to Fabien Campagne.
  *
  * @author Sebastiano Vigna
  * @since 1.0.2
+ * @deprecated This class is obsolete and kept around for backward compatibility only.
  */
 
+@Deprecated
 public interface ParsingFactory {
 
 	/** Returns the {@link it.unimi.dsi.parser.Element} associated
