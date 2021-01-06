@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>DSI utils</title>
+  </head>
+
+  <body>
+    <P>The DSI utilities are a mish mash of classes accumulated during the last
+    ten years in projects developed at the former DSI (Dipartimento di Scienze dell'Informazione,
+    i.e., Information Sciences Department), now DI (Dipartimento di Informatica, i.e., 
+	Informatics Department)  of the Universit&agrave; degli Studi di Milano.
+    They were originally distributed in several projects 
+    (mainly in <a href="http://mg4j.di.unimi.it/">MG4J</a>) but we finally decided to
+    gather all the material in a single place.
+    
+    <P>The DSI utilities are free software
+    distributed under either the  <A HREF="https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">GNU Lesser General Public License 2.1+</A> or the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License 2.0</a>.
+	
+    <h1>Highlights</h1>
+
+	<p>The implementations available are a bit eclectic due to the particular kind of applications
+	we developed. Very broadly, we have:
+	
+	<ul>
+	<li>Implementations of pseudorandom number generators. See the {@linkplain it.unimi.dsi.util package documentation} for details.</li>
+	<li>{@link it.unimi.dsi.bits.BitVector} and its implementations&mdash;a high-performance but flexible set of bit vector classes.</li>
+	<li>A {@link it.unimi.dsi.compression} package containing codecs for several types of encodings.</li>
+	<li>{@link it.unimi.dsi.logging.ProgressLogger}, a flexible logger with statistics marking the progress of the (many) classes
+	we use that require hours of computation.
+	<li>{@link it.unimi.dsi.lang.ObjectParser}, a class making it easy to specify complex objects on the command
+	line.</li>
+	<li>{@link it.unimi.dsi.lang.MutableString}, our answer to the Java {@link java.lang.String} class.</li>
+	<li>The {@link it.unimi.dsi.io I/O package}, containing fast version of several classes existing in {@link java.io},
+	many useful classes to read easily text data (e.g., {@link it.unimi.dsi.io.FileLinesMutableStringIterable}), {@linkplain it.unimi.dsi.io.InputBitStream bit streams},
+	classes providing large-size memory mapping such as {@link it.unimi.dsi.io.ByteBufferInputStream},
+	and {@link it.unimi.dsi.io.OfflineIterable}&mdash;the easy &amp; fast way to store large sequences of objects on disk and iterate on them.</li>
+	<li>The {@link it.unimi.dsi.util} package, containing {@linkplain it.unimi.dsi.util.ImmutableBinaryTrie tries}, 
+	{@linkplain it.unimi.dsi.util.ImmutableExternalPrefixMap immutable prefix maps}, {@linkplain it.unimi.dsi.util.BloomFilter Bloom filters}, 
+	a very comfortable {@link it.unimi.dsi.util.Properties} class and more.</li>
+	<li>The {@link it.unimi.dsi.stat} package, containing a lightweight class for {@linkplain it.unimi.dsi.stat.SummaryStats computing basic statistics} and
+	{@linkplain it.unimi.dsi.stat.Jackknife an arbitrary-precision implementation of the Jackknife method}.</li>
+	<li>Lots of utility methods in {@link it.unimi.dsi.Util} (have a look!)</li>
+	<li><em>Big</em> versions of I/O and utility classes in {@link it.unimi.dsi.big.io} and {@link it.unimi.dsi.big.util}.</li> 
+	</ul>
+  </body>
+</html>

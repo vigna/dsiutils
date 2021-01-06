@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Lilypond Snippet Repository ♪♫</title>
+<script type="text/javascript">
+function focus(){}
+</script>
+<style type="text/css">
+@import "/LSR/css/lsr.css";
+a {
+	font-size: 80%;
+	margin: 0em .3em;
+}
+</style>
+</head>
+<body onload="javascript:document.getElementById('q').focus()">
+<div style="text-align: center">
+<h1>The Lilypond Snippet Repository ♪♫</h1>
+<form action="/LSR/Search">
+<p><input type=text name=q id=q maxlength=100><input type=submit value=Search>
+
+</form>
+<div style="white-space: no-wrap">
+<a href="/LSR/html/whatsthis.html">What's this?</a>  
+<a href="/LSR/html/searching.html">Searching the LSR</a>  
+<a href="/LSR/Browse">Browse</a>  
+<a href="/LSR/html/contributing.html">Contributing</a>  
+<a href="https://lsr.dsi.unimi.it/list.php?type=snippet">Snippet database</a></div>
+</div>
+</body>
+</html>

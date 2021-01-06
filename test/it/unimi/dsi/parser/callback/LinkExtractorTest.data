@@ -1,0 +1,18 @@
+<html><head><link rel='stylesheet' type='text/css' href='manual.css'/>
+<base href="http://base.com/">
+<meta http-equiv="Location">
+<meta content="http://nolocation.com/">
+<meta http-equiv="Location" content="http://location.com/">
+<meta http-equiv="Location" content="http://nolocation.com/">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta content="12;URL=http://norefresh.com/">
+<meta http-equiv="Refresh">
+<meta http-equiv="Refresh" content="12;URL=http://refresh.com/">
+<meta http-equiv="Refresh" content="12;URL=http://norefresh.com/">
+<title>Chapter 2. Vocabulary</title><meta name="generator" content="DocBook XSL Stylesheets V1.61.2">
+<link rel="home" href="http://link.com/" title="JSAP - Java Simple Argument Parser (v1.03a)">
+<a href="http://anchor.com/" title="JSAP - Java Simple Argument Parser (v1.03a)">
+<a ^ id=foo ; href="http://badanchor.com/" :>
+</body>
+</html>
+
