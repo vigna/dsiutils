@@ -5,7 +5,7 @@
   <packaging>jar</packaging>
   <name>DSI Utilities</name>
   <version>${ivy.pom.version}</version>
-  <description>The DSI utilities are a mish mash of classes accumulated during the last ten years in projects developed at the DSI (Dipartimento di Scienze dell'Informazione, i.e., Information Sciences Department), now DI (Dipartimento di Informatica, i.e., Informatics Department), of the Universita` degli Studi di Milano.</description>
+  <description>The DSI utilities are a mish mash of classes accumulated during the last twenty years in projects developed at the DSI (Dipartimento di Scienze dell'Informazione, i.e., Information Sciences Department), now DI (Dipartimento di Informatica, i.e., Informatics Department), of the Universita` degli Studi di Milano.</description>
   <url>http://dsiutils.di.unimi.it/</url>
   <licenses>
     <license>
@@ -20,8 +20,8 @@
     </license>
   </licenses>
   <scm>
-    <connection>scm:git://github.com/vigna/DSI-Utilities.git</connection>
-    <url>https://github.com/vigna/DSI-Utilities</url>
+    <connection>scm:git://github.com/vigna/dsiutils.git</connection>
+    <url>https://github.com/vigna/dsiutils</url>
   </scm>
   <developers>
     <developer>
