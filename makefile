@@ -7,6 +7,7 @@ source:
 	ant clean
 	ln -s . dsiutils-$(version)
 	$(TAR) chvf dsiutils-$(version)-src.tar --owner=0 --group=0 \
+		dsiutils-$(version)/README.md \
 		dsiutils-$(version)/CHANGES \
 		dsiutils-$(version)/COPYING.LESSER \
 		dsiutils-$(version)/LICENSE-2.0.txt \
@@ -33,6 +34,7 @@ binary:
 	$(TAR) zxvf dsiutils-$(version)-src.tar.gz
 	(cd dsiutils-$(version) && unset CLASSPATH && unset LOCAL_IVY_SETTINGS && ant ivy-clean ivy-setupjars && ant junit && ant clean && ant jar javadoc)
 	$(TAR) zcvf dsiutils-$(version)-bin.tar.gz --owner=0 --group=0 \
+		dsiutils-$(version)/README.md \
 		dsiutils-$(version)/CHANGES \
 		dsiutils-$(version)/COPYING.LESSER \
 		dsiutils-$(version)/LICENSE-2.0.txt \
