@@ -273,6 +273,7 @@ public class TransformationStrategies {
 			public long getLong(final long from, final long to) {
 				final int startBit = (int)(from & CHAR_MASK);
 				if (startBit == 0) {
+					final char[] a = this.a;
 					final int pos = (int)(from >>> LOG2_CHAR_SIZE);
 					if (to == from + Long.SIZE)
 						return (long)a[pos + 3] << 48 | (long)a[pos + 2] << 32 | (long)a[pos + 1] << 16 | a[pos];
@@ -328,6 +329,7 @@ public class TransformationStrategies {
 			public long getLong(final long from, final long to) {
 				final int startBit = (int)(from & CHAR_MASK);
 				if (startBit == 0) {
+					final CharSequence s = this.s;
 					final int pos = (int)(from >>> LOG2_CHAR_SIZE);
 					if (to == from + Long.SIZE)
 						return (long)s.charAt(pos + 3) << 48 | (long)s.charAt(pos + 2) << 32 | (long)s.charAt(pos + 1) << 16 | s.charAt(pos);
@@ -449,6 +451,7 @@ public class TransformationStrategies {
 			public long getLong(final long from, final long to) {
 				final int startBit = (int)(from & CHAR_MASK);
 				if (startBit == 0) {
+					final CharSequence s = this.s;
 					final int pos = (int)(from >>> LOG2_CHAR_SIZE);
 					if (to == from + Long.SIZE)
 						return reverseChars((to > actualEnd ? 0 : (long)s.charAt(pos + 3)) << 48 | (long)s.charAt(pos + 2) << 32 | (long)s.charAt(pos + 1) << 16 | s.charAt(pos));
@@ -507,6 +510,7 @@ public class TransformationStrategies {
 			public long getLong(final long from, final long to) {
 				final int startBit = (int)(from & CHAR_MASK);
 				if (startBit == 0) {
+					final char[] a = this.a;
 					final int pos = (int)(from >>> LOG2_CHAR_SIZE);
 					if (to == from + Long.SIZE)
 						return reverseChars((to > actualEnd ? 0 : (long)a[pos + 3]) << 48 | (long)a[pos + 2] << 32 | (long)a[pos + 1] << 16 | a[pos]);
@@ -605,6 +609,7 @@ public class TransformationStrategies {
 			public long getLong(final long from, final long to) {
 				final int startBit = (int)(from & BYTE_MASK);
 				if (startBit == 0) {
+					final CharSequence s = this.s;
 					final int pos = (int)(from >>> LOG2_BYTE_SIZE);
 					if (to == from + Long.SIZE)
 						return (s.charAt(pos + 7) & 0xFFL) << 56 |
@@ -671,6 +676,7 @@ public class TransformationStrategies {
 			public long getLong(final long from, final long to) {
 				final int startBit = (int)(from & BYTE_MASK);
 				if (startBit == 0) {
+					final char[] a = this.a;
 					final int pos = (int)(from >>> LOG2_BYTE_SIZE);
 					if (to == from + Long.SIZE)
 						return (a[pos + 7] & 0xFFL) << 56 |
@@ -812,6 +818,7 @@ public class TransformationStrategies {
 			public long getLong(final long from, final long to) {
 				final int startBit = (int)(from & BYTE_MASK);
 				if (startBit == 0) {
+					final CharSequence s = this.s;
 					final int pos = (int)(from >>> LOG2_BYTE_SIZE);
 					if (to == from + Long.SIZE)
 						return reverseBytes((to > actualEnd ? 0 : (s.charAt(pos + 7) & 0xFFL)) << 56 |
@@ -883,6 +890,7 @@ public class TransformationStrategies {
 			public long getLong(final long from, final long to) {
 				final int startBit = (int)(from & BYTE_MASK);
 				if (startBit == 0) {
+					final char[] a = this.a;
 					final int pos = (int)(from >>> LOG2_BYTE_SIZE);
 					if (to == from + Long.SIZE)
 						return reverseBytes((to > actualEnd ? 0 : (a[pos + 7] & 0xFFL)) << 56 |
@@ -993,6 +1001,7 @@ public class TransformationStrategies {
 			public long getLong(final long from, final long to) {
 				final int startBit = (int)(from & BYTE_MASK);
 				if (startBit == 0) {
+					final byte[] a = this.a;
 					if (to == from + Long.SIZE) {
 						final int pos = (int)(from >>> LOG2_BYTE_SIZE);
 						return (a[pos + 7] & 0xFFL) << 56 |
@@ -1076,12 +1085,12 @@ public class TransformationStrategies {
 
 	/**
 	 * A lexicographical transformation from byte arrays to bit vectors that completes the
-	 * representation with an ASCII NUL to guarantee lexicographical ordering and prefix-freeness
-	 * provided the byte arrays to not contain zeros.
+	 * representation with a zero to guarantee lexicographical ordering and prefix-freeness provided the
+	 * byte arrays to not contain zeros.
 	 *
 	 * <p>
-	 * Note that this transformation is sensible only for byte arrays that do not contain zeros. It is
-	 * mainly intended for byte arrays representing ASCII strings in compact form.
+	 * This transformation is mainly intended for byte arrays representing ASCII strings in compact
+	 * form.
 	 *
 	 * <p>
 	 * <strong>Warning</strong>: bit vectors returned by this strategy are adaptors around the original
@@ -1137,6 +1146,7 @@ public class TransformationStrategies {
 			public long getLong(final long from, final long to) {
 				final int startBit = (int)(from & BYTE_MASK);
 				if (startBit == 0) {
+					final byte[] a = this.a;
 					if (to == from + Long.SIZE) {
 						final int pos = (int)(from >>> LOG2_BYTE_SIZE);
 						return reverseBytes((to > actualEnd ? 0 : (a[pos + 7] & 0xFFL)) << 56 |
@@ -1170,7 +1180,6 @@ public class TransformationStrategies {
 					}
 				}
 
-				// Actually, we should never get here as the transformation is not lexicographical.
 				final long l = Long.SIZE - (to - from);
 				final long startPos = from - startBit;
 				if (l == Long.SIZE) return 0;
