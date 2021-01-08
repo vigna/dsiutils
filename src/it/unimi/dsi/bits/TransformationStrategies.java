@@ -280,9 +280,12 @@ public class TransformationStrategies {
 					if ((to & CHAR_MASK) == 0) {
 						long word = 0;
 						switch ((int)((to - from) >>> LOG2_CHAR_SIZE)) {
-						case 3: word |= (long)a[pos + 2] << 32;
-						case 2: word |= (long)a[pos + 1] << 16;
-						case 1:	word |= a[pos + 0];
+						case 3:
+							word |= (long)a[pos + 2] << 32;
+						case 2:
+							word |= (long)a[pos + 1] << 16;
+						case 1:
+							word |= a[pos + 0];
 						}
 						return word;
 					}
@@ -293,7 +296,7 @@ public class TransformationStrategies {
 				if (l == Long.SIZE) return 0;
 
 				if (startBit <= l) return getLong(startPos, Math.min(length, startPos + Long.SIZE)) << l - startBit >>> l;
-				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << Long.SIZE + l - startBit >>> l;
+				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << l - startBit >>> l;
 			}
 
 			@Override
@@ -332,9 +335,12 @@ public class TransformationStrategies {
 					if ((to & CHAR_MASK) == 0) {
 						long word = 0;
 						switch ((int)((to - from) >>> LOG2_CHAR_SIZE)) {
-						case 3: word |= (long)s.charAt(pos + 2) << 32;
-						case 2: word |= (long)s.charAt(pos + 1) << 16;
-						case 1:	word |= s.charAt(pos + 0);
+						case 3:
+							word |= (long)s.charAt(pos + 2) << 32;
+						case 2:
+							word |= (long)s.charAt(pos + 1) << 16;
+						case 1:
+							word |= s.charAt(pos + 0);
 						}
 						return word;
 					}
@@ -345,7 +351,7 @@ public class TransformationStrategies {
 				if (l == Long.SIZE) return 0;
 
 				if (startBit <= l) return getLong(startPos, Math.min(length, startPos + Long.SIZE)) << l - startBit >>> l;
-				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << Long.SIZE + l - startBit >>> l;
+				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << l - startBit >>> l;
 			}
 
 			@Override
@@ -450,9 +456,12 @@ public class TransformationStrategies {
 					if ((to & CHAR_MASK) == 0) {
 						long word = 0;
 						switch ((int)((Math.min(to, actualEnd) - Math.min(from, actualEnd)) >>> LOG2_CHAR_SIZE)) {
-						case 3: word |= (long)s.charAt(pos + 2) << 32;
-						case 2: word |= (long)s.charAt(pos + 1) << 16;
-						case 1: word |= s.charAt(pos);
+						case 3:
+							word |= (long)s.charAt(pos + 2) << 32;
+						case 2:
+							word |= (long)s.charAt(pos + 1) << 16;
+						case 1:
+							word |= s.charAt(pos);
 						}
 						return reverseChars(word);
 					}
@@ -463,7 +472,7 @@ public class TransformationStrategies {
 				if (l == Long.SIZE) return 0;
 
 				if (startBit <= l) return getLong(startPos, Math.min(length, startPos + Long.SIZE)) << l - startBit >>> l;
-				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << Long.SIZE + l - startBit >>> l;
+				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << l - startBit >>> l;
 			}
 
 			@Override
@@ -504,9 +513,12 @@ public class TransformationStrategies {
 					if ((to & CHAR_MASK) == 0) {
 						long word = 0;
 						switch ((int)((Math.min(to, actualEnd) - Math.min(from, actualEnd)) >>> LOG2_CHAR_SIZE)) {
-						case 3: word |= (long)a[pos + 2] << 32;
-						case 2: word |= (long)a[pos + 1] << 16;
-						case 1: word |= a[pos];
+						case 3:
+							word |= (long)a[pos + 2] << 32;
+						case 2:
+							word |= (long)a[pos + 1] << 16;
+						case 1:
+							word |= a[pos];
 						}
 						return reverseChars(word);
 					}
@@ -517,7 +529,7 @@ public class TransformationStrategies {
 				if (l == Long.SIZE) return 0;
 
 				if (startBit <= l) return getLong(startPos, Math.min(length, startPos + Long.SIZE)) << l - startBit >>> l;
-				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << Long.SIZE + l - startBit >>> l;
+				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << l - startBit >>> l;
 			}
 
 			@Override
@@ -600,20 +612,25 @@ public class TransformationStrategies {
 								(s.charAt(pos + 5) & 0xFFL) << 40 |
 								(s.charAt(pos + 4) & 0xFFL) << 32 |
 								(s.charAt(pos + 3) & 0xFFL) << 24 |
-								(s.charAt(pos + 2) & 0xFF) << 16 |
-								(s.charAt(pos + 1) & 0xFF) << 8 |
-								(s.charAt(pos) & 0xFF);
+								(s.charAt(pos + 2) & 0xFFL) << 16 | (s.charAt(pos + 1) & 0xFFL) << 8 | (s.charAt(pos) & 0xFFL);
 
 					if ((to & BYTE_MASK) == 0) {
 						long word = 0;
 						switch ((int)((to - from) >>> LOG2_BYTE_SIZE)) {
-						case 7: word |= (s.charAt(pos + 6) & 0xFFL) << 48;
-						case 6: word |= (s.charAt(pos + 5) & 0xFFL) << 40;
-						case 5: word |= (s.charAt(pos + 4) & 0xFFL) << 32;
-						case 4: word |= (s.charAt(pos + 3) & 0xFFL) << 24;
-						case 3: word |= (s.charAt(pos + 2) & 0xFF) << 16;
-						case 2: word |= (s.charAt(pos + 1) & 0xFF) << 8;
-						case 1: word |= s.charAt(pos) & 0xFF;
+						case 7:
+							word |= (s.charAt(pos + 6) & 0xFFL) << 48;
+						case 6:
+							word |= (s.charAt(pos + 5) & 0xFFL) << 40;
+						case 5:
+							word |= (s.charAt(pos + 4) & 0xFFL) << 32;
+						case 4:
+							word |= (s.charAt(pos + 3) & 0xFFL) << 24;
+						case 3:
+							word |= (s.charAt(pos + 2) & 0xFFL) << 16;
+						case 2:
+							word |= (s.charAt(pos + 1) & 0xFFL) << 8;
+						case 1:
+							word |= s.charAt(pos) & 0xFFL;
 						}
 						return word;
 					}
@@ -624,7 +641,7 @@ public class TransformationStrategies {
 				if (l == Long.SIZE) return 0;
 
 				if (startBit <= l) return getLong(startPos, Math.min(length, startPos + Long.SIZE)) << l - startBit >>> l;
-				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << Long.SIZE + l - startBit >>> l;
+				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << l - startBit >>> l;
 			}
 
 			@Override
@@ -661,20 +678,25 @@ public class TransformationStrategies {
 								(a[pos + 5] & 0xFFL) << 40 |
 								(a[pos + 4] & 0xFFL) << 32 |
 								(a[pos + 3] & 0xFFL) << 24 |
-								(a[pos + 2] & 0xFF) << 16 |
-								(a[pos + 1] & 0xFF) << 8 |
-								(a[pos] & 0xFF);
+								(a[pos + 2] & 0xFFL) << 16 | (a[pos + 1] & 0xFFL) << 8 | (a[pos] & 0xFFL);
 
 					if ((to & BYTE_MASK) == 0) {
 						long word = 0;
 						switch ((int)((to - from) >>> LOG2_BYTE_SIZE)) {
-						case 7: word |= (a[pos + 6] & 0xFFL) << 48;
-						case 6: word |= (a[pos + 5] & 0xFFL) << 40;
-						case 5: word |= (a[pos + 4] & 0xFFL) << 32;
-						case 4: word |= (a[pos + 3] & 0xFFL) << 24;
-						case 3: word |= (a[pos + 2] & 0xFF) << 16;
-						case 2: word |= (a[pos + 1] & 0xFF) << 8;
-						case 1: word |= a[pos] & 0xFF;
+						case 7:
+							word |= (a[pos + 6] & 0xFFL) << 48;
+						case 6:
+							word |= (a[pos + 5] & 0xFFL) << 40;
+						case 5:
+							word |= (a[pos + 4] & 0xFFL) << 32;
+						case 4:
+							word |= (a[pos + 3] & 0xFFL) << 24;
+						case 3:
+							word |= (a[pos + 2] & 0xFFL) << 16;
+						case 2:
+							word |= (a[pos + 1] & 0xFFL) << 8;
+						case 1:
+							word |= a[pos] & 0xFFL;
 						}
 						return word;
 					}
@@ -686,7 +708,7 @@ public class TransformationStrategies {
 				if (l == Long.SIZE) return 0;
 
 				if (startBit <= l) return getLong(startPos, Math.min(length, startPos + Long.SIZE)) << l - startBit >>> l;
-				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << Long.SIZE + l - startBit >>> l;
+				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << l - startBit >>> l;
 			}
 
 			@Override
@@ -797,20 +819,25 @@ public class TransformationStrategies {
 								(s.charAt(pos + 5) & 0xFFL) << 40 |
 								(s.charAt(pos + 4) & 0xFFL) << 32 |
 								(s.charAt(pos + 3) & 0xFFL) << 24 |
-								(s.charAt(pos + 2) & 0xFF) << 16 |
-								(s.charAt(pos + 1) & 0xFF) << 8 |
-								(s.charAt(pos) & 0xFF));
+								(s.charAt(pos + 2) & 0xFFL) << 16 | (s.charAt(pos + 1) & 0xFFL) << 8 | (s.charAt(pos) & 0xFFL));
 
 					if ((to & BYTE_MASK) == 0) {
 						long word = 0;
 						switch ((int)((Math.min(to, actualEnd) - Math.min(from, actualEnd)) >>> LOG2_BYTE_SIZE)) {
-						case 7: word |= (s.charAt(pos + 6) & 0xFFL) << 48;
-						case 6: word |= (s.charAt(pos + 5) & 0xFFL) << 40;
-						case 5: word |= (s.charAt(pos + 4) & 0xFFL) << 32;
-						case 4: word |= (s.charAt(pos + 3) & 0xFFL) << 24;
-						case 3: word |= (s.charAt(pos + 2) & 0xFF) << 16;
-						case 2: word |= (s.charAt(pos + 1) & 0xFF) << 8;
-						case 1: word |= s.charAt(pos) & 0xFF;
+						case 7:
+							word |= (s.charAt(pos + 6) & 0xFFL) << 48;
+						case 6:
+							word |= (s.charAt(pos + 5) & 0xFFL) << 40;
+						case 5:
+							word |= (s.charAt(pos + 4) & 0xFFL) << 32;
+						case 4:
+							word |= (s.charAt(pos + 3) & 0xFFL) << 24;
+						case 3:
+							word |= (s.charAt(pos + 2) & 0xFFL) << 16;
+						case 2:
+							word |= (s.charAt(pos + 1) & 0xFFL) << 8;
+						case 1:
+							word |= s.charAt(pos) & 0xFFL;
 						}
 						return reverseBytes(word);
 					}
@@ -821,7 +848,7 @@ public class TransformationStrategies {
 				if (l == Long.SIZE) return 0;
 
 				if (startBit <= l) return getLong(startPos, Math.min(length, startPos + Long.SIZE)) << l - startBit >>> l;
-				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << Long.SIZE + l - startBit >>> l;
+				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << l - startBit >>> l;
 			}
 
 			@Override
@@ -863,20 +890,25 @@ public class TransformationStrategies {
 								(a[pos + 5] & 0xFFL) << 40 |
 								(a[pos + 4] & 0xFFL) << 32 |
 								(a[pos + 3] & 0xFFL) << 24 |
-								(a[pos + 2] & 0xFF) << 16 |
-								(a[pos + 1] & 0xFF) << 8 |
-								(a[pos] & 0xFF));
+								(a[pos + 2] & 0xFFL) << 16 | (a[pos + 1] & 0xFFL) << 8 | (a[pos] & 0xFFL));
 
 					if ((to & BYTE_MASK) == 0) {
 						long word = 0;
 						switch ((int)((Math.min(actualEnd, to) - Math.min(actualEnd, from)) >>> LOG2_BYTE_SIZE)) {
-						case 7: word |= (a[pos + 6] & 0xFFL) << 48;
-						case 6: word |= (a[pos + 5] & 0xFFL) << 40;
-						case 5: word |= (a[pos + 4] & 0xFFL) << 32;
-						case 4: word |= (a[pos + 3] & 0xFFL) << 24;
-						case 3: word |= (a[pos + 2] & 0xFF) << 16;
-						case 2: word |= (a[pos + 1] & 0xFF) << 8;
-						case 1: word |= a[pos] & 0xFF;
+						case 7:
+							word |= (a[pos + 6] & 0xFFL) << 48;
+						case 6:
+							word |= (a[pos + 5] & 0xFFL) << 40;
+						case 5:
+							word |= (a[pos + 4] & 0xFFL) << 32;
+						case 4:
+							word |= (a[pos + 3] & 0xFFL) << 24;
+						case 3:
+							word |= (a[pos + 2] & 0xFFL) << 16;
+						case 2:
+							word |= (a[pos + 1] & 0xFFL) << 8;
+						case 1:
+							word |= a[pos] & 0xFFL;
 						}
 						return reverseBytes(word);
 					}
@@ -887,7 +919,7 @@ public class TransformationStrategies {
 				if (l == Long.SIZE) return 0;
 
 				if (startBit <= l) return getLong(startPos, Math.min(length, startPos + Long.SIZE)) << l - startBit >>> l;
-				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << Long.SIZE + l - startBit >>> l;
+				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << l - startBit >>> l;
 			}
 
 			@Override
@@ -968,22 +1000,27 @@ public class TransformationStrategies {
 								(a[pos + 5] & 0xFFL) << 40 |
 								(a[pos + 4] & 0xFFL) << 32 |
 								(a[pos + 3] & 0xFFL) << 24 |
-								(a[pos + 2] & 0xFF) << 16 |
-								(a[pos + 1] & 0xFF) << 8 |
-								(a[pos] & 0xFF);
+								(a[pos + 2] & 0xFFL) << 16 | (a[pos + 1] & 0xFFL) << 8 | (a[pos] & 0xFFL);
 					}
 
 					if ((to & BYTE_MASK) == 0) {
 						final int pos = (int)(from >>> LOG2_BYTE_SIZE);
 						long word = 0;
 						switch ((int)((to - from) >>> LOG2_BYTE_SIZE)) {
-						case 7: word |= (a[pos + 6] & 0xFFL) << 48;
-						case 6: word |= (a[pos + 5] & 0xFFL) << 40;
-						case 5:	word |= (a[pos + 4] & 0xFFL) << 32;
-						case 4:	word |= (a[pos + 3] & 0xFFL) << 24;
-						case 3:	word |= (a[pos + 2] & 0xFF) << 16;
-						case 2:	word |= (a[pos + 1] & 0xFF) << 8;
-						case 1:	word |= (a[pos] & 0xFF);
+						case 7:
+							word |= (a[pos + 6] & 0xFFL) << 48;
+						case 6:
+							word |= (a[pos + 5] & 0xFFL) << 40;
+						case 5:
+							word |= (a[pos + 4] & 0xFFL) << 32;
+						case 4:
+							word |= (a[pos + 3] & 0xFFL) << 24;
+						case 3:
+							word |= (a[pos + 2] & 0xFFL) << 16;
+						case 2:
+							word |= (a[pos + 1] & 0xFFL) << 8;
+						case 1:
+							word |= (a[pos] & 0xFFL);
 						}
 						return word;
 					}
@@ -995,7 +1032,7 @@ public class TransformationStrategies {
 				if (l == Long.SIZE) return 0;
 
 				if (startBit <= l) return getLong(startPos, Math.min(length, startPos + Long.SIZE)) << l - startBit >>> l;
-				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << Long.SIZE + l - startBit >>> l;
+				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << l - startBit >>> l;
 			}
 
 			@Override
@@ -1022,7 +1059,7 @@ public class TransformationStrategies {
 		}
 	}
 
-	private static final TransformationStrategy<byte[]> BYTE_ARRAY = new ByteArrayTransformationStrategy();
+	private static final TransformationStrategy<byte[]> BYTE_ARRAY = new ByteArrayTransformationStrategy(false);
 
 	/** A lexicographical transformation from byte arrays to bit vectors.
 	 *
@@ -1035,8 +1072,40 @@ public class TransformationStrategies {
 		return BYTE_ARRAY;
 	}
 
+	private static final TransformationStrategy<byte[]> PREFIX_FREE_BYTE_ARRAY = new ByteArrayTransformationStrategy(true);
+
+	/**
+	 * A lexicographical transformation from byte arrays to bit vectors that completes the
+	 * representation with an ASCII NUL to guarantee lexicographical ordering and prefix-freeness
+	 * provided the byte arrays to not contain zeros.
+	 *
+	 * <p>
+	 * Note that this transformation is sensible only for byte arrays that do not contain zeros. It is
+	 * mainly intended for byte arrays representing ASCII strings in compact form.
+	 *
+	 * <p>
+	 * <strong>Warning</strong>: bit vectors returned by this strategy are adaptors around the original
+	 * array. If the array changes while the bit vector is being accessed, the results will be
+	 * unpredictable.
+	 *
+	 * @see TransformationStrategies
+	 */
+	public static TransformationStrategy<byte[]> prefixFreeByteArray() {
+		return PREFIX_FREE_BYTE_ARRAY;
+	}
+
 	private static class ByteArrayTransformationStrategy implements TransformationStrategy<byte[]>, Serializable {
 		private static final long serialVersionUID = 1L;
+		/** Whether we should guarantee prefix-freeness by adding 0 to the end of each byte array. */
+		private final boolean prefixFree;
+
+		/** Creates an ISO transformation strategy. The strategy will map a string to the lowest eight bits of its natural UTF16 bit sequence.
+		 *
+		 * @param prefixFree if true, the resulting set of binary words will be made prefix free by adding a NUL at the end of the string.
+		 */
+		protected ByteArrayTransformationStrategy(final boolean prefixFree) {
+			this.prefixFree = prefixFree;
+		}
 
 		@Override
 		public long length(final byte[] a) {
@@ -1049,15 +1118,18 @@ public class TransformationStrategies {
 			private static final long BYTE_MASK = Byte.SIZE - 1;
 			private final byte[] a;
 			private final long length;
+			private final long actualEnd;
 
-			public ByteArrayBitVector(final byte[] a) {
+			public ByteArrayBitVector(final byte[] a, final boolean prefixFree) {
 				this.a = a;
-				length = a.length * (long)Byte.SIZE;
+				actualEnd = a.length * (long)Byte.SIZE;
+				length = actualEnd + (prefixFree ? Byte.SIZE : 0);
 			}
 
 			@Override
 			public boolean getBoolean(final long index) {
 				if (index > length) throw new IndexOutOfBoundsException();
+				if (index >= actualEnd) return false;
 				return (a[(int)(index >>> LOG2_BYTE_SIZE)] & 0x80 >> (index & BYTE_MASK)) != 0;
 			}
 
@@ -1067,27 +1139,32 @@ public class TransformationStrategies {
 				if (startBit == 0) {
 					if (to == from + Long.SIZE) {
 						final int pos = (int)(from >>> LOG2_BYTE_SIZE);
-						return reverseBytes((a[pos + 7] & 0xFFL) << 56 |
+						return reverseBytes((to > actualEnd ? 0 : (a[pos + 7] & 0xFFL)) << 56 |
 								(a[pos + 6] & 0xFFL) << 48 |
 								(a[pos + 5] & 0xFFL) << 40 |
 								(a[pos + 4] & 0xFFL) << 32 |
 								(a[pos + 3] & 0xFFL) << 24 |
-								(a[pos + 2] & 0xFF) << 16 |
-								(a[pos + 1] & 0xFF) << 8 |
-								(a[pos] & 0xFF));
+								(a[pos + 2] & 0xFFL) << 16 | (a[pos + 1] & 0xFFL) << 8 | (a[pos] & 0xFFL));
 					}
 
 					if ((to & BYTE_MASK) == 0) {
 						final int pos = (int)(from >>> LOG2_BYTE_SIZE);
 						long word = 0;
-						switch ((int)((to - from) >>> LOG2_BYTE_SIZE)) {
-						case 7: word |= (a[pos + 6] & 0xFFL) << 48;
-						case 6: word |= (a[pos + 5] & 0xFFL) << 40;
-						case 5:	word |= (a[pos + 4] & 0xFFL) << 32;
-						case 4:	word |= (a[pos + 3] & 0xFFL) << 24;
-						case 3:	word |= (a[pos + 2] & 0xFF) << 16;
-						case 2:	word |= (a[pos + 1] & 0xFF) << 8;
-						case 1:	word |= (a[pos] & 0xFF);
+						switch ((int)((Math.min(actualEnd, to) - Math.min(actualEnd, from)) >>> LOG2_BYTE_SIZE)) {
+						case 7:
+							word |= (a[pos + 6] & 0xFFL) << 48;
+						case 6:
+							word |= (a[pos + 5] & 0xFFL) << 40;
+						case 5:
+							word |= (a[pos + 4] & 0xFFL) << 32;
+						case 4:
+							word |= (a[pos + 3] & 0xFFL) << 24;
+						case 3:
+							word |= (a[pos + 2] & 0xFFL) << 16;
+						case 2:
+							word |= (a[pos + 1] & 0xFFL) << 8;
+						case 1:
+							word |= (a[pos] & 0xFFL);
 						}
 						return reverseBytes(word);
 					}
@@ -1099,7 +1176,7 @@ public class TransformationStrategies {
 				if (l == Long.SIZE) return 0;
 
 				if (startBit <= l) return getLong(startPos, Math.min(length, startPos + Long.SIZE)) << l - startBit >>> l;
-				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << Long.SIZE + l - startBit >>> l;
+				return getLong(startPos, startPos + Long.SIZE) >>> startBit | getLong(startPos + Long.SIZE, Math.min(length, startPos + 2 * Long.SIZE)) << l - startBit >>> l;
 			}
 
 			@Override
@@ -1110,7 +1187,7 @@ public class TransformationStrategies {
 
 		@Override
 		public BitVector toBitVector(final byte[] s) {
-			return new ByteArrayBitVector(s);
+			return new ByteArrayBitVector(s, prefixFree);
 		}
 
 		@Override
@@ -1122,7 +1199,7 @@ public class TransformationStrategies {
 		}
 
 		private Object readResolve() {
-			return BYTE_ARRAY;
+			return prefixFree ? PREFIX_FREE_BYTE_ARRAY : BYTE_ARRAY;
 		}
 	}
 

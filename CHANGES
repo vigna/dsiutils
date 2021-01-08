@@ -5,6 +5,9 @@
   line and arbitrary decompressors that extend java.io.InputStream. It
   is also possible to specify the number of strings in advance.
 
+- New lexicographical prefix-free transformation strategy for byte
+  arrays that do not contain zeros.
+
 2.6.16
 
 - The DSI Utilities are now dually licensed under the Lesser GNU Public

@@ -42,11 +42,36 @@ public class ByteArrayTransformationStrategyTest {
 		assertEquals(128, TransformationStrategies.byteArray().toBitVector(a).getLong(0, 64));
 		assertEquals(0xF000000000000008L, TransformationStrategies.byteArray().toBitVector(a).getLong(4, 68));
 		assertEquals(-1L, TransformationStrategies.byteArray().toBitVector(a).getLong(64, 128));
+		assertEquals(0, TransformationStrategies.byteArray().toBitVector(a).getLong(128, 136));
 
 		for(int i = 1; i < 7; i++)
 			assertEquals(0, TransformationStrategies.byteArray().toBitVector(a).getLong(0, i));
 
 		for(int i = 8; i < 63; i++)
 			assertEquals(128, TransformationStrategies.byteArray().toBitVector(a).getLong(0, i));
+	}
+
+	@Test
+	public void testGetLongPrefixFree() {
+		byte[] a = new byte[] { 0x55, (byte)0xFF };
+		assertEquals(24, TransformationStrategies.prefixFreeByteArray().toBitVector(a).length());
+		System.err.println(Long.toHexString(TransformationStrategies.prefixFreeByteArray().toBitVector(a).getLong(0, 24)));
+		assertEquals(0x00FFAAL, TransformationStrategies.prefixFreeByteArray().toBitVector(a).getLong(0, 24));
+
+		a = new byte[] { 1, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, 0 };
+		assertFalse(TransformationStrategies.prefixFreeByteArray().toBitVector(a).getBoolean(0));
+		assertFalse(TransformationStrategies.prefixFreeByteArray().toBitVector(a).getBoolean(1));
+		assertTrue(TransformationStrategies.prefixFreeByteArray().toBitVector(a).getBoolean(7));
+		assertTrue(TransformationStrategies.prefixFreeByteArray().toBitVector(a).getBoolean(64));
+		assertEquals(128, TransformationStrategies.prefixFreeByteArray().toBitVector(a).getLong(0, 56));
+		assertEquals(128, TransformationStrategies.prefixFreeByteArray().toBitVector(a).getLong(0, 64));
+		assertEquals(0xF000000000000008L, TransformationStrategies.prefixFreeByteArray().toBitVector(a).getLong(4, 68));
+		assertEquals(-1L, TransformationStrategies.prefixFreeByteArray().toBitVector(a).getLong(64, 128));
+		assertEquals(0, TransformationStrategies.prefixFreeByteArray().toBitVector(a).getLong(128, 136));
+		assertEquals(0, TransformationStrategies.prefixFreeByteArray().toBitVector(a).getLong(136, 144));
+
+		for (int i = 1; i < 7; i++) assertEquals(0, TransformationStrategies.prefixFreeByteArray().toBitVector(a).getLong(0, i));
+
+		for (int i = 8; i < 63; i++) assertEquals(128, TransformationStrategies.prefixFreeByteArray().toBitVector(a).getLong(0, i));
 	}
 }
