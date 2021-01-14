@@ -21,6 +21,7 @@ package it.unimi.dsi.io;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -124,7 +125,7 @@ public class ByteBufferInputStream extends MeasurableInputStream implements Repo
 		final int chunks = (int)((size + (CHUNK_SIZE - 1)) / CHUNK_SIZE);
 		final ByteBuffer[] byteBuffer = new ByteBuffer[chunks];
 		for(int i = 0; i < chunks; i++) byteBuffer[i] = fileChannel.map(mapMode, i * CHUNK_SIZE, Math.min(CHUNK_SIZE, size - i * CHUNK_SIZE));
-		byteBuffer[0].position(0);
+		((Buffer)byteBuffer[0]).position(0);
 		final boolean[] readyToUse = new boolean[chunks];
 		Arrays.fill(readyToUse, true);
 		return new ByteBufferInputStream(byteBuffer, size, 0, readyToUse);
@@ -174,7 +175,7 @@ public class ByteBufferInputStream extends MeasurableInputStream implements Repo
 	@Override
 	public int read() {
 		if (! byteBuffer(curr).hasRemaining()) {
-			if (curr < n - 1) byteBuffer(++curr).position(0);
+			if (curr < n - 1) ((Buffer)byteBuffer(++curr)).position(0);
 			else return -1;
 		}
 
@@ -191,7 +192,7 @@ public class ByteBufferInputStream extends MeasurableInputStream implements Repo
 		while(read < realLength) {
 			int rem = byteBuffer(curr).remaining();
 			if (rem == 0) {
-				byteBuffer(++curr).position(0);
+				((Buffer)byteBuffer(++curr)).position(0);
 				rem = byteBuffer(curr).remaining();
 			}
 			byteBuffer[curr].get(b, offset + read, Math.min(realLength - read, rem));
@@ -207,20 +208,20 @@ public class ByteBufferInputStream extends MeasurableInputStream implements Repo
 
 	@Override
 	public long position() {
-		return ((long)curr << CHUNK_SHIFT) + byteBuffer(curr).position();
+		return ((long)curr << CHUNK_SHIFT) + ((Buffer)byteBuffer(curr)).position();
 	}
 
 	@Override
 	public void position(long newPosition) {
 		newPosition = Math.min(newPosition, length());
 		if (newPosition == length()) {
-			final ByteBuffer buffer = byteBuffer(curr = n - 1);
+			final Buffer buffer = byteBuffer(curr = n - 1);
 			buffer.position(buffer.capacity());
 			return;
 		}
 
 		curr = (int)(newPosition >>> CHUNK_SHIFT);
-		byteBuffer(curr).position((int)(newPosition - ((long)curr << CHUNK_SHIFT)));
+		((Buffer)byteBuffer(curr)).position((int)(newPosition - ((long)curr << CHUNK_SHIFT)));
 	}
 
 	public ByteBufferInputStream copy() {
