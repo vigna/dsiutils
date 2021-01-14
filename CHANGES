@@ -8,6 +8,9 @@
 - New lexicographical prefix-free transformation strategy for byte
   arrays that do not contain zeros.
 
+- Fixed problem with generation of Java 8 code and some ByteBuffer
+  methods. Thanks to Aaron Novstrup for reporting this bug.
+
 2.6.16
 
 - The DSI Utilities are now dually licensed under the Lesser GNU Public
