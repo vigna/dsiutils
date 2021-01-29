@@ -15,7 +15,7 @@
 
 	<dependencies>
 		<dependency org="it.unimi.dsi" name="fastutil" rev="latest.release" />
-		<dependency org="com.martiansoftware" name="jsap" rev="latest.release"/>
+		<dependency org="it.unimi.di" name="jsap" rev="20210129"/>
 		<dependency org="junit" name="junit" rev="latest.release" conf="test"/>
 		<dependency org="org.apache.commons" name="commons-configuration2" rev="latest.release"/>
 		<dependency org="org.apache.commons" name="commons-math3" rev="latest.release"/>
