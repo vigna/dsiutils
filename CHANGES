@@ -1,3 +1,11 @@
+2.7.18
+
+- TransformationStrategies.fixedLong() now is truly lexicographical, even
+  on negative numbers. Unfortunately, this change made it necessary to
+  bump the serial version of the class, which is the same of
+  TransformationStrategies.rawFixedLong(), which means that structures
+  serialized using both strategies will not be deserializable.
+
 2.6.17
 
 - New FileLines*Iterable classes replacing older FileLines*Collection

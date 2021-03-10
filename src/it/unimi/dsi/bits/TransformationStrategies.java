@@ -1401,17 +1401,29 @@ public class TransformationStrategies {
 
 	private static final FixedLongTransformationStrategy FIXED_LONG = new FixedLongTransformationStrategy(true);
 
-	/** A transformation from longs to bit vectors that returns a fixed-size {@link Long#SIZE}-bit vector. Note that the
-	 * bit vectors have as first bit the <em>most</em> significant bit of the underlying long integer, so
-	 * lexicographical and numerical order do coincide for positive numbers. */
+	/**
+	 * A transformation from longs to bit vectors that returns a fixed-size {@link Long#SIZE}-bit
+	 * vector. Note that the bit vectors have as first bit the <em>most</em> significant bit of the
+	 * underlying long integer, and that the first bit of the representation is flipped, so
+	 * lexicographical and numerical order coincide.
+	 *
+	 * @implNote The flipping of the most significant bit was implemented in 2.6.18 to match
+	 *           lexicographical and numerical order for negative numbers, too, and made it necessary to
+	 *           bump the serial version of the strategy.
+	 */
 	public static TransformationStrategy<Long> fixedLong() {
 		return FIXED_LONG;
 	}
 
 	private static final FixedLongTransformationStrategy RAW_FIXED_LONG = new FixedLongTransformationStrategy(false);
 
-	/** A trivial, high-performance, raw transformation from longs to bit vectors that returns a fixed-size
-	 * {@link Long#SIZE}-bit vector. */
+	/**
+	 * A trivial, high-performance, raw transformation from longs to bit vectors that returns a
+	 * fixed-size {@link Long#SIZE}-bit vector.
+	 *
+	 * @implNote Implementing {@link #fixedLong()} lexicographical order for all numbers in 2.6.18 made
+	 *           it necessary to bump the serial version of this strategy, too.
+	 */
 	public static TransformationStrategy<Long> rawFixedLong() {
 		return RAW_FIXED_LONG;
 	}
@@ -1419,7 +1431,7 @@ public class TransformationStrategies {
 	/** A transformation from longs to bit vectors that returns a fixed-size {@link Long#SIZE}-bit vector, possibly reversed
 	 * to maintain lexicographical order. */
 	private static class FixedLongTransformationStrategy implements TransformationStrategy<Long>, Serializable {
-		private static final long serialVersionUID = 0L;
+		private static final long serialVersionUID = 1L;
 		private final boolean lexicographical;
 
 		public FixedLongTransformationStrategy(final boolean lexicographical) {
@@ -1454,7 +1466,7 @@ public class TransformationStrategies {
 
 		@Override
 		public BitVector toBitVector(final Long v) {
-			return new FixedLongBitVector(lexicographical ? Long.reverse(v.longValue()) : v.longValue());
+			return new FixedLongBitVector(lexicographical ? Long.reverse(v.longValue()) ^ 1 : v.longValue());
 		}
 
 		@Override
