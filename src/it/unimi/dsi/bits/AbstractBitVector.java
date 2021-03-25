@@ -20,8 +20,8 @@
 package it.unimi.dsi.bits;
 
 import static it.unimi.dsi.bits.LongArrayBitVector.bit;
-import static it.unimi.dsi.bits.LongArrayBitVector.words;
 import static it.unimi.dsi.bits.LongArrayBitVector.word;
+import static it.unimi.dsi.bits.LongArrayBitVector.words;
 
 import java.io.Serializable;
 import java.util.NoSuchElementException;
@@ -246,7 +246,7 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 
 	@Override
 	public boolean isProperPrefix(final BitVector v) {
-		return isPrefix(v) && length() < v.length();
+		return length() < v.length() && isPrefix(v);
 	}
 
 	@Override
