@@ -169,9 +169,11 @@ public final class Fast {
 		return Math.log(x) / 0.6931471805599453;
 	}
 
-	/** Computes the ceiling of the base-two logarithm of the argument.
+	/**
+	 * Computes the ceiling of the base-two logarithm of the argument.
 	 *
-	 * <p>This method relies on {@link #mostSignificantBit(int)}, and thus is pretty fast.
+	 * <p>
+	 * This method relies on {@link Integer#numberOfLeadingZeros(int)}, and thus is pretty fast.
 	 *
 	 * @param x an integer.
 	 * @return the ceiling of the base-two logarithm of the argument, or -1 if <code>x</code> is zero.
@@ -181,9 +183,11 @@ public final class Fast {
 		return Integer.SIZE - Integer.numberOfLeadingZeros(x - 1);
 	}
 
-	/** Computes the ceiling of the base-two logarithm of the argument.
+	/**
+	 * Computes the ceiling of the base-two logarithm of the argument.
 	 *
-	 * <p>This method relies on {@link #mostSignificantBit(long)}, and thus is pretty fast.
+	 * <p>
+	 * This method relies on {@link Long#numberOfLeadingZeros(long)}, and thus is pretty fast.
 	 *
 	 * @param x an integer.
 	 * @return the ceiling of the base-two logarithm of the argument, or -1 if <code>x</code> is zero.
