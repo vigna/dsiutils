@@ -7,4 +7,10 @@ the DSI (Dipartimento di Scienze dell'Informazione, i.e., Information
 Sciences Department), now DI (Dipartimento di Informatica, i.e.,
 Informatics Department), of the Università degli Studi di Milano.
 
+Building
+--------
+
+You need [Ant](https://ant.apache.org/) and [Ivy](https://ant.apache.org/ivy/).
+Then, run `ant ivy-setupjars jar`.
+
 seba (<mailto:sebastiano.vigna@unimi.it>)
