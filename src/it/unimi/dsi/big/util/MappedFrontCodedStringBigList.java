@@ -239,17 +239,6 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 	}
 
 	/**
-	 * Computes the length of the array at the given index.
-	 *
-	 * @param index an index.
-	 * @return the length of the {@code index}-th array.
-	 */
-	public int arrayLength(final int index) {
-		ensureRestrictedIndex(index);
-		return length(index);
-	}
-
-	/**
 	 * Extracts the array at the given index.
 	 *
 	 * @param index an index.
@@ -269,7 +258,8 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 
 		if (delta == 0) {
 			pos = pointers.getLong(index / ratio) + count(arrayLength);
-			copyFromBig(array, pos, a, offset, Math.min(length, arrayLength));
+			final long pos1 = pos;
+			array.getElements(pos1, a, offset, Math.min(length, arrayLength));
 			return arrayLength;
 		}
 
@@ -285,19 +275,15 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 			actualCommon = Math.min(common, length);
 			if (actualCommon <= currLen) currLen = actualCommon;
 			else {
-				copyFromBig(array, prevArrayPos, a, currLen + offset, actualCommon - currLen);
+				final long pos1 = prevArrayPos;
+				array.getElements(pos1, a, currLen + offset, actualCommon - currLen);
 				currLen = actualCommon;
 			}
 		}
 
-		if (currLen < length) copyFromBig(array, pos + count(arrayLength) + count(common), a, currLen + offset, Math.min(arrayLength, length - currLen));
+		if (currLen < length) array.getElements(pos + count(arrayLength) + count(common), a, currLen + offset, Math.min(arrayLength, length - currLen));
 
 		return arrayLength + common;
-	}
-
-	private static void copyFromBig(final ByteBigList array, final long pos, final byte[] a, final int offset, final int length) {
-		// TODO: this should use buffers and multibyte transfers
-		for (int i = 0; i < length; i++) a[offset + i] = array.getByte(pos + i);
 	}
 
 	/**
