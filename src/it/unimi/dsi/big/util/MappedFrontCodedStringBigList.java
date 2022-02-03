@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2002-2021 Sebastiano Vigna
+ * Copyright (C) 2002-2022 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -22,13 +22,26 @@ package it.unimi.dsi.big.util;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.RandomAccess;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Charsets;
+import com.martiansoftware.jsap.FlaggedOption;
+import com.martiansoftware.jsap.JSAP;
+import com.martiansoftware.jsap.JSAPException;
+import com.martiansoftware.jsap.JSAPResult;
+import com.martiansoftware.jsap.Parameter;
+import com.martiansoftware.jsap.SimpleJSAP;
+import com.martiansoftware.jsap.UnflaggedOption;
+import com.martiansoftware.jsap.stringparsers.ForNameStringParser;
+import com.martiansoftware.jsap.stringparsers.IntSizeStringParser;
 
 import it.unimi.dsi.fastutil.BigList;
 import it.unimi.dsi.fastutil.bytes.ByteBigList;
@@ -36,6 +49,7 @@ import it.unimi.dsi.fastutil.bytes.MappedByteBigList;
 import it.unimi.dsi.fastutil.longs.LongBigList;
 import it.unimi.dsi.fastutil.longs.MappedLongBigList;
 import it.unimi.dsi.fastutil.objects.AbstractObjectBigList;
+import it.unimi.dsi.io.FileLinesMutableStringIterable;
 import it.unimi.dsi.lang.MutableString;
 import it.unimi.dsi.util.Properties;
 
@@ -97,10 +111,10 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 	}
 
 	/**
-	 * Maps a front-coded string big list starting from a basename.
+	 * Maps in memory a front-coded string big list starting from a basename.
 	 *
-	 * @param basename the basename of a mapped front-coded string big list.
-	 * @return a mapped front-coded string big list.
+	 * @param basename the basename of a memory-mapped front-coded string big list.
+	 * @return a memory-mapped front-coded string big list.
 	 */
 	public static MappedFrontCodedStringBigList load(final String basename) throws ConfigurationException, IOException {
 		final Properties properties = new Properties(basename + PROPERTIES_EXTENSION);
@@ -366,5 +380,29 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 	@Override
 	public void close() throws IOException {
 		fileChannel.close();
+	}
+
+	public static void main(final String[] arg) throws IOException, JSAPException, NoSuchMethodException, ConfigurationException {
+
+		final SimpleJSAP jsap = new SimpleJSAP(MappedFrontCodedStringBigList.class.getName(), "Dumps the files of a memory-mapped front-coded string big list reading from standard input a newline-separated ordered list of strings.", new Parameter[] {
+				new FlaggedOption("encoding", ForNameStringParser.getParser(Charset.class), "UTF-8", JSAP.NOT_REQUIRED, 'e', "encoding", "The file encoding."),
+				new FlaggedOption("ratio", IntSizeStringParser.getParser(), "4", JSAP.NOT_REQUIRED, 'r', "ratio", "The compression ratio."),
+				new FlaggedOption("decompressor", JSAP.CLASS_PARSER, JSAP.NO_DEFAULT, JSAP.NOT_REQUIRED, 'd', "decompressor", "Use this extension of InputStream to decompress the strings (e.g., java.util.zip.GZIPInputStream)."),
+				new UnflaggedOption("basename", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, JSAP.NOT_GREEDY, "The basename of the files associated with the memory-mapped front-coded string list.") });
+
+		final JSAPResult jsapResult = jsap.parse(arg);
+		if (jsap.messagePrinted()) return;
+
+		final int ratio = jsapResult.getInt("ratio");
+		final Charset encoding = (Charset)jsapResult.getObject("encoding");
+		final Class<? extends InputStream> decompressor = jsapResult.getClass("decompressor");
+		final String basename = jsapResult.getString("basename");
+
+		final Logger logger = LoggerFactory.getLogger(FrontCodedStringBigList.class);
+		logger.info("Reading strings...");
+		final FrontCodedStringBigList frontCodedStringBigList = new FrontCodedStringBigList(FileLinesMutableStringIterable.iterator(System.in, encoding, decompressor), ratio, true);
+		logger.info("Dumping files...");
+		frontCodedStringBigList.dump(basename);
+		logger.info("Completed.");
 	}
 }
