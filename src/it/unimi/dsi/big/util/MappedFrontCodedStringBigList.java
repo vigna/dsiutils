@@ -46,12 +46,12 @@ import it.unimi.dsi.util.Properties;
  * supported.
  *
  * <P>
- * To use this class, one first build a {@link FrontCodedStringBigList}, and then invokes the
+ * To use this class, one first build a UTF-8 {@link FrontCodedStringBigList}, and then invokes the
  * {@link FrontCodedStringBigList#dump(String)} method to generate a
  * {@linkplain #PROPERTIES_EXTENSION property file} containing metadata, and two files containing
- * {@linkplain #BYTE_ARRAY_EXTENSION strings} and string {@linkplain #POINTER_EXTENSION pointers},
- * respectively. The {@link #load(String)} method (invoked with the same basename) will return an
- * instance of this class accessing strings and pointers by memory mapping.
+ * {@linkplain #BYTE_ARRAY_EXTENSION strings} and string {@linkplain #POINTERS_EXTENSION pointers},
+ * respectively. Then, the {@link #load(String)} method (invoked with the same basename) will return
+ * an instance of this class accessing strings and pointers by memory mapping.
  *
  * <P>
  * Note that for consistency with other classes in this package this class implements a
