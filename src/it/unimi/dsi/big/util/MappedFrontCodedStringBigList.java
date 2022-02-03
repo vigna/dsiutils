@@ -31,7 +31,9 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import com.google.common.base.Charsets;
 
 import it.unimi.dsi.fastutil.BigList;
+import it.unimi.dsi.fastutil.bytes.ByteBigList;
 import it.unimi.dsi.fastutil.bytes.MappedByteBigList;
+import it.unimi.dsi.fastutil.longs.LongBigList;
 import it.unimi.dsi.fastutil.longs.MappedLongBigList;
 import it.unimi.dsi.fastutil.objects.AbstractObjectBigList;
 import it.unimi.dsi.lang.MutableString;
@@ -80,9 +82,9 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 	/** The ratio of this front-coded list. */
 	protected final int ratio;
 	/** The underlying byte array. */
-	protected MappedByteBigList byteList;
+	protected ByteBigList byteList;
 	/** The pointers to entire arrays in the list. */
-	protected MappedLongBigList pointers;
+	protected LongBigList pointers;
 	/** The file channel used for memory-mapping. */
 	private final FileChannel fileChannel;
 
@@ -174,7 +176,7 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 	 * @param pos the starting position.
 	 * @return the length coded at {@code pos}.
 	 */
-	static int readInt(final MappedByteBigList a, final long pos) {
+	static int readInt(final ByteBigList a, final long pos) {
 		final byte b0 = a.getByte(pos);
 		if (b0 >= 0) return b0;
 		final byte b1 = a.getByte(pos + 1);
@@ -198,7 +200,7 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 	 * @return the length of the {@code index}-th array.
 	 */
 	private int length(final long index) {
-		final MappedByteBigList array = this.byteList;
+		final ByteBigList array = this.byteList;
 		final int delta = (int)(index % ratio); // The index into the p array, and the delta inside the block.
 
 		long pos = pointers.getLong(index / ratio); // The position into the array of the first entire word before the
@@ -243,7 +245,7 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 	 * @return the length of the extracted array.
 	 */
 	private int extract(final long index, final byte a[], final int offset, final int length) {
-		final MappedByteBigList array = this.byteList;
+		final ByteBigList array = this.byteList;
 		final int delta = (int)(index % ratio); // The delta inside the block.
 		final long startPos = pointers.getLong(index / ratio); // The position into the array of the first entire word
 																// before the
@@ -279,7 +281,7 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 		return arrayLength + common;
 	}
 
-	private static void copyFromBig(final MappedByteBigList array, final long pos, final byte[] a, final int offset, final int length) {
+	private static void copyFromBig(final ByteBigList array, final long pos, final byte[] a, final int offset, final int length) {
 		// TODO: this should use buffers and multibyte transfers
 		for (int i = 0; i < length; i++) a[offset + i] = array.getByte(pos + i);
 	}
