@@ -33,18 +33,22 @@ import it.unimi.dsi.fastutil.longs.LongBigList;
 import it.unimi.dsi.lang.FlyweightPrototype;
 
 
-/** A bridge between byte {@linkplain ByteBuffer buffers} and {@linkplain LongBigList long big lists}.
+/**
+ * A bridge between byte {@linkplain ByteBuffer buffers} and {@linkplain LongBigList long big
+ * lists}.
  *
- * <p>Java's {@linkplain FileChannel#map(MapMode, long, long) memory-mapping facilities} have
- * the severe limitation of mapping at most {@link Integer#MAX_VALUE} bytes, as they
- * expose the content of a file using a {@link MappedByteBuffer}. This class can {@linkplain #map(FileChannel, ByteOrder, FileChannel.MapMode) expose
- * a file of longs of arbitrary length} as a {@linkplain LongBigList}
- * that is actually based on an array of {@link MappedByteBuffer}s, each mapping
- * a <em>chunk</em> of {@link #CHUNK_SIZE} longs.
+ * <p>
+ * Java's {@linkplain FileChannel#map(MapMode, long, long) memory-mapping facilities} have the
+ * severe limitation of mapping at most {@link Integer#MAX_VALUE} bytes, as they expose the content
+ * of a file using a {@link MappedByteBuffer}. This class can
+ * {@linkplain #map(FileChannel, ByteOrder, FileChannel.MapMode) expose a file of longs of arbitrary
+ * length} as a {@link LongBigList} that is actually based on an array of {@link MappedByteBuffer}s,
+ * each mapping a <em>chunk</em> of {@link #CHUNK_SIZE} longs.
  *
- * <p>Instances of this class are not thread safe, but the {@link #copy()} method provides a lightweight
- * duplicate that can be accessed independently by another thread.
- * Only chunks that are actually used will be {@linkplain ByteBuffer#duplicate() duplicated} lazily.
+ * <p>
+ * Instances of this class are not thread safe, but the {@link #copy()} method provides a
+ * lightweight duplicate that can be accessed independently by another thread. Only chunks that are
+ * actually used will be {@linkplain ByteBuffer#duplicate() duplicated} lazily.
  *
  * @author Sebastiano Vigna
  */

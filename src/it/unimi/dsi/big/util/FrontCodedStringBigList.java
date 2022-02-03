@@ -19,6 +19,8 @@
 
 package it.unimi.dsi.big.util;
 
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -28,6 +30,7 @@ import java.util.Iterator;
 import java.util.RandomAccess;
 import java.util.zip.GZIPInputStream;
 
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +49,7 @@ import com.martiansoftware.jsap.stringparsers.IntSizeStringParser;
 import it.unimi.dsi.fastutil.bytes.ByteArrayFrontCodedBigList;
 import it.unimi.dsi.fastutil.chars.CharArrayFrontCodedBigList;
 import it.unimi.dsi.fastutil.io.BinIO;
+import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
 import it.unimi.dsi.fastutil.objects.AbstractObjectBigList;
 import it.unimi.dsi.fastutil.objects.ObjectBigListIterator;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
@@ -54,10 +58,11 @@ import it.unimi.dsi.io.LineIterator;
 import it.unimi.dsi.lang.MutableString;
 import it.unimi.dsi.logging.ProgressLogger;
 import it.unimi.dsi.util.FrontCodedStringList;
+import it.unimi.dsi.util.Properties;
 
 /**
- * Compact storage of strings using front-coding compression (a&#46;k&#46;a&#46; compression by
- * prefix omission).
+ * Compact storage of strings using front-coding compression (also known as compression by prefix
+ * omission).
  *
  * <P>
  * This class is functionally identical to {@link FrontCodedStringList}, except for the larger size
@@ -157,7 +162,8 @@ public class FrontCodedStringBigList extends AbstractObjectBigList<MutableString
 	}
 
 	/**
-	 * Returns the element at the specified position in this front-coded as a mutable string.
+	 * Returns the element at the specified position in this front-coded string big list as a mutable
+	 * string.
 	 *
 	 * @param index an index in the list.
 	 * @return a {@link MutableString} that will contain the string at the specified position. The
@@ -169,8 +175,8 @@ public class FrontCodedStringBigList extends AbstractObjectBigList<MutableString
 	}
 
 	/**
-	 * Returns the element at the specified position in this front-coded list by storing it in a mutable
-	 * string.
+	 * Returns the element at the specified position in this front-coded string big list by storing it
+	 * in a mutable string.
 	 *
 	 * @param index an index in the list.
 	 * @param s a mutable string that will contain the string at the specified position.
@@ -288,6 +294,19 @@ public class FrontCodedStringBigList extends AbstractObjectBigList<MutableString
 	@Override
 	public long size64() {
 		return utf8 ? byteFrontCodedBigList.size64() : charFrontCodedBigList.size64();
+	}
+
+	public void dump(final String basename) throws ConfigurationException, IOException {
+		if (!utf8) throw new IllegalStateException("You can dump UTF-8-based lists, only");
+		final Properties properties = new Properties();
+		properties.setProperty(MappedFrontCodedStringBigList.PropertyKeys.N, byteFrontCodedBigList.size64());
+		properties.setProperty(MappedFrontCodedStringBigList.PropertyKeys.RATIO, byteFrontCodedBigList.ratio());
+		properties.save(basename + MappedFrontCodedStringBigList.PROPERTIES_EXTENSION);
+		final DataOutputStream arrayDos = new DataOutputStream(new FastBufferedOutputStream(new FileOutputStream(basename + MappedFrontCodedStringBigList.BYTE_ARRAY_EXTENSION)));
+		final DataOutputStream pointerDos = new DataOutputStream(new FastBufferedOutputStream(new FileOutputStream(basename + MappedFrontCodedStringBigList.POINTERS_EXTENSION)));
+		byteFrontCodedBigList.dump(arrayDos, pointerDos);
+		arrayDos.close();
+		pointerDos.close();
 	}
 
 	public static void main(final String[] arg) throws IOException, JSAPException, NoSuchMethodException {

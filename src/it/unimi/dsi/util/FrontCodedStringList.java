@@ -54,31 +54,30 @@ import it.unimi.dsi.io.LineIterator;
 import it.unimi.dsi.lang.MutableString;
 import it.unimi.dsi.logging.ProgressLogger;
 
-/** Compact storage of strings using front-coding compression (a&#46;k&#46;a&#46; compression by prefix omission).
+/**
+ * Compact storage of strings using front-coding compression (also known as compression by prefix
+ * omission).
  *
- * <P>This class stores a list of strings using front-coding
- * (a.k.a. prefix-omission) compression;
- * the compression will be reasonable only if the list is sorted, but you could
- * also use instances of this class just as a handy way to manage a large
- * amount of strings. It implements an immutable {@link
- * it.unimi.dsi.fastutil.objects.ObjectList} that returns the <var>i</var>-th
- * string (as a {@link MutableString}) when the {@link #get(int)} method is
- * called with argument <var>i</var>. The returned mutable string may be freely
- * modified.
+ * <P>
+ * This class stores a list of strings using front-coding (also known as prefix-omission)
+ * compression; the compression will be reasonable only if the list is sorted, but you could also
+ * use instances of this class just as a handy way to manage a large amount of strings. It
+ * implements an immutable {@link it.unimi.dsi.fastutil.objects.ObjectList} that returns the
+ * <var>i</var>-th string (as a {@link MutableString}) when the {@link #get(int)} method is called
+ * with argument <var>i</var>. The returned mutable string may be freely modified.
  *
- * <P>As a commodity, this class provides a main method that reads from
- * standard input a sequence of newline-separated strings, and
- * writes a corresponding serialized front-coded string list.
+ * <P>
+ * As a commodity, this class provides a main method that reads from standard input a sequence of
+ * newline-separated strings, and writes a corresponding serialized front-coded string list.
  *
  * <H2>Implementation Details</H2>
  *
- * <P>To store the list of strings, we use either a UTF-8 coded {@link
- * ByteArrayFrontCodedList}, or a {@link CharArrayFrontCodedList}, depending on
- * the value of the {@link #FrontCodedStringList(Iterator,int,boolean)
- * utf8} parameter at creation time. In the first case, if the
- * strings are ASCII-oriented the resulting array will be much smaller, but
- * access times will increase manifold, as each string must be UTF-8 decoded
- * before being returned.
+ * <P>
+ * To store the list of strings, we use either a UTF-8 coded {@link ByteArrayFrontCodedList}, or a
+ * {@link CharArrayFrontCodedList}, depending on the value of the
+ * {@link #FrontCodedStringList(Iterator,int,boolean) utf8} parameter at creation time. In the first
+ * case, if the strings are ASCII-oriented the resulting array will be much smaller, but access
+ * times will increase manifold, as each string must be UTF-8 decoded before being returned.
  */
 
 public class FrontCodedStringList extends AbstractObjectList<MutableString> implements RandomAccess, Serializable {
@@ -165,10 +164,13 @@ public class FrontCodedStringList extends AbstractObjectList<MutableString> impl
 		return utf8 ? byteFrontCodedList.ratio() : charFrontCodedList.ratio();
 	}
 
-	/** Returns the element at the specified position in this front-coded as a mutable string.
+	/**
+	 * Returns the element at the specified position in this front-coded string list as a mutable
+	 * string.
 	 *
 	 * @param index an index in the list.
-	 * @return a {@link MutableString} that will contain the string at the specified position. The string may be freely modified.
+	 * @return a {@link MutableString} that will contain the string at the specified position. The
+	 *         string may be freely modified.
 	 */
 	@Override
 	public MutableString get(final int index) {
@@ -177,7 +179,9 @@ public class FrontCodedStringList extends AbstractObjectList<MutableString> impl
 						: charFrontCodedList.getArray(index));
 	}
 
-	/** Returns the element at the specified position in this front-coded list by storing it in a mutable string.
+	/**
+	 * Returns the element at the specified position in this front-coded string list by storing it in a
+	 * mutable string.
 	 *
 	 * @param index an index in the list.
 	 * @param s a mutable string that will contain the string at the specified position.

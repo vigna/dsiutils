@@ -1,3 +1,8 @@
+2.8.0
+
+- New MappedFrontCodedStringBigList makes it possible to dump a 
+  FrontCodedStringBigList and access it using memory mapping.
+
 2.7.18
 
 - TransformationStrategies.fixedLong() now is truly lexicographical, even
