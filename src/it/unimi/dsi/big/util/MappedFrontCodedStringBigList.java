@@ -20,11 +20,13 @@
 package it.unimi.dsi.big.util;
 
 import java.io.Closeable;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.RandomAccess;
 
@@ -41,17 +43,18 @@ import com.martiansoftware.jsap.Parameter;
 import com.martiansoftware.jsap.SimpleJSAP;
 import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.UnflaggedOption;
-import com.martiansoftware.jsap.stringparsers.ForNameStringParser;
 import com.martiansoftware.jsap.stringparsers.IntSizeStringParser;
 
 import it.unimi.dsi.fastutil.BigList;
+import it.unimi.dsi.fastutil.bytes.ByteArrays;
 import it.unimi.dsi.fastutil.bytes.ByteBigList;
 import it.unimi.dsi.fastutil.bytes.MappedByteBigList;
 import it.unimi.dsi.fastutil.io.BinIO;
+import it.unimi.dsi.fastutil.io.FastBufferedInputStream;
+import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
 import it.unimi.dsi.fastutil.longs.LongBigList;
 import it.unimi.dsi.fastutil.longs.MappedLongBigList;
 import it.unimi.dsi.fastutil.objects.AbstractObjectBigList;
-import it.unimi.dsi.io.FileLinesMutableStringIterable;
 import it.unimi.dsi.lang.MutableString;
 import it.unimi.dsi.util.Properties;
 
@@ -64,12 +67,11 @@ import it.unimi.dsi.util.Properties;
  * supported.
  *
  * <P>
- * To use this class, one first build a UTF-8 {@link FrontCodedStringBigList}, and then invokes the
- * {@link FrontCodedStringBigList#dump(String)} method to generate a
- * {@linkplain #PROPERTIES_EXTENSION property file} containing metadata, and two files containing
- * {@linkplain #BYTE_ARRAY_EXTENSION strings} and string {@linkplain #POINTERS_EXTENSION pointers},
- * respectively. Then, the {@link #load(String)} method (invoked with the same basename) will return
- * an instance of this class accessing strings and pointers by memory mapping.
+ * To use this class, one first invokes the {@link #build(String, int, InputStream)} method to
+ * generate a {@linkplain #PROPERTIES_EXTENSION property file} containing metadata, and two files
+ * containing {@linkplain #BYTE_ARRAY_EXTENSION strings} and string {@linkplain #POINTERS_EXTENSION
+ * pointers}, respectively. Then, the {@link #load(String)} method (invoked with the same basename)
+ * will return an instance of this class accessing strings and pointers by memory mapping.
  *
  * <P>
  * Note that for consistency with other classes in this package this class implements a
@@ -110,6 +112,68 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 		this.pointers = MappedLongBigList.map(FileChannel.open(new File(pointers).toPath()));
 		fileChannel = FileChannel.open(new File(byteBigList).toPath());
 		this.byteList = MappedByteBigList.map(fileChannel);
+	}
+
+	/**
+	 * Writes a length.
+	 *
+	 * @param bytes the data array.
+	 * @param length the length to be written.
+	 * @return the number of elements coding {@code length}.
+	 */
+	private static int writeInt(final FastBufferedOutputStream bytes, final int length) throws IOException {
+		final int count = count(length);
+		for (int i = count; i-- != 1;) bytes.write(-(length >>> i * 7 & 0x7F) - 1);
+		bytes.write(length & 0x7F);
+		return count;
+	}
+
+	public static void build(final String basename, final int ratio, final InputStream is) throws IOException, ConfigurationException {
+		if (ratio < 1) throw new IllegalArgumentException("Illegal ratio (" + ratio + ")");
+		final FastBufferedInputStream fbis = new FastBufferedInputStream(is);
+		final DataOutputStream pointers = new DataOutputStream(new FastBufferedOutputStream(new FileOutputStream(basename + POINTERS_EXTENSION)));
+		final FastBufferedOutputStream bytes = new FastBufferedOutputStream(new FileOutputStream(basename + BYTE_ARRAY_EXTENSION));
+
+		long curSize = 0, n = 0;
+		int b = 0;
+		final byte[][] array = new byte[2][1024];
+		final int[] length = new int[2];
+		for (;;) {
+			int start = 0, len;
+			while ((len = fbis.readLine(array[b], start, array[b].length - start)) == array[b].length - start) {
+				start += len;
+				array[b] = ByteArrays.grow(array[b], array[b].length + 1);
+			}
+
+			if (len < 0) break;
+			len = length[b] = start + len;
+
+			if (n % ratio == 0) {
+				pointers.writeLong(curSize);
+				curSize += writeInt(bytes, len);
+				bytes.write(array[b], 0, len);
+				curSize += len;
+			} else {
+				final int minLength = Math.min(len, length[1 - b]);
+				int common;
+				for (common = 0; common < minLength; common++) if (array[0][common] != array[1][common]) break;
+				len -= common;
+
+				curSize += writeInt(bytes, len);
+				curSize += writeInt(bytes, common);
+				bytes.write(array[b], common, len);
+				curSize += len;
+			}
+
+			b = 1 - b;
+			n++;
+		}
+		bytes.close();
+		pointers.close();
+		final Properties properties = new Properties();
+		properties.setProperty(MappedFrontCodedStringBigList.PropertyKeys.N, n);
+		properties.setProperty(MappedFrontCodedStringBigList.PropertyKeys.RATIO, ratio);
+		properties.save(basename + MappedFrontCodedStringBigList.PROPERTIES_EXTENSION);
 	}
 
 	/**
@@ -360,6 +424,7 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 		return s;
 	}
 
+
 	@Override
 	public long size64() {
 		return n;
@@ -370,11 +435,10 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 		fileChannel.close();
 	}
 
-	public static void main(final String[] arg) throws IOException, JSAPException, NoSuchMethodException, ConfigurationException, ClassNotFoundException {
+	public static void main(final String[] arg) throws IOException, JSAPException, NoSuchMethodException, ConfigurationException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException {
 
-		final SimpleJSAP jsap = new SimpleJSAP(MappedFrontCodedStringBigList.class.getName(), "Dumps the files of a memory-mapped front-coded string big list reading from standard input a newline-separated ordered list of strings or a serialized FrontCodedStringBigList.", new Parameter[] {
+		final SimpleJSAP jsap = new SimpleJSAP(MappedFrontCodedStringBigList.class.getName(), "Dumps the files of a memory-mapped front-coded string big list reading from standard input a newline-separated list of UTF-8-encoded strings or a serialized FrontCodedStringBigList.", new Parameter[] {
 				new Switch("object", 'o', "object", "Read a serialized FrontCodedStringBigList from standard input instead of a list of strings."),
-				new FlaggedOption("encoding", ForNameStringParser.getParser(Charset.class), "UTF-8", JSAP.NOT_REQUIRED, 'e', "encoding", "The file encoding."),
 				new FlaggedOption("ratio", IntSizeStringParser.getParser(), "4", JSAP.NOT_REQUIRED, 'r', "ratio", "The compression ratio."),
 				new FlaggedOption("decompressor", JSAP.CLASS_PARSER, JSAP.NO_DEFAULT, JSAP.NOT_REQUIRED, 'd', "decompressor", "Use this extension of InputStream to decompress the strings (e.g., java.util.zip.GZIPInputStream)."),
 				new UnflaggedOption("basename", JSAP.STRING_PARSER, JSAP.NO_DEFAULT, JSAP.REQUIRED, JSAP.NOT_GREEDY, "The basename of the files associated with the memory-mapped front-coded string list.") });
@@ -389,17 +453,15 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 		if (jsapResult.userSpecified("object")) {
 			logger.info("Reading front-coded string big list...");
 			frontCodedStringBigList = (FrontCodedStringBigList)BinIO.loadObject(System.in);
+			logger.info("Dumping files...");
+			frontCodedStringBigList.dump(basename);
 		}
 		else {
 			final int ratio = jsapResult.getInt("ratio");
-			final Charset encoding = (Charset)jsapResult.getObject("encoding");
 			final Class<? extends InputStream> decompressor = jsapResult.getClass("decompressor");
-
 			logger.info("Reading strings...");
-			frontCodedStringBigList = new FrontCodedStringBigList(FileLinesMutableStringIterable.iterator(System.in, encoding, decompressor), ratio, true);
+			build(basename, ratio, decompressor != null ? decompressor.getConstructor(InputStream.class).newInstance(System.in) : System.in);
 		}
-		logger.info("Dumping files...");
-		frontCodedStringBigList.dump(basename);
 		logger.info("Completed.");
 	}
 }
