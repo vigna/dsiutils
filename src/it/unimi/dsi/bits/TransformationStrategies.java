@@ -1455,7 +1455,7 @@ public class TransformationStrategies {
 			@Override
 			public long getLong(final long from, final long to) {
 				if (from == 0 && to == Long.SIZE) return v;
-				return (v >> from) & (1L << to - from) - 1;
+				return (v >>> from) & (1L << to - from) - 1;
 			}
 
 			@Override

@@ -19,6 +19,7 @@
 
 package it.unimi.dsi.bits;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -30,18 +31,22 @@ public class FixedLongTransformationStrategyTest {
 	public void testGetBoolean() {
 		final TransformationStrategy<Long> fixedLong = TransformationStrategies.fixedLong();
 		BitVector p = fixedLong.toBitVector(Long.valueOf(0));
-		for(int i = Long.SIZE; i-- != 0;) assertFalse(p.getBoolean(i));
+		for (int i = Long.SIZE; i-- != 1;) assertFalse(p.getBoolean(i));
+
+		// Flipped bit
+		assertTrue(p.getBoolean(0));
 		p = fixedLong.toBitVector(Long.valueOf(0xDEADBEEFDEADF00DL));
-		for(int i = Long.SIZE; i-- != 0;) assertTrue(p.getBoolean(i) == ((0xDEADBEEFDEADF00DL & 1L << Long.SIZE - 1 - i) != 0));
+		for (int i = Long.SIZE; i-- != 0;) assertTrue(p.getBoolean(i) == (((0xDEADBEEFDEADF00DL ^ 1L << 63) & 1L << Long.SIZE - 1 - i) != 0));
 	}
 
 	@Test
 	public void testGetLong() {
 		final TransformationStrategy<Long> fixedLong = TransformationStrategies.fixedLong();
-		final BitVector p = fixedLong.toBitVector(Long.valueOf(Long.reverse(0xDEADBEEFDEADF00DL)));
+		final BitVector p = fixedLong.toBitVector(Long.valueOf(0xDEADBEEFDEADF00DL));
 		for(int from = Long.SIZE; from-- != 0;)
-			for(int to = Long.SIZE; from < to--;)
-				assertTrue(p.getLong(from, to) == LongArrayBitVector.wrap(new long[] { 0xDEADBEEFDEADF00DL }).getLong(from, to));
+			for (int to = Long.SIZE; from < to--;) 
+				assertEquals(LongArrayBitVector.wrap(new long[] {
+						Long.reverse(0xDEADBEEFDEADF00DL) ^ 1 }).getLong(from, to), p.getLong(from, to));
 	}
 
 }
