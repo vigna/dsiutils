@@ -25,9 +25,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.RandomAccess;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -46,15 +46,14 @@ import com.martiansoftware.jsap.UnflaggedOption;
 import com.martiansoftware.jsap.stringparsers.IntSizeStringParser;
 
 import it.unimi.dsi.fastutil.BigList;
-import it.unimi.dsi.fastutil.bytes.ByteArrays;
 import it.unimi.dsi.fastutil.bytes.ByteBigList;
 import it.unimi.dsi.fastutil.bytes.MappedByteBigList;
 import it.unimi.dsi.fastutil.io.BinIO;
-import it.unimi.dsi.fastutil.io.FastBufferedInputStream;
 import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
 import it.unimi.dsi.fastutil.longs.LongBigList;
 import it.unimi.dsi.fastutil.longs.MappedLongBigList;
 import it.unimi.dsi.fastutil.objects.AbstractObjectBigList;
+import it.unimi.dsi.io.FileLinesByteArrayIterable;
 import it.unimi.dsi.lang.MutableString;
 import it.unimi.dsi.util.Properties;
 
@@ -67,16 +66,16 @@ import it.unimi.dsi.util.Properties;
  * supported.
  *
  * <P>
- * To use this class, one first invokes the {@link #build(String, int, InputStream)} method to
- * generate a {@linkplain #PROPERTIES_EXTENSION property file} containing metadata, and two files
- * containing {@linkplain #BYTE_ARRAY_EXTENSION strings} and string {@linkplain #POINTERS_EXTENSION
- * pointers}, respectively. Then, the {@link #load(String)} method (invoked with the same basename)
- * will return an instance of this class accessing strings and pointers by memory mapping.
+ * To use this class, one first invokes the {@link #build(String, int, Iterator)} method to generate
+ * a {@linkplain #PROPERTIES_EXTENSION property file} containing metadata, and two files containing
+ * {@linkplain #BYTE_ARRAY_EXTENSION strings} and string {@linkplain #POINTERS_EXTENSION pointers},
+ * respectively. Then, the {@link #load(String)} method (invoked with the same basename) will return
+ * an instance of this class accessing strings and pointers by memory mapping.
  *
  * <P>
  * Note that for consistency with other classes in this package this class implements a
  * {@linkplain BigList big list} of {@linkplain MutableString mutable strings}; however, for greater
- * flexibility it also implements a {@link #getString(long)} method and a {@link #getBytes(long)}
+ * flexibility it also implements a {@link #getString(long)} method and a {@link #getArray(long)}
  * method.
  *
  * @see FrontCodedStringBigList
@@ -121,32 +120,38 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 	 * @param length the length to be written.
 	 * @return the number of elements coding {@code length}.
 	 */
-	private static int writeInt(final FastBufferedOutputStream bytes, final int length) throws IOException {
+	static int writeInt(final FastBufferedOutputStream bytes, final int length) throws IOException {
 		final int count = count(length);
 		for (int i = count; i-- != 1;) bytes.write(-(length >>> i * 7 & 0x7F) - 1);
 		bytes.write(length & 0x7F);
 		return count;
 	}
 
-	public static void build(final String basename, final int ratio, final InputStream is) throws IOException, ConfigurationException {
+	/**
+	 * Builds and stores a new memory-mapped front-coded big string list.
+	 *
+	 * <p>
+	 * Given a basename, three file with extensions {@link #PROPERTIES_EXTENSION},
+	 * {@link #BYTE_ARRAY_EXTENSION} and {@link #POINTERS_EXTENSION} will be generated.
+	 *
+	 * <p>
+	 * After building a list, you can {@linkplain #load(String) load it} using the same basename.
+	 *
+	 * @param basename the basename of the list.
+	 * @param ratio the ratio.
+	 * @param arrays an iterator over byte arrays containing UTF-8 encoded-strings.
+	 */
+	public static void build(final String basename, final int ratio, final Iterator<byte[]> arrays) throws IOException, ConfigurationException {
 		if (ratio < 1) throw new IllegalArgumentException("Illegal ratio (" + ratio + ")");
-		final FastBufferedInputStream fbis = new FastBufferedInputStream(is);
 		final DataOutputStream pointers = new DataOutputStream(new FastBufferedOutputStream(new FileOutputStream(basename + POINTERS_EXTENSION)));
 		final FastBufferedOutputStream bytes = new FastBufferedOutputStream(new FileOutputStream(basename + BYTE_ARRAY_EXTENSION));
 
 		long curSize = 0, n = 0;
 		int b = 0;
-		final byte[][] array = new byte[2][1024];
-		final int[] length = new int[2];
-		for (;;) {
-			int start = 0, len;
-			while ((len = fbis.readLine(array[b], start, array[b].length - start)) == array[b].length - start) {
-				start += len;
-				array[b] = ByteArrays.grow(array[b], array[b].length + 1);
-			}
-
-			if (len < 0) break;
-			len = length[b] = start + len;
+		final byte[][] array = new byte[2][];
+		while(arrays.hasNext()) {
+			array[b] = arrays.next();
+			int len = array[b].length;
 
 			if (n % ratio == 0) {
 				pointers.writeLong(curSize);
@@ -154,7 +159,7 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 				bytes.write(array[b], 0, len);
 				curSize += len;
 			} else {
-				final int minLength = Math.min(len, length[1 - b]);
+				final int minLength = Math.min(len, array[1 - b].length);
 				int common;
 				for (common = 0; common < minLength; common++) if (array[0][common] != array[1][common]) break;
 				len -= common;
@@ -229,9 +234,14 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 	 * @param index an index in the list.
 	 * @return a byte array representing in UTF-8 encoding the string at the specified position.
 	 */
-	public byte[] getBytes(final long index) {
-		return getArray(index);
+	public byte[] getArray(final long index) {
+		ensureRestrictedIndex(index);
+		final int length = length(index);
+		final byte a[] = new byte[length];
+		extract(index, a, 0, length);
+		return a;
 	}
+
 
 	/**
 	 * Computes the number of elements coding a given length.
@@ -240,13 +250,11 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 	 * @return the number of elements coding {@code length}.
 	 */
 	static int count(final int length) {
-
 		if (length < (1 << 7)) return 1;
 		if (length < (1 << 14)) return 2;
 		if (length < (1 << 21)) return 3;
 		if (length < (1 << 28)) return 4;
 		return 5;
-
 	}
 
 	/**
@@ -266,7 +274,6 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 		final byte b3 = a.getByte(pos + 3);
 		if (b3 >= 0) return (-b0 - 1) << 21 | (-b1 - 1) << 14 | (-b2 - 1) << 7 | b3;
 		return (-b0 - 1) << 28 | (-b1 - 1) << 21 | (-b2 - 1) << 14 | (-b3 - 1) << 7 | a.getByte(pos + 4);
-
 	}
 
 	/**
@@ -352,20 +359,6 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 		return arrayLength + common;
 	}
 
-	/**
-	 * Returns an array stored in this front-coded list.
-	 *
-	 * @param index an index.
-	 * @return the corresponding array stored in this front-coded list.
-	 */
-	public byte[] getArray(final long index) {
-		ensureRestrictedIndex(index);
-		final int length = length(index);
-		final byte a[] = new byte[length];
-		extract(index, a, 0, length);
-		return a;
-	}
-
 	/*
 	 * The following methods are highly optimized UTF-8 converters exploiting the fact that since it was
 	 * ourselves in the first place who created the coding, we can be sure it is correct.
@@ -393,7 +386,7 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 		return result;
 	}
 
-	protected static char[] byte2Char(final byte[] a, char[] s) {
+	char[] byte2Char(final byte[] a, char[] s) {
 		final int length = a.length;
 		if (s == null) s = new char[countUTF8Chars(a)];
 		int b, c, d, t;
@@ -435,7 +428,7 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 		fileChannel.close();
 	}
 
-	public static void main(final String[] arg) throws IOException, JSAPException, NoSuchMethodException, ConfigurationException, ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException {
+	public static void main(final String[] arg) throws IOException, JSAPException, ConfigurationException, ClassNotFoundException, IllegalArgumentException, SecurityException {
 
 		final SimpleJSAP jsap = new SimpleJSAP(MappedFrontCodedStringBigList.class.getName(), "Dumps the files of a memory-mapped front-coded string big list reading from standard input a newline-separated list of UTF-8-encoded strings or a serialized FrontCodedStringBigList.", new Parameter[] {
 				new Switch("object", 'o', "object", "Read a serialized FrontCodedStringBigList from standard input instead of a list of strings."),
@@ -460,7 +453,7 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 			final int ratio = jsapResult.getInt("ratio");
 			final Class<? extends InputStream> decompressor = jsapResult.getClass("decompressor");
 			logger.info("Reading strings...");
-			build(basename, ratio, decompressor != null ? decompressor.getConstructor(InputStream.class).newInstance(System.in) : System.in);
+			build(basename, ratio, FileLinesByteArrayIterable.iterator(System.in, decompressor));
 		}
 		logger.info("Completed.");
 	}

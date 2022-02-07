@@ -23,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +33,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
-import it.unimi.dsi.fastutil.io.FastByteArrayInputStream;
 import it.unimi.dsi.lang.MutableString;
 
 public class MappedFrontCodedStringBigListTest {
@@ -48,24 +46,22 @@ public class MappedFrontCodedStringBigListTest {
 		c.add(StringUtils.repeat("a", 1000) + StringUtils.repeat("b", 1000));
 		c.add(StringUtils.repeat("a", 100) + StringUtils.repeat("b", 1000));
 		final MutableString s = new MutableString();
+		Collections.sort(c);
 		for (int p = 0; p < 2; p++) {
 			for (int ratio = 1; ratio < 8; ratio++) {
 				final FrontCodedStringBigList fcl = new FrontCodedStringBigList(c.iterator(), ratio, true);
 
-				final ByteBuffer buffer = StandardCharsets.UTF_8.encode(StringUtils.join(c.iterator(), "\n"));
-
-				MappedFrontCodedStringBigList.build(basename, 4, new FastByteArrayInputStream(buffer.array(), 0, buffer.limit()));
+				MappedFrontCodedStringBigList.build(basename, 4, c.stream().map(x -> x.getBytes(StandardCharsets.UTF_8)).iterator());
 				final MappedFrontCodedStringBigList mfcl = MappedFrontCodedStringBigList.load(basename);
 				for (int i = 0; i < fcl.size64(); i++) {
 					assertEquals(Integer.toString(i), c.get(i), mfcl.get(i).toString());
 					assertEquals(Integer.toString(i), c.get(i), mfcl.getString(i));
-					assertEquals(Integer.toString(i), c.get(i), new String(mfcl.getBytes(i), StandardCharsets.UTF_8));
+					assertEquals(Integer.toString(i), c.get(i), new String(mfcl.getArray(i), StandardCharsets.UTF_8));
 					fcl.get(i, s);
 					assertEquals(Integer.toString(i), c.get(i), s.toString());
 				}
 			}
 		}
-		Collections.sort(c);
 
 		new File(basename + MappedFrontCodedStringBigList.PROPERTIES_EXTENSION).delete();
 		new File(basename + MappedFrontCodedStringBigList.BYTE_ARRAY_EXTENSION).delete();
