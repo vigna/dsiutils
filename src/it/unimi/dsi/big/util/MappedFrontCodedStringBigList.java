@@ -78,6 +78,10 @@ import it.unimi.dsi.util.Properties;
  * flexibility it also implements a {@link #getString(long)} method and a {@link #getArray(long)}
  * method.
  *
+ * <p>
+ * If you need to build an instance from a (possibly compressed) stream, we suggest to adapt it
+ * using {@link FileLinesByteArrayIterable#iterator()}.
+ *
  * @see FrontCodedStringBigList
  */
 
