@@ -39,6 +39,7 @@ import com.martiansoftware.jsap.JSAPException;
 import com.martiansoftware.jsap.JSAPResult;
 import com.martiansoftware.jsap.Parameter;
 import com.martiansoftware.jsap.SimpleJSAP;
+import com.martiansoftware.jsap.Switch;
 import com.martiansoftware.jsap.UnflaggedOption;
 import com.martiansoftware.jsap.stringparsers.ForNameStringParser;
 import com.martiansoftware.jsap.stringparsers.IntSizeStringParser;
@@ -46,6 +47,7 @@ import com.martiansoftware.jsap.stringparsers.IntSizeStringParser;
 import it.unimi.dsi.fastutil.BigList;
 import it.unimi.dsi.fastutil.bytes.ByteBigList;
 import it.unimi.dsi.fastutil.bytes.MappedByteBigList;
+import it.unimi.dsi.fastutil.io.BinIO;
 import it.unimi.dsi.fastutil.longs.LongBigList;
 import it.unimi.dsi.fastutil.longs.MappedLongBigList;
 import it.unimi.dsi.fastutil.objects.AbstractObjectBigList;
@@ -368,9 +370,10 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 		fileChannel.close();
 	}
 
-	public static void main(final String[] arg) throws IOException, JSAPException, NoSuchMethodException, ConfigurationException {
+	public static void main(final String[] arg) throws IOException, JSAPException, NoSuchMethodException, ConfigurationException, ClassNotFoundException {
 
-		final SimpleJSAP jsap = new SimpleJSAP(MappedFrontCodedStringBigList.class.getName(), "Dumps the files of a memory-mapped front-coded string big list reading from standard input a newline-separated ordered list of strings.", new Parameter[] {
+		final SimpleJSAP jsap = new SimpleJSAP(MappedFrontCodedStringBigList.class.getName(), "Dumps the files of a memory-mapped front-coded string big list reading from standard input a newline-separated ordered list of strings or a serialized FrontCodedStringBigList.", new Parameter[] {
+				new Switch("object", 'o', "object", "Read a serialized FrontCodedStringBigList from standard input instead of a list of strings."),
 				new FlaggedOption("encoding", ForNameStringParser.getParser(Charset.class), "UTF-8", JSAP.NOT_REQUIRED, 'e', "encoding", "The file encoding."),
 				new FlaggedOption("ratio", IntSizeStringParser.getParser(), "4", JSAP.NOT_REQUIRED, 'r', "ratio", "The compression ratio."),
 				new FlaggedOption("decompressor", JSAP.CLASS_PARSER, JSAP.NO_DEFAULT, JSAP.NOT_REQUIRED, 'd', "decompressor", "Use this extension of InputStream to decompress the strings (e.g., java.util.zip.GZIPInputStream)."),
@@ -379,14 +382,22 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 		final JSAPResult jsapResult = jsap.parse(arg);
 		if (jsap.messagePrinted()) return;
 
-		final int ratio = jsapResult.getInt("ratio");
-		final Charset encoding = (Charset)jsapResult.getObject("encoding");
-		final Class<? extends InputStream> decompressor = jsapResult.getClass("decompressor");
 		final String basename = jsapResult.getString("basename");
 
+		final FrontCodedStringBigList frontCodedStringBigList;
 		final Logger logger = LoggerFactory.getLogger(FrontCodedStringBigList.class);
-		logger.info("Reading strings...");
-		final FrontCodedStringBigList frontCodedStringBigList = new FrontCodedStringBigList(FileLinesMutableStringIterable.iterator(System.in, encoding, decompressor), ratio, true);
+		if (jsapResult.userSpecified("object")) {
+			logger.info("Reading front-coded string big list...");
+			frontCodedStringBigList = (FrontCodedStringBigList)BinIO.loadObject(System.in);
+		}
+		else {
+			final int ratio = jsapResult.getInt("ratio");
+			final Charset encoding = (Charset)jsapResult.getObject("encoding");
+			final Class<? extends InputStream> decompressor = jsapResult.getClass("decompressor");
+
+			logger.info("Reading strings...");
+			frontCodedStringBigList = new FrontCodedStringBigList(FileLinesMutableStringIterable.iterator(System.in, encoding, decompressor), ratio, true);
+		}
 		logger.info("Dumping files...");
 		frontCodedStringBigList.dump(basename);
 		logger.info("Completed.");
