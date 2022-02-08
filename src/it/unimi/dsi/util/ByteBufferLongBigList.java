@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2012-2021 Sebastiano Vigna
+ * Copyright (C) 2012-2022 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -30,6 +30,7 @@ import java.util.Arrays;
 
 import it.unimi.dsi.fastutil.longs.AbstractLongBigList;
 import it.unimi.dsi.fastutil.longs.LongBigList;
+import it.unimi.dsi.fastutil.longs.MappedLongBigList;
 import it.unimi.dsi.lang.FlyweightPrototype;
 
 
@@ -51,8 +52,9 @@ import it.unimi.dsi.lang.FlyweightPrototype;
  * actually used will be {@linkplain ByteBuffer#duplicate() duplicated} lazily.
  *
  * @author Sebastiano Vigna
+ * @deprecated Use {@link MappedLongBigList} instead.
  */
-
+@Deprecated
 public class ByteBufferLongBigList extends AbstractLongBigList implements FlyweightPrototype <ByteBufferLongBigList> {
 	private static int CHUNK_SHIFT = 27;
 

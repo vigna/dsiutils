@@ -1,15 +1,15 @@
 2.8.0
 
-- New MappedFrontCodedStringBigList makes it possible to dump a 
-  FrontCodedStringBigList and access it using memory mapping.
-
-2.7.18
+- New MappedFrontCodedStringBigList makes it possible to access
+  a list of string using memory mapping.
 
 - TransformationStrategies.fixedLong() now is truly lexicographical, even
   on negative numbers. Unfortunately, this change made it necessary to
   bump the serial version of the class, which is the same of
   TransformationStrategies.rawFixedLong(), which means that structures
   serialized using both strategies will not be deserializable.
+
+- Fixed wrong indexing in LongSet views of subvectors in AbstractBitVector.
 
 2.6.17
 

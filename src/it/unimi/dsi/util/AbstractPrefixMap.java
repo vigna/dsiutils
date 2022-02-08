@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2007-2021 Sebastiano Vigna
+ * Copyright (C) 2007-2022 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -28,16 +28,21 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectFunction;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.lang.MutableString;
 
-/** An abstract implementation of a prefix map.
+/**
+ * An abstract implementation of a prefix map.
  *
- * <p>This class provides the full serives of a {@link PrefixMap} by implementing just
+ * <p>
+ * This class provides the full services of a {@link PrefixMap} by implementing just
  * {@link #getInterval(CharSequence)} and {@link #getTerm(int, MutableString)}
  */
 
 public abstract class AbstractPrefixMap extends AbstractObject2LongFunction<CharSequence> implements PrefixMap<MutableString>, Serializable {
 	private static final long serialVersionUID = 1L;
+	/** A cached view of the map as a range map. */
 	protected Object2ObjectFunction<CharSequence, Interval> rangeMap;
+	/** A cached view of the map as a prefix map. */
 	protected Object2ObjectFunction<Interval, MutableString> prefixMap;
+	/** A cached view of the map as a list of mutable strings. */
 	protected ObjectList<MutableString> list;
 
 	// We must guarantee that, unless the user says otherwise, the default return value is -1.

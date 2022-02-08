@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2010-2021 Sebastiano Vigna
+ * Copyright (C) 2010-2022 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -20,12 +20,14 @@
 package it.unimi.dsi.bits;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import it.unimi.dsi.fastutil.Size64;
 import it.unimi.dsi.fastutil.booleans.BooleanBigArrayBigList;
+import it.unimi.dsi.fastutil.longs.LongSortedSet;
 
 public class AbstractBitVectorTest {
 
@@ -155,5 +157,17 @@ public class AbstractBitVectorTest {
 		v.length(1L << 32);
 		assertEquals(1L << 32, v.size64());
 		assertEquals(1L << 31, ((Size64)v.asLongSet()).size64());
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void testLongSetView() {
+		final LongArrayBitVector v = LongArrayBitVector.ofLength(1000);
+		assertTrue(v.asLongSet().add(1000));
+		assertEquals(1001, v.length());
+		v.set(1);
+		final LongSortedSet s = v.subVector(1, 500).asLongSet();
+		assertFalse(s.contains(500));
+		assertTrue(s.contains(0));
+		v.subVector(1, 500).asLongSet().add(500);
 	}
 }

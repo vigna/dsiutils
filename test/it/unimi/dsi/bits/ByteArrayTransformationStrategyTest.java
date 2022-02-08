@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2010-2021 Sebastiano Vigna
+ * Copyright (C) 2010-2022 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -55,7 +55,6 @@ public class ByteArrayTransformationStrategyTest {
 	public void testGetLongPrefixFree() {
 		byte[] a = new byte[] { 0x55, (byte)0xFF };
 		assertEquals(24, TransformationStrategies.prefixFreeByteArray().toBitVector(a).length());
-		System.err.println(Long.toHexString(TransformationStrategies.prefixFreeByteArray().toBitVector(a).getLong(0, 24)));
 		assertEquals(0x00FFAAL, TransformationStrategies.prefixFreeByteArray().toBitVector(a).getLong(0, 24));
 
 		a = new byte[] { 1, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, 0 };

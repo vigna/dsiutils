@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2007-2021 Sebastiano Vigna
+ * Copyright (C) 2007-2022 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -26,12 +26,12 @@ import it.unimi.dsi.fastutil.booleans.BooleanBigList;
 import it.unimi.dsi.fastutil.booleans.BooleanBigLists;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
 
-/** A boolean-list based implementation of {@link BitVector}.
+/**
+ * A boolean-list based implementation of {@link BitVector}.
  *
- * <P>This implementation of a bit vector is based on a backing
- * list of booleans. It is rather inefficient, but useful for
- * wrapping purposes, for covering completely the code in
- * {@link AbstractBitVector} and for creating mock objects.
+ * @implNote This implementation of a bit vector is based on a backing list of booleans. It is
+ *           rather inefficient, but useful for wrapping purposes, for covering completely the code
+ *           in {@link AbstractBitVector} and for creating mock objects.
  */
 public class BooleanListBitVector extends AbstractBitVector implements Serializable {
 	private static final long serialVersionUID = 1L;

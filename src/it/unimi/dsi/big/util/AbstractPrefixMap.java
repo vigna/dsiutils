@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2007-2021 Sebastiano Vigna
+ * Copyright (C) 2007-2022 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -38,8 +38,11 @@ import it.unimi.dsi.util.LongIntervals;
 
 public abstract class AbstractPrefixMap extends AbstractObject2LongFunction<CharSequence> implements PrefixMap<MutableString>, Serializable {
 	private static final long serialVersionUID = 1L;
+	/** A cached view of the map as a range map. */
 	protected Object2ObjectFunction<CharSequence, LongInterval> rangeMap;
+	/** A cached view of the map as a prefix map. */
 	protected AbstractObject2ObjectFunction<LongInterval, MutableString> prefixMap;
+	/** A cached view of the map as a list of mutable strings. */
 	protected ObjectBigList<MutableString> list;
 
 	// We must guarantee that, unless the user says otherwise, the default return value is -1.

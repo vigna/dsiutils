@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2002-2021 Sebastiano Vigna
+ * Copyright (C) 2002-2022 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -339,7 +339,7 @@ public class TernaryIntervalSearchTreeTest {
 	}
 
 	@Test
-	public void testLargeSet() {
+	public void test() {
 		final List<String> c = new ObjectArrayList<>(WORDS);
 		Collections.shuffle(c);
 		TernaryIntervalSearchTree t = new TernaryIntervalSearchTree(c);

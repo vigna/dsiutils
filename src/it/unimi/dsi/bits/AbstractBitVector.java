@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2007-2021 Sebastiano Vigna
+ * Copyright (C) 2007-2022 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -68,8 +68,13 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 		if (index > length()) throw new IndexOutOfBoundsException("Index (" + index + ") is greater than length (" + (length()) + ")");
 	}
 
+	/** @implSpec This implementation delegates to {@link #set(long, boolean)}. */
 	public void set(final int index) { set(index, true); }
+
+	/** @implSpec This implementation delegates to {@link #set(long, boolean)}. */
 	public void clear(final int index) { set(index, false); }
+
+	/** @implSpec This implementation delegates to {@link #flip(long)}. */
 	public void flip(final int index) { set(index, ! getBoolean(index)); }
 
 	@Override
@@ -102,10 +107,17 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 		for(long i = from; i < to; i++) if (getBoolean(i)) result |= 1L << i - from;
 		return result;
 	}
+
+	/** @implSpec This implementation delegates to {@link #getBoolean(long)}. */
 	public boolean getBoolean(final int index) { return getBoolean((long)index); }
 
+	/** @implSpec This implementation delegates to {@link #removeBoolean(long)}. */
 	public boolean removeBoolean(final int index) { return removeBoolean((long)index); }
+
+	/** @implSpec This implementation delegates to {@link #set(long, boolean)}. */
 	public boolean set(final int index, final boolean value) { return set((long)index, value); }
+
+	/** @implSpec This implementation delegates to {@link #add(long, boolean)}. */
 	public void add(final int index, final boolean value) { add((long)index, value); }
 
 	@Override
@@ -275,19 +287,23 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 		return (int)length;
 	}
 
-	/** {@inheritDoc}
-	 * <p>This implementation just returns {@link #length()}.
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @implSpec This implementation just returns {@link #length()}.
 	 */
 	@Override
 	public long size64() {
 		return length();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void clear() {
 		length(0);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public BitVector replace(final BitVector bv) {
 		clear();
@@ -351,27 +367,43 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 		return bits;
 	}
 
-	/** An integer sorted set view of a bit vector.
+	/**
+	 * A view of a bit vector as a sorted set of long integers.
 	 *
-	 * <P>This class implements in the obvious way an integer set view
-	 * of a bit vector. The vector is enlarged as needed (i.e., when
-	 * a one beyond the current size is set), but it is never shrunk.
+	 * <p>
+	 * This class implements a view of a subvector as a sorted set of long integers using the subvector
+	 * as a bit mask. If the end position is {@link Long#MAX_VALUE}, the vector is enlarged as needed
+	 * (i.e., when a one beyond the current size is set), but it is never shrunk.
+	 *
+	 * <p>
+	 * Outside of the specified range {{@link #contains(long)} will return false and {@link #add(long)}
+	 * will cause an {@link UnsupportedOperationException}.
 	 */
 
 	public static class LongSetView extends AbstractLongSortedSet implements LongSet, Serializable, Size64 {
-
-		protected final BitVector bitVector;
 		private static final long serialVersionUID = 1L;
+		/** The underlying bit vector. */
+		protected final BitVector bitVector;
+		/** The starting position (included). */
 		private final long from;
+		/**
+		 * The ending position (not included); use {@link Long#MAX_VALUE} to get an extendable bit vector.
+		 */
 		private final long to;
 
+		/**
+		 * Creates a new view on a subvector.
+		 *
+		 * @param bitVector the underlying bit vector.
+		 * @param from the first index (inclusive).
+		 * @param to the last index (not inclusive).
+		 */
 		public LongSetView(final BitVector bitVector, final long from, final long to) {
 			if (from > to) throw new IllegalArgumentException("Start index (" + from + ") is greater than end index (" + to + ")");
 			this.bitVector = bitVector;
 			this.from = from;
 			this.to = to;
 		}
-
 
 		@Override
 		public boolean contains(final long index) {
@@ -383,7 +415,7 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 		@Override
 		public boolean add(final long index) {
 			if (index < 0) throw new IllegalArgumentException("The provided index (" + index + ") is negative");
-			if (index < from || index >= to) return false;
+			if (index < from || index >= to) throw new UnsupportedOperationException();
 
 			final long length = bitVector.length();
 			if (index >= length) bitVector.length(index + 1);
@@ -523,6 +555,12 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 		/** A bit mask containing {@link #width} bits set to one. */
 		protected final long fullMask;
 
+		/**
+		 * Returns a list-of-integers view of a bit vector.
+		 *
+		 * @param bitVector a bit vector.
+		 * @param width the bit width of the integers.
+		 */
 		public LongBigListView(final BitVector bitVector, final int width) {
 			this.width = width;
 			this.bitVector = bitVector;
@@ -542,18 +580,26 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 			return width == 0 ? 0 : bitVector.length() / width;
 		}
 
-		/* @deprecated Please use {@link #size64()}. */
+		/**
+		 * @return {@link #size64()}
+		 * @deprecated Please use {@link #size64()}.
+		 */
 		@Deprecated
 		public long length() {
 			return size64();
 		}
 
+		/**
+		 * Resizes this list, enlarging the underying bit vector as necessary.
+		 *
+		 * @param newSize the new size.
+		 */
 		@Override
 		public void size(final long newSize) {
 			bitVector.length(newSize * width);
 		}
 
-		/* @deprecated Please use {@link #size(long)}. */
+		/** @deprecated Please use {@link #size(long)}. */
 		@Deprecated
 		public LongBigList length(final long newSize) {
 			size(newSize);
@@ -596,6 +642,7 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 			return new LongBigListIteratorView();
 		}
 
+		/** @implSpec This implementation delegates to {@link #add(long, long)}. */
 		public void add(final int index, final long value) {
 			add((long)index, value);
 		}
@@ -612,6 +659,7 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 			return bitVector.getLong(start, start + width);
 		}
 
+		/** @implSpec This implementation delegates to {@link #getLong(long)}. */
 		public long getLong(final int index) {
 			return getLong((long)index);
 		}
@@ -676,6 +724,15 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 		return super.compareTo(list);
 	}
 
+	/**
+	 * Compares lexicographically this bit vector with another bit vector.
+	 *
+	 * @implNote This method compares the two bit vectors by extracting a 64-bit word at a time using
+	 *           {@link BitVector#getLong(long, long)}.
+	 *
+	 * @param v another bit vector.
+	 * @return -1, 0, or 1, depending on the lexicographical order of the two vectors.
+	 */
 	public int compareTo(final BitVector v) {
 		final long minLength = Math.min(length(), v.length());
 		final long l = minLength & -Long.SIZE;
@@ -716,8 +773,11 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 	/** A subvector of a given bit vector, specified by an initial and a final bit. */
 
 	public static class SubBitVector extends AbstractBitVector implements BitVector {
-		final protected BitVector bitVector;
-		protected long from;
+		/** The underlying bit vector. */
+		protected final BitVector bitVector;
+		/** The initial bit (inclusive). */
+		protected final long from;
+		/** The final bit (not inclusive). */
 		protected long to;
 
 		public SubBitVector(final BitVector l, final long from, final long to) {
@@ -779,6 +839,11 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 		public long getLong(final long from, final long to) {
 			BitVectors.ensureFromTo(length(), from, to);
 			return bitVector.getLong(from + this.from, to + this.from);
+		}
+
+		@Override
+		public LongSortedSet asLongSet() {
+			return new LongSetView(this, 0, length());
 		}
 
 		@Override

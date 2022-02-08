@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2010-2021 Sebastiano Vigna
+ * Copyright (C) 2010-2022 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -32,7 +32,7 @@ import it.unimi.dsi.lang.MutableString;
 public class FrontCodedStringListTest {
 
 	@Test
-	public void testLargeSet() {
+	public void test() {
 		final List<String> c = Arrays.asList(TernaryIntervalSearchTreeTest.WORDS.clone());
 		final MutableString s = new MutableString();
 		for(int p = 0; p < 2; p++) {

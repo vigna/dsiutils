@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2002-2021 Sebastiano Vigna
+ * Copyright (C) 2002-2022 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -30,10 +30,7 @@ import java.util.Collections;
 import org.junit.Test;
 
 import it.unimi.dsi.fastutil.Hash;
-import it.unimi.dsi.fastutil.Size64;
 import it.unimi.dsi.fastutil.io.BinIO;
-import it.unimi.dsi.fastutil.objects.AbstractObject2LongFunction;
-import it.unimi.dsi.fastutil.objects.AbstractObjectBigList;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectBigLists;
 import it.unimi.dsi.lang.MutableString;
@@ -83,58 +80,5 @@ public class LiterallySignedStringMapTest {
 			for(int i = s.length; i-- != 0;) assertEquals(i, map.getLong(s[i]));
 			for(int i = s.length + n; i-- != s.length;) assertEquals(-1, map.getLong(Integer.toString(i)));
 		}
-	}
-
-	private final class LargeFunction extends AbstractObject2LongFunction<String> implements Size64 {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public long getLong(final Object key) {
-			try {
-				final long l = Long.parseLong(key.toString());
-				return l < 1L << 31 ? l : -1;
-			}
-			catch(final Exception e) {
-				return -1;
-			}
-		}
-
-		@Override
-		public boolean containsKey(final Object key) {
-			try {
-				final long l = Long.parseLong(key.toString());
-				return l < 1L << 31;
-			}
-			catch(final Exception e) {
-				return false;
-			}
-		}
-
-		@Override
-		@Deprecated
-		public int size() {
-			return Integer.MAX_VALUE;
-		}
-
-		@Override
-		public long size64() {
-			return 1L << 31;
-		}
-	}
-
-	@Test
-	public void testLarge() {
-		new LiterallySignedStringMap(new LargeFunction(), new AbstractObjectBigList<MutableString>() {
-
-			@Override
-			public MutableString get(final long index) {
-				return new MutableString(Long.toString(index));
-			}
-
-			@Override
-			public long size64() {
-				return 1L << 31;
-			}
-		});
 	}
 }

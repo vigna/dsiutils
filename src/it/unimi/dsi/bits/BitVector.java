@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2007-2021 Sebastiano Vigna
+ * Copyright (C) 2007-2022 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -154,14 +154,16 @@ public interface BitVector extends RandomAccess, BooleanBigList {
 	 *
 	 * @param from the first index (inclusive).
 	 * @param to the last index (not inclusive).
+	 * @return a subvector view specified by initial and final index.
 	 */
 	BitVector subVector(long from, long to);
 
 	/**
-	 * Returns a subvector view specified by initial index and running up to the end of this vector.
+	 * Returns a subvector view specified by initial index and running up to the end of this bit vector.
 	 *
 	 * @param from the first index (inclusive).
 	 * @see #subVector(long, long)
+	 * @return a subvector view specified by initial index and running up to the end of this bit vector.
 	 */
 	BitVector subVector(long from);
 
@@ -177,6 +179,10 @@ public interface BitVector extends RandomAccess, BooleanBigList {
 	 * Note that, in particular, the resulting string representation is exactly that of a
 	 * {@link java.util.BitSet}.
 	 *
+	 * @apiNote Implementations are allowed to prohibit modifications outside of the current size of the
+	 *          bit vector.
+	 *
+	 * @return a view of this bit vector as a sorted set of long integers.
 	 */
 	LongSortedSet asLongSet();
 
@@ -189,6 +195,7 @@ public interface BitVector extends RandomAccess, BooleanBigList {
 	 * <code>(p + 1) * width</code> (bit <code>width</code> &minus; 1, exclusive).
 	 *
 	 * @param width a bit width.
+	 * @return a view of this bit vector as a list of nonnegative integers of specified width.
 	 */
 	LongBigList asLongBigList(int width);
 
@@ -278,8 +285,8 @@ public interface BitVector extends RandomAccess, BooleanBigList {
 	 * Returns the number of bits in this bit vector.
 	 *
 	 * <p>
-	 * If the number of bits in this vector is smaller than or equal to {@link Integer#MAX_VALUE}, this
-	 * method is semantically equivalent to {@link List#size()}. In any case, this method is
+	 * If the number of bits in this bit vector is smaller than or equal to {@link Integer#MAX_VALUE},
+	 * this method is semantically equivalent to {@link List#size()}. In any case, this method is
 	 * semantically equivalent to {@link BooleanBigList#size64()}, but it is prefererred.
 	 *
 	 * @return the number of bits in this bit vector.
@@ -320,7 +327,8 @@ public interface BitVector extends RandomAccess, BooleanBigList {
 	BitVector and(BitVector v);
 
 	/**
-	 * Performs a logical or between this bit vector and another one, leaving the result in this vector.
+	 * Performs a logical or between this bit vector and another one, leaving the result in this bit
+	 * vector.
 	 *
 	 * @param v a bit vector.
 	 * @return this bit vector.
@@ -337,14 +345,14 @@ public interface BitVector extends RandomAccess, BooleanBigList {
 	BitVector xor(BitVector v);
 
 	/**
-	 * Returns the position of the first bit set in this vector.
+	 * Returns the position of the first bit set in this bit vector.
 	 *
 	 * @return the first bit set, or -1 for a vector of zeroes.
 	 */
 	long firstOne();
 
 	/**
-	 * Returns the position of the last bit set in this vector.
+	 * Returns the position of the last bit set in this bit vector.
 	 *
 	 * @return the last bit set, or -1 for a vector of zeroes.
 	 */
@@ -369,14 +377,14 @@ public interface BitVector extends RandomAccess, BooleanBigList {
 	long previousOne(long index);
 
 	/**
-	 * Returns the position of the first bit unset in this vector.
+	 * Returns the position of the first bit unset in this bit vector.
 	 *
 	 * @return the first bit unset, or -1 for a vector of ones.
 	 */
 	long firstZero();
 
 	/**
-	 * Returns the position of the last bit unset in this vector.
+	 * Returns the position of the last bit unset in this bit vector.
 	 *
 	 * @return the last bit unset, or -1 for a vector of ones.
 	 */
@@ -400,7 +408,7 @@ public interface BitVector extends RandomAccess, BooleanBigList {
 	long previousZero(long index);
 
 	/**
-	 * Returns the length of the greatest common prefix between this and the specified vector.
+	 * Returns the length of the greatest common prefix between this and the specified bit vector.
 	 *
 	 * @param v a bit vector.
 	 * @return the length of the greatest common prefix.
@@ -408,19 +416,19 @@ public interface BitVector extends RandomAccess, BooleanBigList {
 	long longestCommonPrefixLength(BitVector v);
 
 	/**
-	 * Returns true if this vector is a prefix of the specified vector.
+	 * Returns true if this bit vector is a prefix of the specified bit vector.
 	 *
 	 * @param v a bit vector.
-	 * @return true if this vector is a prefix of <code>v</code>.
+	 * @return true if this bit vector is a prefix of <code>v</code>.
 	 */
 	boolean isPrefix(BitVector v);
 
 	/**
-	 * Returns true if this vector is a proper prefix of the specified vector.
+	 * Returns true if this bit vector is a proper prefix of the specified bit vector.
 	 *
 	 * @param v a bit vector.
-	 * @return true if this vector is a proper prefix of <code>v</code> (i.e., it is a prefix but not
-	 *         equal).
+	 * @return true if this bit vector is a proper prefix of <code>v</code> (i.e., it is a prefix but
+	 *         not equal).
 	 */
 	boolean isProperPrefix(BitVector v);
 
@@ -430,7 +438,7 @@ public interface BitVector extends RandomAccess, BooleanBigList {
 	 * @param v a bit vector.
 	 * @param from the starting bit, inclusive.
 	 * @param to the ending bit, not inclusive.
-	 * @return true if this vector and v are equal in the range of positions
+	 * @return true if this bit vector and v are equal in the range of positions
 	 *         [<code>from</code>..<code>to</code>).
 	 */
 	boolean equals(final BitVector v, final long from, final long to);

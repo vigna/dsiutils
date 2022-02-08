@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2002-2021 Sebastiano Vigna
+ * Copyright (C) 2002-2022 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -38,7 +38,7 @@ import it.unimi.dsi.util.LongIntervals;
 
 public class ImmutableExternalPrefixMapTest {
 
-	public void testLargeSet(final int blockSize) throws IOException {
+	public void test(final int blockSize) throws IOException {
 		final Collection<String> c = Arrays.asList(TernaryIntervalSearchTreeTest.WORDS);
 		TernaryIntervalSearchTree t = new TernaryIntervalSearchTree(c);
 		ImmutableExternalPrefixMap d = new ImmutableExternalPrefixMap(c, blockSize);
@@ -81,28 +81,28 @@ public class ImmutableExternalPrefixMapTest {
 	}
 
 	@Test
-	public void testLargeSet64() throws IOException {
-		testLargeSet(64);
+	public void test64() throws IOException {
+		test(64);
 	}
 
 	@Test
-	public void testLargeSet128() throws IOException {
-		testLargeSet(128);
+	public void test128() throws IOException {
+		test(128);
 	}
 
 	@Test
-	public void testLargeSet256() throws IOException {
-		testLargeSet(256);
+	public void test256() throws IOException {
+		test(256);
 	}
 
 	@Test
-	public void testLargeSet1024() throws IOException {
-		testLargeSet(1024);
+	public void test1024() throws IOException {
+		test(1024);
 	}
 
 	@Test
-	public void testLargeSet16384() throws IOException {
-		testLargeSet(16384);
+	public void test16384() throws IOException {
+		test(16384);
 	}
 
 	@Test
