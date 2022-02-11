@@ -52,6 +52,7 @@ import it.unimi.dsi.fastutil.io.BinIO;
 import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
 import it.unimi.dsi.fastutil.longs.LongBigArrays;
 import it.unimi.dsi.fastutil.longs.LongBigList;
+import it.unimi.dsi.fastutil.longs.LongMappedBigList;
 import it.unimi.dsi.fastutil.objects.AbstractObject2LongFunction;
 import it.unimi.dsi.fastutil.objects.Object2LongFunction;
 import it.unimi.dsi.fastutil.objects.ObjectBigList;
@@ -59,29 +60,38 @@ import it.unimi.dsi.io.FastBufferedReader;
 import it.unimi.dsi.io.LineIterator;
 import it.unimi.dsi.lang.MutableString;
 import it.unimi.dsi.logging.ProgressLogger;
-import it.unimi.dsi.util.ByteBufferLongBigList;
 
-/** A string map based on a function signed using a big list of longs.
+/**
+ * A string map based on a function signed using a big list of longs.
  *
- * <p>The purpose of this map is identical to that of a {@link ShiftAddXorSignedStringMap}, but
- * Shift-Add-Xor signatures are 64-bit and stored in a {@link LongBigList}. This approach makes it possible to
- * store the signatures in a file and read them by memory mapping using a {@link ByteBufferLongBigList}.
- * If the map has a very large number of keys but the access pattern is strongly skewed towards a relatively
- * small number of entries, using memory mapping might be advantageous.
+ * <p>
+ * The purpose of this map is identical to that of a {@link ShiftAddXorSignedStringMap}, but
+ * Shift-Add-Xor signatures are 64-bit and stored in a {@link LongBigList}. This approach makes it
+ * possible to store the signatures in a file and read them by memory mapping using a
+ * {@link LongMappedBigList}. If the map has a very large number of keys but the access pattern is
+ * strongly skewed towards a relatively small number of entries, using memory mapping might be
+ * advantageous.
  *
- * <p>The intended usage pattern is as follows:
+ * <p>
+ * The intended usage pattern is as follows:
  *
  * <ul>
  *
- * <li>first, you {@linkplain #sign(Iterator, Object2LongFunction) generate a file of signatures} (note that
- * for this phase it might be necessary to keep the signatures in main memory; see {@link #sign(Iterator, String)} for some elaboration);
+ * <li>first, you {@linkplain #sign(Iterator, Object2LongFunction) generate a file of signatures}
+ * (note that for this phase it might be necessary to keep the signatures in main memory; see
+ * {@link #sign(Iterator, String)} for some elaboration);
  *
- * <li>then, when you want to use the signed map you map the file using {@link ByteBufferLongBigList#map(java.nio.channels.FileChannel)}
- * and {@linkplain #LongBigListSignedStringMap(Object2LongFunction, LongBigList) create on the fly a signed map}.
+ * <li>then, when you want to use the signed map you map the file using
+ * {@link LongMappedBigList#map(java.nio.channels.FileChannel)} and
+ * {@linkplain #LongBigListSignedStringMap(Object2LongFunction, LongBigList) create on the fly a
+ * signed map}.
  *
  * </ul>
  *
- * <p>To simplify the process, there is a {@linkplain #LongBigListSignedStringMap(Object2LongFunction, String) constructor} that will do the mapping for you.
+ * <p>
+ * To simplify the process, there is a
+ * {@linkplain #LongBigListSignedStringMap(Object2LongFunction, String) constructor} that will do
+ * the mapping for you.
  *
  * @author Sebastiano Vigna
  * @since 2.0.13
@@ -218,7 +228,7 @@ public class LongBigListSignedStringMap extends AbstractObject2LongFunction<Char
 		final long signatureSize = new File(signatures).length() / Long.BYTES;
 		if (n != signatureSize) throw new IllegalStateException("The size of the function differs from that of the signature list: " + n + " != " + signatureSize);
 		this.function = function;
-		this.signatures = ByteBufferLongBigList.map(new FileInputStream(signatures).getChannel());
+		this.signatures = LongMappedBigList.map(new FileInputStream(signatures).getChannel());
 		defaultReturnValue(-1);
 	}
 
