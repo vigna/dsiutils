@@ -47,11 +47,11 @@ import com.martiansoftware.jsap.stringparsers.IntSizeStringParser;
 
 import it.unimi.dsi.fastutil.BigList;
 import it.unimi.dsi.fastutil.bytes.ByteBigList;
-import it.unimi.dsi.fastutil.bytes.MappedByteBigList;
+import it.unimi.dsi.fastutil.bytes.ByteMappedBigList;
 import it.unimi.dsi.fastutil.io.BinIO;
 import it.unimi.dsi.fastutil.io.FastBufferedOutputStream;
 import it.unimi.dsi.fastutil.longs.LongBigList;
-import it.unimi.dsi.fastutil.longs.MappedLongBigList;
+import it.unimi.dsi.fastutil.longs.LongMappedBigList;
 import it.unimi.dsi.fastutil.objects.AbstractObjectBigList;
 import it.unimi.dsi.io.FileLinesByteArrayIterable;
 import it.unimi.dsi.lang.MutableString;
@@ -112,9 +112,9 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 	protected MappedFrontCodedStringBigList(final long n, final int ratio, final String byteBigList, final String pointers) throws IOException {
 		this.n = n;
 		this.ratio = ratio;
-		this.pointers = MappedLongBigList.map(FileChannel.open(new File(pointers).toPath()));
+		this.pointers = LongMappedBigList.map(FileChannel.open(new File(pointers).toPath()));
 		fileChannel = FileChannel.open(new File(byteBigList).toPath());
-		this.byteList = MappedByteBigList.map(fileChannel);
+		this.byteList = ByteMappedBigList.map(fileChannel);
 	}
 
 	/**
