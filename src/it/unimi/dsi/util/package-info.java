@@ -16,6 +16,11 @@
  * together with a reasoned guide to the choice of the generator that's right for you.
  *
  * <p>
+ * Note that starting with Java 17 <code>xoroshiro128++</code> and <code>xoshiro256++</code> are
+ * part of the package <a href=
+ * "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/package-summary.html"><code>java.util.random</code></a>.
+ *
+ * <p>
  * A table summarizing timings is provided below. The timings were measured on an Intel&reg;
  * Core&trade; i7-8700B CPU @3.20GHz using
  * <a href="http://openjdk.java.net/projects/code-tools/jmh/">JMH</a> microbenchmarks. The JMH

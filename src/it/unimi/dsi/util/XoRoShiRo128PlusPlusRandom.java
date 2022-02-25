@@ -28,27 +28,37 @@ import org.apache.commons.math3.random.RandomGenerator;
 import it.unimi.dsi.Util;
 import it.unimi.dsi.logging.ProgressLogger;
 
-/** A fast, all-purpose, rock-solid, small-state {@linkplain Random pseudorandom number generator}. It has excellent speed,
- * but its state space (128 bits) that is large enough for
- * mild parallelism only; it passes all tests we are aware of.
- * In Java, it is slightly faster than a {@link XoRoShiRo128StarStarRandom}.
- * More information can be found at our <a href="http://prng.di.unimi.it/">PRNG page</a>.
+/**
+ * A fast, all-purpose, rock-solid, small-state {@linkplain Random pseudorandom number generator}.
+ * It has excellent speed, but its state space (128 bits) that is large enough for mild parallelism
+ * only; it passes all tests we are aware of. In Java, it is slightly faster than a
+ * {@link XoRoShiRo128StarStarRandom}. More information can be found at our
+ * <a href="http://prng.di.unimi.it/">PRNG page</a>.
  *
- * <p>If you need to generate just floating-point numbers, {@link XoRoShiRo128PlusRandom} is slightly faster. If you can use more space,
- * you might try {@link XoShiRo256PlusPlusRandom}.
+ * <p>
+ * Note that starting with Java 17 you can find this generator in <a href=
+ * "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/package-summary.html"><code>java.util.random</code></a>.
  *
- * <p>By using the supplied {@link #jump()} method it is possible to generate non-overlapping long sequences
- * for parallel computations; {@link #longJump()} makes it possible to create several
- * starting points, each providing several non-overlapping sequences, for distributed computations. This class provides also a {@link #split()} method to support recursive parallel computations, in the spirit of
- * {@link SplittableRandom}.
+ * <p>
+ * If you need to generate just floating-point numbers, {@link XoRoShiRo128PlusRandom} is slightly
+ * faster. If you can use more space, you might try {@link XoShiRo256PlusPlusRandom}.
  *
- * <p><strong>Warning</strong>: before release 2.6.3, the {@link #split()} method
- * would not alter the state of the caller, and it would return instances initialized in the same
- * way if called multiple times. This was a major mistake in the implementation and it has been fixed,
- * but as a consequence the output of the caller after a call to {@link #split()} is
- * now different, and the result of {@link #split()} is initialized in a different way.
+ * <p>
+ * By using the supplied {@link #jump()} method it is possible to generate non-overlapping long
+ * sequences for parallel computations; {@link #longJump()} makes it possible to create several
+ * starting points, each providing several non-overlapping sequences, for distributed computations.
+ * This class provides also a {@link #split()} method to support recursive parallel computations, in
+ * the spirit of {@link SplittableRandom}.
  *
- * <p>Note that this is not a {@linkplain SecureRandom secure generator}.
+ * <p>
+ * <strong>Warning</strong>: before release 2.6.3, the {@link #split()} method would not alter the
+ * state of the caller, and it would return instances initialized in the same way if called multiple
+ * times. This was a major mistake in the implementation and it has been fixed, but as a consequence
+ * the output of the caller after a call to {@link #split()} is now different, and the result of
+ * {@link #split()} is initialized in a different way.
+ *
+ * <p>
+ * Note that this is not a {@linkplain SecureRandom secure generator}.
  *
  * @version 1.0
  * @see it.unimi.dsi.util

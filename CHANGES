@@ -1,4 +1,4 @@
-2.8.0
+2.7.0
 
 - New MappedFrontCodedStringBigList makes it possible to access
   a list of string using memory mapping.
