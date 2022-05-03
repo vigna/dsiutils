@@ -26,6 +26,7 @@ import static it.unimi.dsi.bits.LongArrayBitVector.words;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
 
+import it.unimi.dsi.fastutil.Arrays;
 import it.unimi.dsi.fastutil.BigList;
 import it.unimi.dsi.fastutil.Size64;
 import it.unimi.dsi.fastutil.booleans.AbstractBooleanBigList;
@@ -361,9 +362,14 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 
 	@Override
 	public long[] bits() {
-		final long[] bits = new long[words(length())];
 		final long length = length();
-		for (long i = 0; i < length; i++) if (getBoolean(i)) bits[word(i)] |= 1L << i;
+		if (length > Long.SIZE * (long)Arrays.MAX_ARRAY_SIZE) throw new IllegalArgumentException("Too many bits");
+		final int words = words(length());
+		final long[] bits = new long[words];
+		int i = 0;
+		long p = 0;
+		for (i = 0; i < words - 1; i++) bits[i] = getLong(p, p += 64);
+		bits[i] = getLong(p, length);
 		return bits;
 	}
 
