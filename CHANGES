@@ -1,3 +1,8 @@
+2.7.1
+
+- New method LongBigArrayBigVector.bigBits() to expose underlying
+  big array.
+
 2.7.0
 
 - New MappedFrontCodedStringBigList makes it possible to access

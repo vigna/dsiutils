@@ -190,6 +190,15 @@ public class LongBigArrayBitVector extends AbstractBitVector implements Cloneabl
 	}
 
 	/**
+	 * Returns the underlying big array.
+	 *
+	 * @return the underlying big array.
+	 */
+	public long[][] bigBits() {
+		return bits;
+	}
+
+	/**
 	 * Ensures that this bit vector can hold the specified number of bits.
 	 *
 	 * <p>

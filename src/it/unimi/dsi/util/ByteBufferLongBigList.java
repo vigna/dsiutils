@@ -30,6 +30,7 @@ import java.util.Arrays;
 
 import it.unimi.dsi.fastutil.longs.AbstractLongBigList;
 import it.unimi.dsi.fastutil.longs.LongBigList;
+import it.unimi.dsi.fastutil.longs.LongMappedBigList;
 import it.unimi.dsi.lang.FlyweightPrototype;
 
 
@@ -51,7 +52,7 @@ import it.unimi.dsi.lang.FlyweightPrototype;
  * actually used will be {@linkplain ByteBuffer#duplicate() duplicated} lazily.
  *
  * @author Sebastiano Vigna
- * @deprecated Use {@link MappedLongBigList} instead.
+ * @deprecated Use {@link LongMappedBigList} instead.
  */
 @Deprecated
 public class ByteBufferLongBigList extends AbstractLongBigList implements FlyweightPrototype <ByteBufferLongBigList> {
