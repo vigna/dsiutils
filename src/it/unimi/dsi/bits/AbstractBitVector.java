@@ -32,6 +32,7 @@ import it.unimi.dsi.fastutil.Size64;
 import it.unimi.dsi.fastutil.booleans.AbstractBooleanBigList;
 import it.unimi.dsi.fastutil.longs.AbstractLongBigList;
 import it.unimi.dsi.fastutil.longs.AbstractLongSortedSet;
+import it.unimi.dsi.fastutil.longs.LongArrays;
 import it.unimi.dsi.fastutil.longs.LongBidirectionalIterator;
 import it.unimi.dsi.fastutil.longs.LongBigList;
 import it.unimi.dsi.fastutil.longs.LongBigListIterator;
@@ -363,6 +364,7 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 	@Override
 	public long[] bits() {
 		final long length = length();
+		if (length == 0) return LongArrays.EMPTY_ARRAY;
 		if (length > Long.SIZE * (long)Arrays.MAX_ARRAY_SIZE) throw new IllegalArgumentException("Too many bits");
 		final int words = words(length());
 		final long[] bits = new long[words];

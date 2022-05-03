@@ -1,3 +1,7 @@
+2.7.2
+
+- Fixed exception in AbstractBigVector.bits() for zero-length bit vectors.
+
 2.7.1
 
 - New method LongBigArrayBigVector.bigBits() to expose underlying
