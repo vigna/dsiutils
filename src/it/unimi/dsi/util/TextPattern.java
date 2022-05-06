@@ -23,38 +23,41 @@ import it.unimi.dsi.bits.Fast;
 import it.unimi.dsi.fastutil.chars.CharList;
 import it.unimi.dsi.lang.MutableString;
 
-/** QuickSearch matching against a constant string.
+/**
+ * Fast pattern matching against a constant string.
  *
- * <P>The {@linkplain java.util.regex regular expression facilities} of the Java API
- * are a powerful tool; however, when searching for a <em>constant</em> pattern
- * many algorithms can increase of orders magnitude the speed of a search.
+ * <P>
+ * The {@linkplain java.util.regex regular expression facilities} of the Java API are a powerful
+ * tool; however, when searching for a <em>constant</em> pattern many algorithms can increase of
+ * orders magnitude the speed of a search.
  *
- * <P>This class provides constant-pattern text search facilities by
- * implementing Sunday's QuickSearch (a simplified but very effective variant
- * of the Boyer&mdash;Moore search algorithm) using <a href="http://vigna.di.unimi.it/papers.php#BoVMSJ"><em>compact
- * approximators</em></A>, a randomised data structure that can accomodate in a
- * small space (but in an approximated way) the bad-character shift table of a
- * large alphabet such as Unicode.
+ * <P>
+ * This class provides constant-pattern text search facilities by implementing the last-character
+ * heuristics of the Boyer&ndash;Moore search algorithm using
+ * <a href="http://vigna.di.unimi.it/papers.php#BoVMSJ"><em>compact approximators</em></A>, a
+ * randomized data structure that can accomodate in a small space (but in an approximated way) the
+ * bad-character shift table of a large alphabet such as Unicode.
  *
- * <P>Since a large subset of US-ASCII is used in all languages (e.g.,
- * whitespace, punctuation, etc.), this class caches separately the shifts for
- * the first 128 Unicode characters, resulting in  very good performance even on
- * text in pure US-ASCII.
+ * <P>
+ * Since a large subset of US-ASCII is used in all languages (e.g., whitespace, punctuation, etc.),
+ * this class caches separately the shifts for the first 128 Unicode characters, resulting in very
+ * good performance even on text in pure US-ASCII.
  *
- * <P>Note that the {@link MutableString#indexOf(MutableString) indexOf}
- * methods of {@link MutableString} use a even more simplified variant of
- * QuickSearch which is less efficient, but has a smaller setup time and does
- * not generate any object. The search facilities provided by this class are
- * targeted at searches on very large texts, repeated searches with the same
- * pattern, and case-insensitive searches.
+ * <P>
+ * Note that the {@link MutableString#indexOf(MutableString,int) indexOf} methods of
+ * {@link MutableString} use a even more simplified variant of Boyer&ndash;Moore's algorithm which
+ * is less efficient, but has a smaller setup time and does not generate any object. In general, for
+ * short case-insensitive patterns the overhead of this class will make it slower than such methods.
+ * The search facilities provided by this class are targeted at searches with long patterns, and
+ * case-insensitive searches.
  *
- * <P>Instances of this class are immutable and thread-safe.
- *
- * <P>This class is experimental: APIs could change with the next release.
+ * <P>
+ * Instances of this class are immutable and thread-safe.
  *
  * @author Sebastiano Vigna
  * @author Paolo Boldi
  * @since 0.6
+ * @see MutableString#indexOf(MutableString, int)
  */
 
 public class TextPattern implements java.io.Serializable, CharSequence {
@@ -103,7 +106,10 @@ public class TextPattern implements java.io.Serializable, CharSequence {
 
 	/** Whether this pattern is case sensitive. */
 	private final boolean caseSensitive;
-	/** Whether this pattern uses optimised ASCII downcasing (as opposed to the correct Unicode downcasing procedure). */
+	/**
+	 * Whether this pattern uses optimized ASCII downcasing (as opposed to the correct Unicode
+	 * downcasing procedure).
+	 */
 	private final boolean asciiCase;
 
 	/** Creates a new case-sensitive {@link TextPattern} object that can be used to search for the given pattern.
@@ -147,16 +153,19 @@ public class TextPattern implements java.io.Serializable, CharSequence {
 	}
 
 
-	/** A fast, optimised method to lower case just ASCII letters.
+	/**
+	 * A fast, optimized method to lower case just ASCII letters.
 	 *
 	 * @param c a character.
-	 * @return the character <code>c</code>, downcased if it lies between <code>A</code> and <code>Z</code>.
+	 * @return the character <code>c</code>, downcased if it lies between <code>A</code> and
+	 *         <code>Z</code>.
 	 */
 	private static char asciiToLowerCase(final char c) {
 		return c >= 'A' && c <= 'Z' ? (char)(c + 32) : c;
 	}
 
-	/** A method to downcase correctly Unicode characters optimised for ASCII letters.
+	/**
+	 * A method to downcase correctly Unicode characters optimized for ASCII letters.
 	 *
 	 * @param c a character.
 	 * @return the character <code>c</code>, downcased.
@@ -234,7 +243,7 @@ public class TextPattern implements java.io.Serializable, CharSequence {
 		with two hash functions h_0 and h_1. The approximator stores a function
 		f from the character set to integers in a table s. The value of the
 		function on c can be obtained by maximising the values s[h_0(c)] and
-		s[h_1(c)]. When storing a value, instead, we minimise s[h_0(c)] and
+		s[h_1(c)]. When storing a value, instead, we minimize s[h_0(c)] and
 		s[h_1(c)] with f(c). As a result, the value stored is smaller than or
 		equal to the actual value f(c). By tuning the size of s and the number
 		of hash functions one can get a desired error precision. */
@@ -666,7 +675,6 @@ public class TextPattern implements java.io.Serializable, CharSequence {
 	 * @return the index of the first occurrence of this pattern contained in the
 	 * array fragment starting from <code>from</code> (inclusive) up to <code>to</code>
 	 * (exclusive) characters, or <code>-1</code>, if the pattern cannot be found.
-	 * TODO: this must be tested
 	 */
 	public int search(final byte[] a, final int from, final int to) {
 

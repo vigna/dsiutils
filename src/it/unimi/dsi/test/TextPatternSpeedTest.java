@@ -48,65 +48,55 @@ public class TextPatternSpeedTest  {
 			System.exit(1);
 		}
 
-		int i, n;
+		int u = 0;
 
 		final String p = arg[0];
 
 		int k;
-		long start;
-		System.out.println("Searching for " + arg[0]);
+		long elapsed;
+		System.out.println("Searching for " + p);
+		final int n = 10000;
 
 		for(k = 10; k-- != 0;) {
 			System.out.println();
 
-			start = - System.nanoTime();
-			n = 0;
+			elapsed = -System.nanoTime();
 
-			for(int r = 100; r-- != 0;) {
-				i = -1;
-				do {
-					i = target.indexOf(p, i + 1);
-					n++;
-				} while(i != -1);
-
+			for (int r = n; r-- != 0;) {
+				int i = -1;
+				do u ^= (i = target.indexOf(p, i + 1)); while (i != -1);
 			}
 
-			start += System.nanoTime();
+			elapsed += System.nanoTime();
 
-			System.out.println("Called indexOf() " + n + " times on a string in " + start + " ns (" + Util.format(start / (double)n) + " ns/call)");
+			System.out.println("Called indexOf() " + n + " times on a string in " + elapsed + " ns (" + Util.format(elapsed / (double)n) + " ns/call)");
 			final TextPattern tp = new TextPattern(p);
 			final char a[] = ms.array();
 
-			start = - System.nanoTime();
-			n = 0;
+			elapsed = -System.nanoTime();
 
-			for(int r = 100; r-- != 0;) {
-				i = -1;
-				do {
-					i = tp.search(a, i + 1);
-					n++;
-				} while(i != -1);
+			for (int r = n; r-- != 0;) {
+				int i = -1;
+				do u ^= (i = tp.search(a, i + 1)); while (i != -1);
 			}
 
-			start += System.nanoTime();
+			elapsed += System.nanoTime();
 
-			System.out.println("Called search() " + n + " times on a string in " + start + " ns (" + Util.format(start / (double)n) + " ns/call)");
+			System.out.println("Called search() " + n + " times on a string in " + elapsed + " ns (" + Util.format(elapsed / (double)n) + " ns/call)");
 
 			final MutableString pattern = new MutableString(p);
-			start = - System.nanoTime();
-			n = 0;
+			elapsed = -System.nanoTime();
 
-			for(int r = 100; r-- != 0;) {
-				i = -1;
-				do {
-					i = ms.indexOf(pattern, i + 1);
-					n++;
-				} while(i != -1);
+			for (int r = n; r-- != 0;) {
+				int i = -1;
+				do u ^= (i = ms.indexOf(pattern, i + 1)); while (i != -1);
 			}
 
-			start += System.nanoTime();
+			elapsed += System.nanoTime();
 
-			System.out.println("Called indexOf() " + n + " times on a mutable string in " + start + " ns (" + Util.format(start / (double)n) + " ns/call)");
+			System.out.println("Called indexOf() " + n + " times on a mutable string in " + elapsed + " ns (" + Util.format(elapsed / (double)n) + " ns/call)");
 		}
+
+		if (u == 0) System.out.println((char)0);
 	}
 }

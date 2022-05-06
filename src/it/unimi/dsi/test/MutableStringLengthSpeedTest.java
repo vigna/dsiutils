@@ -47,8 +47,12 @@ public class MutableStringLengthSpeedTest {
 
 			start = -System.nanoTime();
 
-			i = n;
-			while (i-- != 0) x ^= u.length();
+			i = n / 2;
+			while (i-- != 0) {
+				// Using just ^= causes code elimination
+				x ^= u.length();
+				x += u.length();
+			}
 
 			start += System.nanoTime();
 
@@ -57,8 +61,11 @@ public class MutableStringLengthSpeedTest {
 
 			start = -System.nanoTime();
 
-			i = n;
-			while (i-- != 0) x ^= t.length();
+			i = n / 2;
+			while (i-- != 0) {
+				x ^= t.length();
+				x += t.length();
+			}
 
 			start += System.nanoTime();
 
@@ -68,7 +75,11 @@ public class MutableStringLengthSpeedTest {
 
 			i = n;
 			s.loose();
-			while (i-- != 0) x ^= s.length();
+			i = n / 2;
+			while (i-- != 0) {
+				x ^= s.length();
+				x += s.length();
+			}
 
 			start += System.nanoTime();
 
@@ -76,8 +87,11 @@ public class MutableStringLengthSpeedTest {
 
 			start = -System.nanoTime();
 
-			i = n;
-			while (i-- != 0) x ^= v.length();
+			i = n / 2;
+			while (i-- != 0) {
+				x ^= v.length();
+				x += v.length();
+			}
 
 			start += System.nanoTime();
 
@@ -85,8 +99,11 @@ public class MutableStringLengthSpeedTest {
 
 			start = -System.nanoTime();
 
-			i = n;
-			while (i-- != 0) x ^= w.length();
+			i = n / 2;
+			while (i-- != 0) {
+				x ^= w.length();
+				x += w.length();
+			}
 
 			start += System.nanoTime();
 			if (x == 0) System.out.println();

@@ -41,175 +41,169 @@ import it.unimi.dsi.fastutil.chars.CharSet;
 import it.unimi.dsi.fastutil.objects.ObjectArrays;
 import it.unimi.dsi.util.TextPattern;
 
-/** Fast, compact, optimised &amp; versatile mutable strings.
+/**
+ * Fast, compact, optimized &amp; versatile mutable strings.
  *
  * <h2>Motivation</h2>
  *
- * <P>The classical Java string classes, {@link java.lang.String} and {@link
- * java.lang.StringBuffer}, lie at the extreme of a spectrum (immutable and
- * mutable).
+ * <P>
+ * The classical Java string classes, {@link java.lang.String} and {@link java.lang.StringBuffer}
+ * (or {@link StringBuilder}), lie at the extreme of a spectrum (immutable and mutable).
  *
- * <P>However, large-scale text indexing requires some features that are not
- * provided by these classes: in particular, the possibility of using a mutable
- * string, once frozen, in the same optimised way of an immutable
- * string.
+ * <P>
+ * However, large-scale text indexing requires some features that are not provided by these classes:
+ * in particular, the possibility of using a mutable string, once frozen, in the same optimized way
+ * of an immutable string.
  *
- * <P>In a typical scenario you are dividing text into words (so you use a
- * <em>mutable</em> string to accumulate characters). Once you've got your
- * word, you would like to check whether this word is in a dictionary
- * <em>without creating a new object</em>. However, equality of
- * {@link StringBuilder string builders} is not defined on their content, and storing
- * words after a conversion to <code>String</code> will not help either, as
- * then you would need to convert the current mutable string into an immutable
- * one (thus creating a new object) <em>before deciding whether you need to
+ * <P>
+ * In a typical scenario you are dividing text into words (so you use a <em>mutable</em> string to
+ * accumulate characters). Once you've got your word, you would like to check whether this word is
+ * in a dictionary <em>without creating a new object</em>. However, equality of {@link StringBuilder
+ * string builders} is not defined on their content, and storing words after a conversion to
+ * <code>String</code> will not help either, as then you would need to convert the current mutable
+ * string into an immutable one (thus creating a new object) <em>before deciding whether you need to
  * store it</em>.
  *
- * <P>This class tries to make the best of both worlds, and thus aims at being
- * a Better Mousetrap&trade;.
+ * <P>
+ * This class tries to make the best of both worlds, and thus aims at being a Better
+ * Mousetrap&trade;.
  *
- * <P>You can read more details about the design of <code>MutableString</code>
- * in Paolo Boldi and Sebastiano Vigna,
- * &ldquo;<a href="http://vigna.di.unimi.it/papers.php#BoVMSJ">Mutable strings
- * in Java: Design, implementation and lightweight text-search
- * algorithms</a>&rdquo;, <i>Sci. Comput. Programming</i>, 54(1):3-23, 2005.
+ * <P>
+ * You can read more details about the design of <code>MutableString</code> in Paolo Boldi and
+ * Sebastiano Vigna, &ldquo;<a href="http://vigna.di.unimi.it/papers.php#BoVMSJ">Mutable strings in
+ * Java: Design, implementation and lightweight text-search algorithms</a>&rdquo;, <i>Sci. Comput.
+ * Programming</i>, 54(1):3-23, 2005.
  *
  * <h2>Features</h2>
  *
- * Mutable strings come in two flavours: <em>compact</em> and
- * <em>loose</em>. A mutable string created by the empty constructor or
- * the constructor specifying a capacity is loose. All other
- * constructors create compact mutable strings. In most cases, you can completely
- * forget whether your mutable strings are loose or compact and get
- * good performance.
+ * Mutable strings come in two flavours: <em>compact</em> and <em>loose</em>. A mutable string
+ * created by the empty constructor or the constructor specifying a capacity is loose. All other
+ * constructors create compact mutable strings. In most cases, you can completely forget whether
+ * your mutable strings are loose or compact and get good performance.
  *
  * <ul>
  *
- * <li>Mutable strings occupy little space&mdash; their only attributes are a
- * backing character array and an integer;
+ * <li>Mutable strings occupy little space&mdash; their only attributes are a backing character
+ * array and an integer;
  *
- * <li>their methods try to be as efficient as possible:for instance, if some
- * limitation on a parameter is implied by limitation on array access, we do
- * not check it explicitly, and Bloom filters are used to speed up {@link
- * #replace(char[],String[]) multi-character substitutions};
+ * <li>their methods try to be as efficient as possible:for instance, if some limitation on a
+ * parameter is implied by limitation on array access, we do not check it explicitly, and Bloom
+ * filters are used to speed up {@link #replace(char[],String[]) multi-character substitutions};
  *
- * <li>they let you access directly the backing array
- * (at your own risk);
+ * <li>they let you access directly the backing array (at your own risk);
  *
- * <li>they implement {@link CharSequence}, so, for instance, you can match or split a
- * mutable string against a regular expression using the {@linkplain java.util.regex.Pattern standard Java API};
+ * <li>they implement {@link CharSequence}, so, for instance, you can match or split a mutable
+ * string against a regular expression using the {@linkplain java.util.regex.Pattern standard Java
+ * API};
  *
- * <li>they implement {@link Appendable}, so they can be used with {@link java.util.Formatter}
- * and similar classes;
+ * <li>they implement {@link Appendable}, so they can be used with {@link java.util.Formatter} and
+ * similar classes;
  *
- * <li>{@code null}is not accepted as a string argument;
+ * <li>{@code null} is not accepted as a string argument;
  *
  * <li>compact mutable strings have a slow growth; loose mutable strings have a fast growth;
  *
- * <li>hash codes of compact mutable strings are cached (for faster
- * equality checks);
+ * <li>hash codes of compact mutable strings are cached (for faster equality checks);
  *
- * <li>typical conversions such as trimming, upper/lower casing and
- * replacements are made in place, with minimal reallocations;
+ * <li>all search-based methods ({@link #indexOf(MutableString,int}, etc.) use a mini (single-word)
+ * Bloom filter to implement the last-character heuristics from the Boyer&ndash;Moore
+ * algorithm&mdash;they are much faster than the {@link String} counterparts;
  *
- * <li>all methods try, whenever it is possible, to return <code>this</code>, so
- * you can chain methods as in <code>s.length(0).append("foo").append("bar")</code>;
+ * <li>typical conversions such as trimming, upper/lower casing and replacements are made in place,
+ * with minimal reallocations;
  *
- * <li>you can write or print a mutable string without creating a
- * <code>String</code> by using {@link #write(Writer)}, {@link
- * #print(PrintWriter)} and {@link #println(PrintWriter)}; you can read it back
- * using {@link #read(Reader,int)}.
+ * <li>all methods try, whenever it is possible, to return <code>this</code>, so you can chain
+ * methods as in <code>s.length(0).append("foo").append("bar")</code>;
  *
- * <li>you can write <em>any</em> mutable string in (length-prefixed) UTF-8
- * format by using {@link #writeSelfDelimUTF8(DataOutput)}&mdash;you are not
- * limited to strings whose UTF-8 encoded length fits 16 bits; notice however
- * that surrogate pairs will not be coalesced into a single code point, so you must re-read
- * such strings using the same method;
+ * <li>you can write or print a mutable string without creating a <code>String</code> by using
+ * {@link #write(Writer)}, {@link #print(PrintWriter)} and {@link #println(PrintWriter)}; you can
+ * read it back using {@link #read(Reader,int)}.
+ *
+ * <li>you can write <em>any</em> mutable string in (length-prefixed) UTF-8 format by using
+ * {@link #writeSelfDelimUTF8(DataOutput)}&mdash;you are not limited to strings whose UTF-8 encoded
+ * length fits 16 bits; notice however that surrogate pairs will not be coalesced into a single code
+ * point, so you must re-read such strings using the same method;
  *
  * <li>you can {@link #wrap(char[]) wrap} any character array into a mutable string;
  *
- * <li>this class is not final: thus, you can add your own methods to
- * specialised versions.
+ * <li>this class is not final: thus, you can add your own methods to specialized versions.
  *
  * </ul>
  *
- * <P>Committing to use this class for such an ubiquitous data structure as
- * strings may seem dangerous, as standard string classes are by now tested and
- * stable. However, this class has been heavily regression (and torture) tested
- * on all methods, and we believe it is very reliable.
+ * <P>
+ * Committing to use this class for such an ubiquitous data structure as strings may seem dangerous,
+ * as standard string classes are by now tested and stable. However, this class has been heavily
+ * regression (and torture) tested on all methods, and we believe it is very reliable.
  *
- * <P>To simplify the transition to mutable strings, we have tried to make
- * mixing string classes simpler by providing polymorphic versions of all
- * methods accepting one or more strings&mdash;whenever you must specify a
- * string you can usually provide a <code>MutableString</code>, a
- * <code>String</code>, or a generic <code>CharSequence</code>.
+ * <P>
+ * To simplify the transition to mutable strings, we have tried to make mixing string classes
+ * simpler by providing polymorphic versions of all methods accepting one or more
+ * strings&mdash;whenever you must specify a string you can usually provide a
+ * <code>MutableString</code>, a <code>String</code>, or a generic <code>CharSequence</code>.
  *
- * <P>Note that usually we provide a specific method for
- * <code>String</code>. This duplication may seem useless, as
- * <code>String</code> implements <code>CharSequence</code>. However, invoking
- * methods on an interface is slower than invoking methods on a class, and we
- * expect constant strings to appear often in such methods.
+ * <P>
+ * Note that usually we provide a specific method for <code>String</code>. This duplication may seem
+ * useless, as <code>String</code> implements <code>CharSequence</code>. However, invoking methods
+ * on an interface is slower than invoking methods on a class, and we expect constant strings to
+ * appear often in such methods.
  *
  * <h2>The Reallocation Heuristic</h2>
  *
- * <P>Backing array reallocations use a heuristic based on looseness.  Whenever
- * an operation changes the length, compact strings are resized to fit
- * <em>exactly</em> the new content, whereas the capacity of a loose string is
- * never shortened, and enlargements maximise the new length required with the
+ * <P>
+ * Backing array reallocations use a heuristic based on looseness. Whenever an operation changes the
+ * length, compact strings are resized to fit <em>exactly</em> the new content, whereas the capacity
+ * of a loose string is never shortened, and enlargements maximize the new length required with the
  * double of the current capacity.
  *
- * <P>The effect of this policy is that loose strings will get large buffers
- * quickly, but compact strings will occupy little space and perform very well
- * in data structures using hash codes.
+ * <P>
+ * The effect of this policy is that loose strings will get large buffers quickly, but compact
+ * strings will occupy little space and perform very well in data structures using hash codes.
  *
- * <P>For instance, you can easily reuse a loose mutable string calling {@link
- * #length(int) length(0)} (which does <em>not</em> reallocate the backing
- * array).
+ * <P>
+ * For instance, you can easily reuse a loose mutable string calling {@link #length(int) length(0)}
+ * (which does <em>not</em> reallocate the backing array).
  *
- * <P>In any case, you can call {@link #compact()} and {@link #loose()} to force
- * the respective condition.
+ * <P>
+ * In any case, you can call {@link #compact()} and {@link #loose()} to force the respective
+ * condition.
  *
  * <h2>Disadvantages</h2>
  *
- * <P>The main disadvantage of mutable strings is that their substrings
- * cannot share their backing arrays, so if you need to generate many
- * substrings you may want to use <code>String</code>. However, {@link
- * #subSequence(int,int) subSequence()} returns a {@link CharSequence} that
- * shares the backing array.
+ * <P>
+ * The main disadvantage of mutable strings is that their substrings cannot share their backing
+ * arrays, so if you need to generate many substrings you may want to use <code>String</code>.
+ * However, {@link #subSequence(int,int) subSequence()} returns a {@link CharSequence} that shares
+ * the backing array.
  *
  * <h2>Warnings</h2>
  *
- * There are a few differences with standard string classes you should be aware
- * of.
+ * There are a few differences with standard string classes you should be aware of.
  *
  * <ol>
  *
- * <li><STRONG>This class is not synchronised</STRONG>.  If multiple threads
- * access an object of this class concurrently, and at least one of the threads
- * modifies it, it must be synchronised externally.
+ * <li><STRONG>This class is not synchronized</STRONG>. If multiple threads access an object of this
+ * class concurrently, and at least one of the threads modifies it, it must be synchronized
+ * externally.
  *
- * <li>This class implements polymorphic versions of the {@link #equals(Object)
- * equals} method that compare the <em>content</em> of <code>String</code>s and
- * <code>CharSequence</code>s, so that you can easily do checks like
+ * <li>This class implements polymorphic versions of the {@link #equals(Object) equals} method that
+ * compare the <em>content</em> of <code>String</code>s and <code>CharSequence</code>s, so that you
+ * can easily do checks like
  *
  * <PRE>
- *         mutableString.equals("Hello")
+ * mutableString.equals("Hello")
  * </PRE>
  *
- * Thus, you must <em>not</em> mix mutable strings with
- * <code>CharSequence</code>s in collections as equality between objects of
- * those types is not symmetric.
+ * Thus, you must <em>not</em> mix mutable strings with <code>CharSequence</code>s in collections as
+ * equality between objects of those types is not symmetric.
  *
- * <li>When the length of a string or char array argument is zero,
- * some methods may just do nothing even if other parameters are out of
- * bounds.
+ * <li>When the length of a string or char array argument is zero, some methods may just do nothing
+ * even if other parameters are out of bounds.
  *
- * <li>The output of {@link #writeSelfDelimUTF8(DataOutput) writeSelfDelimUTF8()} is
- * <em>not</em> compatible with the usual Java {@link
- * DataOutput#writeUTF(String) writeUTF()}.
+ * <li>The output of {@link #writeSelfDelimUTF8(DataOutput) writeSelfDelimUTF8()} is <em>not</em>
+ * compatible with the usual Java {@link DataOutput#writeUTF(String) writeUTF()}.
  *
- * <li>Even if this class is not final, most <em>methods</em> are declared
- * final for efficiency, so you cannot override them (why should you ever want
- * to override {@link #array()}?).
+ * <li>Even if this class is not final, most <em>methods</em> are declared final for efficiency, so
+ * you cannot override them (why should you ever want to override {@link #array()}?).
  *
  * </ol>
  *
@@ -410,16 +404,18 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 		System.arraycopy(array, start, dest, destStart, end - start);
 	}
 
-	/** Ensures that at least the given number of characters can be stored in this mutable string.
+	/**
+	 * Ensures that at least the given number of characters can be stored in this mutable string.
 	 *
-	 * <P>The new capacity of this string will be <em>exactly</em> equal to the
-	 * provided argument if this mutable string is compact (this differs
-	 * markedly from {@link java.lang.StringBuffer#ensureCapacity(int)
-	 * StringBuffer}). If this mutable string is loose, the provided argument
-	 * is maximised with the current capacity doubled.
+	 * <P>
+	 * The new capacity of this string will be <em>exactly</em> equal to the provided argument if this
+	 * mutable string is compact (this differs markedly from
+	 * {@link java.lang.StringBuffer#ensureCapacity(int) StringBuffer}). If this mutable string is
+	 * loose, the provided argument is maximized with the current capacity doubled.
 	 *
-	 * <P>Note that if the given argument is greater than the current length, you will make
-	 * this string loose (see the {@linkplain MutableString class description}).
+	 * <P>
+	 * Note that if the given argument is greater than the current length, you will make this string
+	 * loose (see the {@linkplain MutableString class description}).
 	 *
 	 * @param minimumCapacity we want at least this number of characters, but no more.
 	 * @return this mutable string.
@@ -887,7 +883,6 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 	 * @param separator a separator that will be appended inbetween the character sequences.
 	 * @return this mutable string.
 	 */
-	// TODO: this needs tests
 	public final MutableString append(final CharSequence[] a, final int offset, final int length, final CharSequence separator) {
 		ObjectArrays.ensureOffsetLength(a, offset, length);
 		if (length == 0) return this;
@@ -1560,7 +1555,6 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 
 		if (newLength >= length) {
 			expand(newLength);
-			// TODO: optimise for the case end == start + 1
 			System.arraycopy(array, end, array, start + 1, length - end);
 			array[start] = c;
 
@@ -2439,26 +2433,26 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 	}
 
 
-	/** Returns the index of the first occurrence of the specified mutable string, starting at the specified index.
+	/**
+	 * Returns the index of the first occurrence of the specified mutable string, starting at the
+	 * specified index.
 	 *
-	 * <P>This method uses a lightweight combination of Sunday's QuickSearch (a
-	 * simplified but very effective variant of the Boyer&mdash;Moore search
-	 * algorithm) and Bloom filters. More precisely, instead of recording the
-	 * last occurrence of all characters in the pattern, we simply record in a
-	 * small Bloom filter which characters belong to the pattern. Every time
-	 * there is a mismatch, we look at the character <em>immediately
-	 * following</em> the pattern: if it is not in the Bloom filter, besides
-	 * moving to the next position we can additionally skip a number of
-	 * characters equal to the length of the pattern.
+	 * <P>
+	 * This method uses a lightweight combination of Boyer&ndash;Moore's last-character heuristics and
+	 * Bloom filters. More precisely, instead of recording the last occurrence of all characters in the
+	 * pattern, we simply record in a small Bloom filter which characters belong to the pattern. Every
+	 * time there is a mismatch, we look at the character <em>immediately following</em> the pattern: if
+	 * it is not in the Bloom filter, besides moving to the next position we can additionally skip a
+	 * number of characters equal to the length of the pattern.
 	 *
-	 * <P>Unless called with a pattern that saturates the filter, this method
-	 * will usually outperform that of <code>String</code>.
+	 * <P>
+	 * Unless called with a pattern that saturates the filter, this method will usually outperform that
+	 * of <code>String</code>.
 	 *
 	 * @param pattern the mutable string to look for.
 	 * @param from the index from which the search must start.
-	 * @return the index of the first occurrence of <code>pattern</code> after
-	 * the first <code>from</code> characters, or <code>-1</code>, if the string never
-	 * appears.
+	 * @return the index of the first occurrence of <code>pattern</code> after the first
+	 *         <code>from</code> characters, or <code>-1</code>, if the string never appears.
 	 */
 
 	public final int indexOf(final MutableString pattern, final int from) {
@@ -3744,13 +3738,13 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 		return this;
 	}
 
-	/** Squeezes and normalises spaces in this mutable string. All subsequences of consecutive
-	 * characters satisfying {@link Character#isSpaceChar(char)} (or
-	 * {@link Character#isWhitespace(char)} if <code>squeezeOnlyWhitespace</code> is true)
-	 * will be transformed into a single space.
+	/**
+	 * Squeezes and normalizes spaces in this mutable string. All subsequences of consecutive characters
+	 * satisfying {@link Character#isSpaceChar(char)} (or {@link Character#isWhitespace(char)} if
+	 * <code>squeezeOnlyWhitespace</code> is true) will be transformed into a single space.
 	 *
 	 * @param squeezeOnlyWhitespace if true, a space is defined by {@link Character#isWhitespace(char)};
-	 * otherwise, a space is defined by {@link Character#isSpaceChar(char)}.
+	 *            otherwise, a space is defined by {@link Character#isSpaceChar(char)}.
 	 * @return this mutable string.
 	 */
 	public final MutableString squeezeSpaces(final boolean squeezeOnlyWhitespace) {
@@ -3776,9 +3770,11 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 		return this;
 	}
 
-	/** Squeezes and normalises whitespace in this mutable string. All subsequences of consecutive
-	 * characters satisfying {@link Character#isWhitespace(char)} will be transformed
-	 * into a single space.
+	/**
+	 * Squeezes and normalizes whitespace in this mutable string. All subsequences of consecutive
+	 * characters satisfying {@link Character#isWhitespace(char)} will be transformed into a single
+	 * space.
+	 *
 	 * @return this mutable string.
 	 * @see #squeezeSpace()
 	 */
@@ -3786,9 +3782,10 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 		return squeezeSpaces(true);
 	}
 
-	/** Squeezes and normalises spaces in this mutable string. All subsequences of consecutive
-	 * characters satisfying {@link Character#isSpaceChar(char)} will be transformed
-	 * into a single space.
+	/**
+	 * Squeezes and normalizes spaces in this mutable string. All subsequences of consecutive characters
+	 * satisfying {@link Character#isSpaceChar(char)} will be transformed into a single space.
+	 *
 	 * @return this mutable string.
 	 * @see #squeezeWhitespace()
 	 */
@@ -4622,16 +4619,17 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 		return new String(array, 0, length());
 	}
 
-	/** Writes a mutable string in serialised form.
+	/**
+	 * Writes a mutable string in serialized form.
 	 *
-	 * <P>The serialised version of a mutable string is made of its
-	 * length followed by its characters (in UTF-16 format). Note that the
-	 * compactness state is forgotten.
+	 * <P>
+	 * The serialized version of a mutable string is made of its length followed by its characters (in
+	 * UTF-16 format). Note that the compactness state is forgotten.
 	 *
-	 * <P>Because of limitations of {@link ObjectOutputStream}, this method must
-	 * write one character at a time, and does not try to do any caching (in
-	 * particular, it does not create any object). On non-buffered data outputs
-	 * it might be very slow.
+	 * <P>
+	 * Because of limitations of {@link ObjectOutputStream}, this method must write one character at a
+	 * time, and does not try to do any caching (in particular, it does not create any object). On
+	 * non-buffered data outputs it might be very slow.
 	 *
 	 * @param s a data output.
 	 */
@@ -4644,15 +4642,17 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 		for(int i = 0; i < length; i++) s.writeChar(a[i]);
 	}
 
-	/** Reads a mutable string in serialised form.
+	/**
+	 * Reads a mutable string in serialized form.
 	 *
-	 * <P>Mutable strings produced by this method are always compact; this seems
-	 * reasonable, as stored strings are unlikely going to be changed.
+	 * <P>
+	 * Mutable strings produced by this method are always compact; this seems reasonable, as stored
+	 * strings are unlikely going to be changed.
 	 *
-	 * <P>Because of limitations of {@link ObjectInputStream}, this method must
-	 * read one character at a time, and does not try to do any read-ahead (in
-	 * particular, it does not create any object). On non-buffered data inputs
-	 * it might be very slow.
+	 * <P>
+	 * Because of limitations of {@link ObjectInputStream}, this method must read one character at a
+	 * time, and does not try to do any read-ahead (in particular, it does not create any object). On
+	 * non-buffered data inputs it might be very slow.
 	 *
 	 * @param s a data input.
 	 */
