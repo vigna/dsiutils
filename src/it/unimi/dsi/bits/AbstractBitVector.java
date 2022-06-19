@@ -22,11 +22,11 @@ package it.unimi.dsi.bits;
 import static it.unimi.dsi.bits.LongArrayBitVector.bit;
 import static it.unimi.dsi.bits.LongArrayBitVector.word;
 import static it.unimi.dsi.bits.LongArrayBitVector.words;
+import static it.unimi.dsi.fastutil.Arrays.MAX_ARRAY_SIZE;
 
 import java.io.Serializable;
 import java.util.NoSuchElementException;
 
-import it.unimi.dsi.fastutil.Arrays;
 import it.unimi.dsi.fastutil.BigList;
 import it.unimi.dsi.fastutil.Size64;
 import it.unimi.dsi.fastutil.booleans.AbstractBooleanBigList;
@@ -365,7 +365,7 @@ public abstract class AbstractBitVector extends AbstractBooleanBigList implement
 	public long[] bits() {
 		final long length = length();
 		if (length == 0) return LongArrays.EMPTY_ARRAY;
-		if (length > Long.SIZE * (long)Arrays.MAX_ARRAY_SIZE) throw new IllegalArgumentException("Too many bits");
+		if (length > LongArrayBitVector.bits(MAX_ARRAY_SIZE)) throw new IllegalArgumentException("Too many bits");
 		final int words = words(length());
 		final long[] bits = new long[words];
 		int i = 0;

@@ -19,6 +19,8 @@
 
 package it.unimi.dsi.bits;
 
+import static it.unimi.dsi.fastutil.Arrays.MAX_ARRAY_SIZE;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -189,7 +191,7 @@ public class LongArrayBitVector extends AbstractBitVector implements Cloneable, 
 	}
 
 	protected LongArrayBitVector(final long capacity) {
-		if (capacity > bits(it.unimi.dsi.fastutil.Arrays.MAX_ARRAY_SIZE)) throw new IndexOutOfBoundsException("In this implementations bit vectors can be at most " + bits(it.unimi.dsi.fastutil.Arrays.MAX_ARRAY_SIZE) + " bits long");
+		if (capacity > bits(MAX_ARRAY_SIZE)) throw new IndexOutOfBoundsException("In this implementations bit vectors can be at most " + bits(MAX_ARRAY_SIZE) + " bits long");
 		this.bits = capacity > 0 ? new long[words(capacity)] : LongArrays.EMPTY_ARRAY;
 	}
 
@@ -265,7 +267,7 @@ public class LongArrayBitVector extends AbstractBitVector implements Cloneable, 
 	 */
 
 	public LongArrayBitVector ensureCapacity(final long numBits) {
-		if (numBits > bits(it.unimi.dsi.fastutil.Arrays.MAX_ARRAY_SIZE)) throw new IndexOutOfBoundsException("In this implementations bit vectors can be at most " + bits(it.unimi.dsi.fastutil.Arrays.MAX_ARRAY_SIZE) + " bits long");
+		if (numBits > bits(MAX_ARRAY_SIZE)) throw new IndexOutOfBoundsException("In this implementations bit vectors can be at most " + bits(MAX_ARRAY_SIZE) + " bits long");
 		bits = LongArrays.grow(bits, words(numBits), words(length));
 		return this;
 	}
