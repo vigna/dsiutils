@@ -1,6 +1,6 @@
 2.7.2
 
-- Fixed exception in AbstractBigVector.bits() for zero-length bit vectors.
+- Faster, safer AbstractBitVector.bits().
 
 2.7.1
 
