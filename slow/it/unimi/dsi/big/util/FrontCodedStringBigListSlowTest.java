@@ -50,13 +50,13 @@ public class FrontCodedStringBigListSlowTest {
 		}, 10, true);
 		SplittableRandom r = new SplittableRandom(0);
 		for (long i = 0; i < size; i++) {
-			assertEquals(new String(new byte[] { (byte)r.nextLong() }, StandardCharsets.ISO_8859_1), byteArrayFrontCodedBigList.get(i));
+			assertEquals(new String(new byte[] { (byte)r.nextLong() }, StandardCharsets.ISO_8859_1), byteArrayFrontCodedBigList.get(i).toString());
 		}
 		r = new SplittableRandom(0);
 		final MutableString s = new MutableString();
 		for (long i = 0; i < size; i++) {
 			byteArrayFrontCodedBigList.get(i, s);
-			assertEquals(new String(new byte[] { (byte)r.nextLong() }, StandardCharsets.ISO_8859_1), s);
+			assertEquals(new String(new byte[] { (byte)r.nextLong() }, StandardCharsets.ISO_8859_1), s.toString());
 		}
 	}
 
