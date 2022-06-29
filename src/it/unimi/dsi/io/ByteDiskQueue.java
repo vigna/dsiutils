@@ -518,7 +518,6 @@ public class ByteDiskQueue implements Closeable, Size64 {
 		channel = new RandomAccessFile(file, "rw").getChannel();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void finalize() throws Throwable {
 		try {

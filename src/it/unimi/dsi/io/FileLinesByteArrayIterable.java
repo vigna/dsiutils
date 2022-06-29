@@ -232,7 +232,6 @@ public class FileLinesByteArrayIterable implements Iterable<byte[]>, Size64 {
 			}
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		protected synchronized void finalize() throws Throwable {
 			try {

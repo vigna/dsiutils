@@ -290,7 +290,6 @@ public class FileLinesMutableStringIterable implements Iterable<MutableString>, 
 			}
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		protected synchronized void finalize() throws Throwable {
 			try {

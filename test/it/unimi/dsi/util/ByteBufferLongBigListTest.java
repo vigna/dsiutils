@@ -33,6 +33,7 @@ import org.junit.Test;
 import it.unimi.dsi.fastutil.io.BinIO;
 import it.unimi.dsi.fastutil.longs.LongIterators;
 
+@SuppressWarnings("deprecation")
 public class ByteBufferLongBigListTest {
 
 	@Test

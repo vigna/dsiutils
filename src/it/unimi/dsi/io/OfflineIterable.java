@@ -112,7 +112,6 @@ public class OfflineIterable<T,U extends T> implements Iterable<U>, SafelyClosea
 			}
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		protected void finalize() throws Throwable {
 			try {
@@ -232,7 +231,6 @@ public class OfflineIterable<T,U extends T> implements Iterable<U>, SafelyClosea
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void finalize() throws Throwable {
 		try {
