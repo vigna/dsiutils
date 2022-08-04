@@ -30,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.RandomAccess;
 
+import it.unimi.dsi.lang.FlyweightPrototype;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,7 +86,7 @@ import it.unimi.dsi.util.Properties;
  * @see FrontCodedStringBigList
  */
 
-public class MappedFrontCodedStringBigList extends AbstractObjectBigList<MutableString> implements RandomAccess, Closeable {
+public class MappedFrontCodedStringBigList extends AbstractObjectBigList<MutableString> implements RandomAccess, Closeable, FlyweightPrototype<MappedFrontCodedStringBigList> {
 	public static final long serialVersionUID = 1;
 	public static final String PROPERTIES_EXTENSION = ".properties";
 	public static final String BYTE_ARRAY_EXTENSION = ".bytearray";
@@ -115,6 +116,25 @@ public class MappedFrontCodedStringBigList extends AbstractObjectBigList<Mutable
 		this.pointers = LongMappedBigList.map(FileChannel.open(new File(pointers).toPath()));
 		fileChannel = FileChannel.open(new File(byteBigList).toPath());
 		this.byteList = ByteMappedBigList.map(fileChannel);
+	}
+
+	private MappedFrontCodedStringBigList(final long n, final int ratio, final ByteBigList byteList, final LongBigList pointers, final FileChannel fileChannel) {
+		this.n = n;
+		this.ratio = ratio;
+		this.byteList = byteList;
+		this.pointers = pointers;
+		this.fileChannel = fileChannel;
+	}
+
+	@Override
+	public MappedFrontCodedStringBigList copy() {
+		return new MappedFrontCodedStringBigList(
+				n,
+				ratio,
+				(byteList instanceof ByteMappedBigList) ? ((ByteMappedBigList) byteList).copy() : byteList,
+				(pointers instanceof LongMappedBigList) ? ((LongMappedBigList) pointers).copy() : pointers,
+				fileChannel
+		);
 	}
 
 	/**
