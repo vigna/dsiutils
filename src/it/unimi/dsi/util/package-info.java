@@ -23,9 +23,8 @@
  * <p>
  * A table summarizing timings is provided below. The timings were measured on an Intel&reg;
  * Core&trade; i7-8700B CPU @3.20GHz using
- * <a href="http://openjdk.java.net/projects/code-tools/jmh/">JMH</a> microbenchmarks. The JMH
- * timings were decreased by 1ns, as using the low-level {@code perfasm} profiler the JMH overhead
- * was estimated at &approx;1ns per call.
+ * <a href="http://openjdk.java.net/projects/code-tools/jmh/">JMH</a> microbenchmarks on the
+ * <a href="https://www.graalvm.org/">GraalVM</a> virtual machine.
  *
  * <TABLE BORDER=1>
  * <caption>Timings in nanoseconds for a few generators</caption>
