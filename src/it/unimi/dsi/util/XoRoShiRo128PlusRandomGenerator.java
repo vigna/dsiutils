@@ -28,7 +28,6 @@ import org.apache.commons.math3.random.AbstractRandomGenerator;
 import org.apache.commons.math3.random.RandomGenerator;
 
 import it.unimi.dsi.Util;
-import it.unimi.dsi.logging.ProgressLogger;
 
 /** A fast, high-quality {@linkplain RandomGenerator pseudorandom number generator} for floating-point generation.
  * It has excellent speed,

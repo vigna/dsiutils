@@ -26,7 +26,6 @@ import java.util.SplittableRandom;
 import org.apache.commons.math3.random.RandomGenerator;
 
 import it.unimi.dsi.Util;
-import it.unimi.dsi.logging.ProgressLogger;
 
 /**
  * A fast, all-purpose, rock-solid, small-state {@linkplain Random pseudorandom number generator}.

@@ -26,7 +26,6 @@ import java.util.SplittableRandom;
 import org.apache.commons.math3.random.RandomGenerator;
 
 import it.unimi.dsi.Util;
-import it.unimi.dsi.logging.ProgressLogger;
 
 /** A fast, rock-solid {@linkplain Random pseudorandom number generator} for floating-point generation.
  * It has excellent speed, a state space (256 bits) that is large enough for

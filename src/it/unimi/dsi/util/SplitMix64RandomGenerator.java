@@ -27,7 +27,6 @@ import org.apache.commons.math3.random.RandomGenerator;
 
 import it.unimi.dsi.Util;
 import it.unimi.dsi.fastutil.HashCommon;
-import it.unimi.dsi.logging.ProgressLogger;
 
 /** A fast, high-quality, non-splittable version of the <span style="font-variant: small-caps">SplitMix</span>
  * pseudorandom number generator used by {@link SplittableRandom}. Due to

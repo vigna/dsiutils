@@ -27,7 +27,6 @@ import org.apache.commons.math3.random.AbstractRandomGenerator;
 import org.apache.commons.math3.random.RandomGenerator;
 
 import it.unimi.dsi.Util;
-import it.unimi.dsi.logging.ProgressLogger;
 
 /** A fast, all-purpose, rock-solid {@linkplain RandomGenerator pseudorandom number generator}. It has excellent speed, a state space (256 bits) that is large enough for
  * any parallel application, and it passes all tests we are aware of.
