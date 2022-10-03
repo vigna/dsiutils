@@ -251,18 +251,4 @@ public class XorShift128PlusRandomGenerator extends AbstractRandomGenerator {
 		s0 = state[0];
 		s1 = state[1];
 	}
-
-	public static void main(final String[] arg) {
-		final long n = Long.parseLong(arg[0]);
-		long x = 0;
-		final ProgressLogger pl = new ProgressLogger();
-		final XorShift128PlusRandomGenerator r = new XorShift128PlusRandomGenerator();
-		for(int k = 10; k-- != 0;) {
-			pl.start("Measuring...");
-			for (long i = n; i-- != 0;)
-				x ^= r.nextLong();
-			pl.done(n);
-			if (x == 0) System.out.println(x);
-		}
-	}
 }

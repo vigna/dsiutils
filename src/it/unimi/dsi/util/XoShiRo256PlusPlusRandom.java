@@ -354,18 +354,4 @@ public class XoShiRo256PlusPlusRandom extends Random {
 		s2 = state[2];
 		s3 = state[3];
 	}
-
-	public static void main(final String[] arg) {
-		final long n = Long.parseLong(arg[0]);
-		long x = 0;
-		final ProgressLogger pl = new ProgressLogger();
-		final XoShiRo256PlusPlusRandomGenerator r = new XoShiRo256PlusPlusRandomGenerator(0);
-		for(int k = 10; k-- != 0;) {
-			pl.start("Measuring...");
-			for (long i = n; i-- != 0;)
-				x ^= r.nextLong();
-			pl.done(n);
-			if (x == 0) System.out.println(x);
-		}
-	}
 }

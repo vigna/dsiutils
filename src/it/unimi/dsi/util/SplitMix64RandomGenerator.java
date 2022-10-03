@@ -159,18 +159,4 @@ public class SplitMix64RandomGenerator extends AbstractRandomGenerator implement
 	public void setState(final long state) {
 		x = state;
 	}
-
-	public static void main(final String[] arg) {
-		final long n = Long.parseLong(arg[0]);
-		long x = 0;
-		final ProgressLogger pl = new ProgressLogger();
-		final SplitMix64RandomGenerator r = new SplitMix64RandomGenerator();
-		for(int k = 10; k-- != 0;) {
-			pl.start("Measuring...");
-			for (long i = n; i-- != 0;)
-				x ^= r.nextLong();
-			pl.done(n);
-			if (x == 0) System.out.println(x);
-		}
-	}
 }
