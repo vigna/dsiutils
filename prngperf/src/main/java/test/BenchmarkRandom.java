@@ -98,20 +98,4 @@ public class BenchmarkRandom {
         blackhole.consume(random.nextInt((1 << 30) + 1));
         blackhole.consume(random.nextInt((1 << 30) + 1));
     }
-
-    @Benchmark
-    @BenchmarkMode(Mode.AverageTime)
-	@OperationsPerInvocation(10)
-    public void nextInt230229(Blackhole blackhole) {
-        blackhole.consume(random.nextInt((1 << 30) + (1 << 29)));
-        blackhole.consume(random.nextInt((1 << 30) + (1 << 29)));
-        blackhole.consume(random.nextInt((1 << 30) + (1 << 29)));
-        blackhole.consume(random.nextInt((1 << 30) + (1 << 29)));
-        blackhole.consume(random.nextInt((1 << 30) + (1 << 29)));
-        blackhole.consume(random.nextInt((1 << 30) + (1 << 29)));
-        blackhole.consume(random.nextInt((1 << 30) + (1 << 29)));
-        blackhole.consume(random.nextInt((1 << 30) + (1 << 29)));
-        blackhole.consume(random.nextInt((1 << 30) + (1 << 29)));
-        blackhole.consume(random.nextInt((1 << 30) + (1 << 29)));
-    }
 }
