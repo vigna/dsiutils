@@ -105,7 +105,7 @@ import it.unimi.dsi.util.TextPattern;
  *
  * <li>hash codes of compact mutable strings are cached (for faster equality checks);
  *
- * <li>all search-based methods ({@link #indexOf(MutableString,int}, etc.) use a mini (single-word)
+ * <li>all search-based methods ({@link #indexOf(MutableString,int)}, etc.) use a mini (single-word)
  * Bloom filter to implement the last-character heuristics from the Boyer&ndash;Moore
  * algorithm&mdash;they are much faster than the {@link String} counterparts;
  *
