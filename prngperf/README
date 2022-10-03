@@ -1,0 +1,3 @@
+To perform a basic JMH run:
+
+mvn clean install && java -jar target/benchmarks.jar
