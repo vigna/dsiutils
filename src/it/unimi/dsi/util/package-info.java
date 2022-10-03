@@ -44,44 +44,60 @@
  * <TH><code>{@link it.unimi.dsi.util.XorShift1024StarPhiRandom xorshift1024*&phi;}</code>
  *
  * <TR>
- * <TH STYLE='text-align: left'>nextLong()
- * <TD STYLE='text-align: right'>14.419
- * <TD STYLE='text-align: right'>1.252
- * <TD STYLE='text-align: right'>1.283
- * <TD STYLE='text-align: right'>1.241
- * <TD STYLE='text-align: right'>1.428
- * <TD STYLE='text-align: right'>1.574
- * <TD STYLE='text-align: right'>1.295
- * <TD STYLE='text-align: right'>1.738
- * <TD STYLE='text-align: right'>1.884
- * <TD STYLE='text-align: right'>1.653
- * <TD STYLE='text-align: right'>1.901
+ * <TH STYLE='text-align: left'><code>nextLong()</code>
+ * <TD STYLE='text-align: right'>13.096
+ * <TD STYLE='text-align: right'>1.117
+ * <TD STYLE='text-align: right'>2.152
+ * <TD STYLE='text-align: right'>2.126
+ * <TD STYLE='text-align: right'>3.065
+ * <TD STYLE='text-align: right'>3.132
+ * <TD STYLE='text-align: right'>2.926
+ * <TD STYLE='text-align: right'>2.812
+ * <TD STYLE='text-align: right'>2.801
+ * <TD STYLE='text-align: right'>2.765
+ * <TD STYLE='text-align: right'>2.836
+ *
  * <TR>
- * <TH STYLE='text-align: left'>nextInt(100000)
- * <TD STYLE='text-align: right'>6.715
- * <TD STYLE='text-align: right'>2.045
- * <TD STYLE='text-align: right'>2.499
- * <TD STYLE='text-align: right'>2.543
- * <TD STYLE='text-align: right'>2.336
- * <TD STYLE='text-align: right'>2.594
- * <TD STYLE='text-align: right'>1.202
- * <TD STYLE='text-align: right'>2.607
- * <TD STYLE='text-align: right'>2.954
- * <TD STYLE='text-align: right'>2.367
- * <TD STYLE='text-align: right'>3.119
+ * <TH STYLE='text-align: left'><code>nextDouble()</code>
+ * <TD STYLE='text-align: right'>13.111
+ * <TD STYLE='text-align: right'>2.220
+ * <TD STYLE='text-align: right'>2.143
+ * <TD STYLE='text-align: right'>2.163
+ * <TD STYLE='text-align: right'>3.029
+ * <TD STYLE='text-align: right'>3.123
+ * <TD STYLE='text-align: right'>2.884
+ * <TD STYLE='text-align: right'>2.858
+ * <TD STYLE='text-align: right'>2.855
+ * <TD STYLE='text-align: right'>2.806
+ * <TD STYLE='text-align: right'>2.820
+ *
  * <TR>
- * <TH STYLE='text-align: left'>nextDouble()
- * <TD STYLE='text-align: right'>14.458
- * <TD STYLE='text-align: right'>1.876
- * <TD STYLE='text-align: right'>2.161
- * <TD STYLE='text-align: right'>2.176
- * <TD STYLE='text-align: right'>1.918
- * <TD STYLE='text-align: right'>2.219
- * <TD STYLE='text-align: right'>1.853
- * <TD STYLE='text-align: right'>2.304
- * <TD STYLE='text-align: right'>2.503
- * <TD STYLE='text-align: right'>2.112
- * <TD STYLE='text-align: right'>2.755
+ * <TH STYLE='text-align: left'><code>nextInt(100000)</code>
+ * <TD STYLE='text-align: right'>6.554
+ * <TD STYLE='text-align: right'>2.352
+ * <TD STYLE='text-align: right'>2.230
+ * <TD STYLE='text-align: right'>2.356
+ * <TD STYLE='text-align: right'>3.365
+ * <TD STYLE='text-align: right'>3.386
+ * <TD STYLE='text-align: right'>3.320
+ * <TD STYLE='text-align: right'>3.013
+ * <TD STYLE='text-align: right'>3.169
+ * <TD STYLE='text-align: right'>2.992
+ * <TD STYLE='text-align: right'>3.327
+ *
+ * <TR>
+ * <TH STYLE='text-align: left'><code>nextInt(2<sup>30</sup>+1)</code>
+ * <TD STYLE='text-align: right'>18.909
+ * <TD STYLE='text-align: right'>17.563
+ * <TD STYLE='text-align: right'>17.706
+ * <TD STYLE='text-align: right'>2.316
+ * <TD STYLE='text-align: right'>3.388
+ * <TD STYLE='text-align: right'>3.384
+ * <TD STYLE='text-align: right'>3.293
+ * <TD STYLE='text-align: right'>3.051
+ * <TD STYLE='text-align: right'>3.121
+ * <TD STYLE='text-align: right'>2.994
+ * <TD STYLE='text-align: right'>3.369
  * </TABLE>
  *
  * <p>
