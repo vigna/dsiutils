@@ -115,7 +115,6 @@ public class XorGensRandomGenerator extends AbstractRandomGenerator implements S
 
 	public long nextLong(final long n) {
         if (n <= 0) throw new IllegalArgumentException();
-		// No special provision for n power of two: all our bits are good.
 		for(;;) {
 			final long bits = nextLong() >>> 1;
 			final long value = bits % n;

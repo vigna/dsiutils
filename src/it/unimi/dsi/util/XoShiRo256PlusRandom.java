@@ -135,7 +135,7 @@ public class XoShiRo256PlusRandom extends Random {
 		if (n <= 0) throw new IllegalArgumentException("illegal bound " + n + " (must be positive)");
 		long t = nextLong();
 		final long nMinus1 = n - 1;
-		// Shortcut for powers of two--high bits
+		// For powers of 2 we return the high bits
 		if ((n & nMinus1) == 0) return (t >>> Long.numberOfLeadingZeros(nMinus1)) & nMinus1;
 		// Rejection-based algorithm to get uniform integers in the general case
 		for (long u = t >>> 1; u + nMinus1 - (t = u % n) < 0; u = nextLong() >>> 1);

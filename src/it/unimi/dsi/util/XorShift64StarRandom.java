@@ -92,7 +92,6 @@ public class XorShift64StarRandom extends Random {
 	@Override
 	public int nextInt(final int n) {
         if (n <= 0) throw new IllegalArgumentException();
-		// No special provision for n power of two: all our bits are good.
         return (int)((nextLong() >>> 1) % n);
 	}
 
@@ -107,7 +106,6 @@ public class XorShift64StarRandom extends Random {
      */
 	public long nextLong(final long n) {
         if (n <= 0) throw new IllegalArgumentException();
-		// No special provision for n power of two: all our bits are good.
 		for(;;) {
 			final long bits = nextLong() >>> 1;
 			final long value = bits % n;
