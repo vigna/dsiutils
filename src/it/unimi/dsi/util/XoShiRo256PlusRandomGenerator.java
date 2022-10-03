@@ -138,6 +138,7 @@ public class XoShiRo256PlusRandomGenerator extends AbstractRandomGenerator imple
 		long t = nextLong();
 		final long nMinus1 = n - 1;
 		// For powers of 2 we return the high bits
+		// t >>> 1 >>> Long.numberOfLeadingZeros(n) might be faster but it would be backward incompatible
 		if ((n & nMinus1) == 0) return (t >>> Long.numberOfLeadingZeros(nMinus1)) & nMinus1;
 		// Rejection-based algorithm to get uniform integers in the general case
 		for (long u = t >>> 1; u + nMinus1 - (t = u % n) < 0; u = nextLong() >>> 1);
