@@ -23,8 +23,9 @@
  * <p>
  * A table summarizing timings is provided below. The timings were measured on an Intel&reg;
  * Core&trade; i7-8700B CPU @3.20GHz using
- * <a href="http://openjdk.java.net/projects/code-tools/jmh/">JMH</a> microbenchmarks on the
- * <a href="https://www.graalvm.org/">GraalVM</a> virtual machine.
+ * <a href="http://openjdk.java.net/projects/code-tools/jmh/">JMH</a>
+ * <a href="https://github.com/vigna/dsiutils/tree/master/prngperf">microbenchmarks</a> on the
+ * <a href="https://www.graalvm.org/">GraalVM</a> virtual machine for Java 17 (release 22.2.0).
  *
  * <TABLE BORDER=1>
  * <caption>Timings in nanoseconds for a few generators</caption>
@@ -45,59 +46,60 @@
  *
  * <TR>
  * <TH STYLE='text-align: left'><code>nextLong()</code>
- * <TD STYLE='text-align: right'>13.096
+ * <TD STYLE='text-align: right'>17.024
+ * <TD STYLE='text-align: right'>1.059
+ * <TD STYLE='text-align: right'>0.846
+ * <TD STYLE='text-align: right'>0.981
+ * <TD STYLE='text-align: right'>1.054
  * <TD STYLE='text-align: right'>1.117
- * <TD STYLE='text-align: right'>2.152
- * <TD STYLE='text-align: right'>2.126
- * <TD STYLE='text-align: right'>3.065
- * <TD STYLE='text-align: right'>3.132
- * <TD STYLE='text-align: right'>2.926
- * <TD STYLE='text-align: right'>2.812
- * <TD STYLE='text-align: right'>2.801
- * <TD STYLE='text-align: right'>2.765
- * <TD STYLE='text-align: right'>2.836
+ * <TD STYLE='text-align: right'>0.911
+ * <TD STYLE='text-align: right'>1.617
+ * <TD STYLE='text-align: right'>1.646
+ * <TD STYLE='text-align: right'>1.601
+ * <TD STYLE='text-align: right'>1.329
  *
  * <TR>
  * <TH STYLE='text-align: left'><code>nextDouble()</code>
- * <TD STYLE='text-align: right'>13.111
- * <TD STYLE='text-align: right'>2.220
- * <TD STYLE='text-align: right'>2.143
- * <TD STYLE='text-align: right'>2.163
- * <TD STYLE='text-align: right'>3.029
- * <TD STYLE='text-align: right'>3.123
- * <TD STYLE='text-align: right'>2.884
- * <TD STYLE='text-align: right'>2.858
- * <TD STYLE='text-align: right'>2.855
- * <TD STYLE='text-align: right'>2.806
- * <TD STYLE='text-align: right'>2.820
+ * <TD STYLE='text-align: right'>16.611
+ * <TD STYLE='text-align: right'>2.707
+ * <TD STYLE='text-align: right'>1.938
+ * <TD STYLE='text-align: right'>1.946
+ * <TD STYLE='text-align: right'>1.945
+ * <TD STYLE='text-align: right'>1.944
+ * <TD STYLE='text-align: right'>1.936
+ * <TD STYLE='text-align: right'>1.935
+ * <TD STYLE='text-align: right'>1.940
+ * <TD STYLE='text-align: right'>1.935
+ * <TD STYLE='text-align: right'>1.932
  *
  * <TR>
  * <TH STYLE='text-align: left'><code>nextInt(100000)</code>
- * <TD STYLE='text-align: right'>6.554
- * <TD STYLE='text-align: right'>2.352
- * <TD STYLE='text-align: right'>2.230
- * <TD STYLE='text-align: right'>2.356
- * <TD STYLE='text-align: right'>3.365
- * <TD STYLE='text-align: right'>3.386
- * <TD STYLE='text-align: right'>3.320
- * <TD STYLE='text-align: right'>3.013
- * <TD STYLE='text-align: right'>3.169
- * <TD STYLE='text-align: right'>2.992
- * <TD STYLE='text-align: right'>3.327
+ * <TD STYLE='text-align: right'>8.692
+ * <TD STYLE='text-align: right'>2.164
+ * <TD STYLE='text-align: right'>1.906
+ * <TD STYLE='text-align: right'>2.344
+ * <TD STYLE='text-align: right'>2.441
+ * <TD STYLE='text-align: right'>2.451
+ * <TD STYLE='text-align: right'>2.138
+ * <TD STYLE='text-align: right'>3.521
+ * <TD STYLE='text-align: right'>3.635
+ * <TD STYLE='text-align: right'>3.433
+ * <TD STYLE='text-align: right'>2.468
  *
  * <TR>
  * <TH STYLE='text-align: left'><code>nextInt(2<sup>30</sup>+1)</code>
- * <TD STYLE='text-align: right'>18.909
- * <TD STYLE='text-align: right'>17.563
- * <TD STYLE='text-align: right'>17.706
- * <TD STYLE='text-align: right'>2.316
- * <TD STYLE='text-align: right'>3.388
- * <TD STYLE='text-align: right'>3.384
- * <TD STYLE='text-align: right'>3.293
- * <TD STYLE='text-align: right'>3.051
- * <TD STYLE='text-align: right'>3.121
- * <TD STYLE='text-align: right'>2.994
- * <TD STYLE='text-align: right'>3.369
+ * <TD STYLE='text-align: right'>19.370
+ * <TD STYLE='text-align: right'>12.870
+ * <TD STYLE='text-align: right'>11.828
+ * <TD STYLE='text-align: right'>2.519
+ * <TD STYLE='text-align: right'>2.369
+ * <TD STYLE='text-align: right'>2.605
+ * <TD STYLE='text-align: right'>2.247
+ * <TD STYLE='text-align: right'>3.873
+ * <TD STYLE='text-align: right'>3.760
+ * <TD STYLE='text-align: right'>3.550
+ * <TD STYLE='text-align: right'>2.594
+ *
  * </TABLE>
  *
  * <p>
