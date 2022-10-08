@@ -22,7 +22,7 @@
  *
  * <p>
  * A table summarizing timings is provided below. The timings were measured on an Intel&reg;
- * Core&trade; i7-8700B CPU @3.20GHz using
+ * Core&trade; i7-7700 CPU @3.60GHz using
  * <a href="http://openjdk.java.net/projects/code-tools/jmh/">JMH</a>
  * <a href="https://github.com/vigna/dsiutils/tree/master/prngperf">microbenchmarks</a> on the
  * <a href="https://www.graalvm.org/">GraalVM</a> virtual machine for Java 17 (release 22.2.0).
