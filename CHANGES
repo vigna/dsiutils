@@ -1,3 +1,8 @@
+2.7.3
+
+- Mapping an empty file with ByteBufferInputStream would have caused
+  an exception.
+
 2.7.2
 
 - Faster, safer AbstractBitVector.bits().
