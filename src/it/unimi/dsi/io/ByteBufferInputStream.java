@@ -121,10 +121,9 @@ public class ByteBufferInputStream extends MeasurableInputStream implements Repo
 	 */
 	public static ByteBufferInputStream map(final FileChannel fileChannel, final MapMode mapMode) throws IOException {
 		final long size = fileChannel.size();
-		final int chunks = (int)((size + (CHUNK_SIZE - 1)) / CHUNK_SIZE);
+		final int chunks = size == 0 ? 1 : (int)((size + (CHUNK_SIZE - 1)) / CHUNK_SIZE);
 		final ByteBuffer[] byteBuffer = new ByteBuffer[chunks];
 		for(int i = 0; i < chunks; i++) byteBuffer[i] = fileChannel.map(mapMode, i * CHUNK_SIZE, Math.min(CHUNK_SIZE, size - i * CHUNK_SIZE));
-		if (chunks != 0) byteBuffer[0].position(0);
 		final boolean[] readyToUse = new boolean[chunks];
 		Arrays.fill(readyToUse, true);
 		return new ByteBufferInputStream(byteBuffer, size, 0, readyToUse);
