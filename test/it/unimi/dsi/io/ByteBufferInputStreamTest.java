@@ -34,7 +34,8 @@ import org.junit.Test;
 
 import it.unimi.dsi.util.SplitMix64Random;
 
-/** Note: this test has little meaning unless you change ByteBufferInputStream.FIRST_SHIFT to 16.
+/**
+ * Note: this test has little meaning unless you change ByteBufferInputStream.CHUNK_SHIFT to 16.
  */
 
 @SuppressWarnings("resource")
@@ -124,5 +125,42 @@ public class ByteBufferInputStreamTest {
 			System.gc(); // Try to get rid of mapped buffers.
 			channel.close();
 		}
+	}
+
+	@Test
+	public void testEmpty() throws IOException {
+		final File f = File.createTempFile(ByteBufferInputStreamTest.class.getName(), "tmp");
+		f.deleteOnExit();
+		final FileChannel channel = new FileInputStream(f).getChannel();
+		final ByteBufferInputStream s = ByteBufferInputStream.map(channel);
+		final byte b[] = new byte[1];
+		assertEquals(-1, s.read());
+		assertEquals(-1, s.read(b));
+		assertEquals(0, s.available());
+		assertEquals(0, s.skip(1));
+		assertEquals(0, s.length());
+		assertEquals(0, s.position());
+		s.position(1);
+		assertEquals(-1, s.read());
+		assertEquals(-1, s.read(b));
+		assertEquals(0, s.available());
+		assertEquals(0, s.skip(1));
+		assertEquals(0, s.length());
+		assertEquals(0, s.position());
+		s.position(1);
+		final ByteBufferInputStream t = s.copy();
+		assertEquals(-1, t.read());
+		assertEquals(-1, t.read(b));
+		assertEquals(0, t.available());
+		assertEquals(0, t.skip(1));
+		assertEquals(0, t.length());
+		assertEquals(0, t.position());
+		t.position(1);
+		assertEquals(-1, t.read());
+		assertEquals(-1, t.read(b));
+		assertEquals(0, t.available());
+		assertEquals(0, t.skip(1));
+		assertEquals(0, t.length());
+		assertEquals(0, t.position());
 	}
 }
