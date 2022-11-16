@@ -21,11 +21,11 @@
  * "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/random/package-summary.html"><code>java.util.random</code></a>.
  *
  * <p>
- * A table summarizing timings is provided below. The timings were measured on an Intel&reg;
- * Core&trade; i7-7700 CPU @3.60GHz using
+ * A table summarizing timings is provided below. The timings were measured on a 12th Gen Intel&reg;
+ * Core&trade; i7-12700KF @3.60GHz using
  * <a href="http://openjdk.java.net/projects/code-tools/jmh/">JMH</a>
  * <a href="https://github.com/vigna/dsiutils/tree/master/prngperf">microbenchmarks</a> on the
- * <a href="https://www.graalvm.org/">GraalVM</a> virtual machine for Java 17 (release 22.2.0).
+ * <a href="https://www.graalvm.org/">GraalVM</a> virtual machine for Java 19 (release 22.3.0).
  *
  * <TABLE BORDER=1>
  * <caption>Timings in nanoseconds for a few generators</caption>
@@ -46,69 +46,61 @@
  *
  * <TR>
  * <TH STYLE='text-align: left'><code>nextLong()</code>
- * <TD STYLE='text-align: right'>17.024
- * <TD STYLE='text-align: right'>1.059
- * <TD STYLE='text-align: right'>0.846
- * <TD STYLE='text-align: right'>0.981
- * <TD STYLE='text-align: right'>1.054
- * <TD STYLE='text-align: right'>1.117
+ * <TD STYLE='text-align: right'>14.522
+ * <TD STYLE='text-align: right'>0.699
+ * <TD STYLE='text-align: right'>0.536
+ * <TD STYLE='text-align: right'>0.518
+ * <TD STYLE='text-align: right'>0.817
+ * <TD STYLE='text-align: right'>0.937
+ * <TD STYLE='text-align: right'>0.732
  * <TD STYLE='text-align: right'>0.911
- * <TD STYLE='text-align: right'>1.617
- * <TD STYLE='text-align: right'>1.646
- * <TD STYLE='text-align: right'>1.601
- * <TD STYLE='text-align: right'>1.329
+ * <TD STYLE='text-align: right'>0.852
+ * <TD STYLE='text-align: right'>0.760
+ * <TD STYLE='text-align: right'>0.776
  *
  * <TR>
  * <TH STYLE='text-align: left'><code>nextDouble()</code>
- * <TD STYLE='text-align: right'>16.611
- * <TD STYLE='text-align: right'>2.707
- * <TD STYLE='text-align: right'>1.938
- * <TD STYLE='text-align: right'>1.946
- * <TD STYLE='text-align: right'>1.945
- * <TD STYLE='text-align: right'>1.944
- * <TD STYLE='text-align: right'>1.936
- * <TD STYLE='text-align: right'>1.935
- * <TD STYLE='text-align: right'>1.940
- * <TD STYLE='text-align: right'>1.935
- * <TD STYLE='text-align: right'>1.932
+ * <TD STYLE='text-align: right'>14.513
+ * <TD STYLE='text-align: right'>1.813
+ * <TD STYLE='text-align: right'>1.609
+ * <TD STYLE='text-align: right'>1.608
+ * <TD STYLE='text-align: right'>1.607
+ * <TD STYLE='text-align: right'>1.609
+ * <TD STYLE='text-align: right'>1.608
+ * <TD STYLE='text-align: right'>1.607
+ * <TD STYLE='text-align: right'>1.610
+ * <TD STYLE='text-align: right'>1.608
+ * <TD STYLE='text-align: right'>1.609
  *
  * <TR>
  * <TH STYLE='text-align: left'><code>nextInt(100000)</code>
- * <TD STYLE='text-align: right'>8.692
- * <TD STYLE='text-align: right'>2.164
- * <TD STYLE='text-align: right'>1.906
- * <TD STYLE='text-align: right'>2.344
- * <TD STYLE='text-align: right'>2.441
- * <TD STYLE='text-align: right'>2.451
- * <TD STYLE='text-align: right'>2.138
- * <TD STYLE='text-align: right'>3.521
- * <TD STYLE='text-align: right'>3.635
- * <TD STYLE='text-align: right'>3.433
- * <TD STYLE='text-align: right'>2.468
+ * <TD STYLE='text-align: right'>7.652
+ * <TD STYLE='text-align: right'>1.329
+ * <TD STYLE='text-align: right'>1.368
+ * <TD STYLE='text-align: right'>1.194
+ * <TD STYLE='text-align: right'>1.322
+ * <TD STYLE='text-align: right'>1.428
+ * <TD STYLE='text-align: right'>1.216
+ * <TD STYLE='text-align: right'>1.751
+ * <TD STYLE='text-align: right'>1.763
+ * <TD STYLE='text-align: right'>1.990
+ * <TD STYLE='text-align: right'>1.286
  *
  * <TR>
  * <TH STYLE='text-align: left'><code>nextInt(2<sup>30</sup>+1)</code>
- * <TD STYLE='text-align: right'>19.370
- * <TD STYLE='text-align: right'>12.870
- * <TD STYLE='text-align: right'>11.828
- * <TD STYLE='text-align: right'>2.519
- * <TD STYLE='text-align: right'>2.369
- * <TD STYLE='text-align: right'>2.605
- * <TD STYLE='text-align: right'>2.247
- * <TD STYLE='text-align: right'>3.873
- * <TD STYLE='text-align: right'>3.760
- * <TD STYLE='text-align: right'>3.550
- * <TD STYLE='text-align: right'>2.594
+ * <TD STYLE='text-align: right'>16.291
+ * <TD STYLE='text-align: right'>10.722
+ * <TD STYLE='text-align: right'>9.639
+ * <TD STYLE='text-align: right'>1.260
+ * <TD STYLE='text-align: right'>1.348
+ * <TD STYLE='text-align: right'>1.471
+ * <TD STYLE='text-align: right'>1.240
+ * <TD STYLE='text-align: right'>1.851
+ * <TD STYLE='text-align: right'>1.862
+ * <TD STYLE='text-align: right'>1.890
+ * <TD STYLE='text-align: right'>1.351
  *
  * </TABLE>
- *
- * <p>
- * Note that generators that are <a href="http://prng.di.unimi.it/">extremely fast in C</a>, such as
- * <code>xoshiro256+</code>, do not perform particularly well in Java, most likely because of the
- * cost of accessing variables, which rises as the size of the state space grows. Indeed,
- * smaller-state generators are faster. Moreover, generators based on the <code>++</code> scrambler
- * are slightly faster than those based on the <code>**</code> scrambler, contrarily to what happens
- * in C.
  *
  * <p>
  * For each generator, we provide a version that extends {@link java.util.Random}, overriding (as
