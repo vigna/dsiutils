@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2003-2022 Paolo Boldi and Sebastiano Vigna
+ * Copyright (C) 2003-2023 Paolo Boldi and Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,

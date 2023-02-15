@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2012-2022 Sebastiano Vigna
+ * Copyright (C) 2012-2023 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
