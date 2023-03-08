@@ -85,12 +85,37 @@
 
 	<target name="stage" depends="dist,ivy-pom" description="deploy release version to Maven staging repository">
 		<!-- sign and deploy the main artifact -->
+		<exec executable="gpg">
+			<arg value="-sba"/>
+			<arg value="--yes"/>
+			<arg value="${maven-jar}"/>
+		</exec>
+		<exec executable="gpg">
+			<arg value="-sba"/>
+			<arg value="--yes"/>
+			<arg value="${maven-sources-jar}"/>
+		</exec>
+		<exec executable="gpg">
+			<arg value="-sba"/>
+			<arg value="--yes"/>
+			<arg value="${maven-javadoc-jar}"/>
+		</exec>
+		<exec executable="gpg">
+			<arg value="-sba"/>
+			<arg value="--yes"/>
+			<arg value="pom.xml"/>
+		</exec>
+
 		<resolver:deploy>
 			<pom file="pom.xml"/>
 			<remoterepo id="${maven-staging-repository-id}" url ="${maven-staging-repository-url}"/>
+			<artifact file="pom.xml.asc" type="pom.asc"/>
 			<artifact file="${maven-jar}" type="jar"/>
 			<artifact file="${maven-sources-jar}" type="jar" classifier="sources"/>
 			<artifact file="${maven-javadoc-jar}" type="jar" classifier="javadoc"/>
+			<artifact file="${maven-jar}.asc" type="jar.asc"/>
+			<artifact file="${maven-sources-jar}.asc" type="jar.asc" classifier="sources"/>
+			<artifact file="${maven-javadoc-jar}.asc" type="jar.asc" classifier="javadoc"/>
 		</resolver:deploy>
 	</target>
 
