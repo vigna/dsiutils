@@ -5,7 +5,7 @@
   <artifactId>dsiutils</artifactId>
   <packaging>jar</packaging>
   <name>DSI Utilities</name>
-  <version>2.7.3</version>
+  <version>2.7.4-SNAPSHOT</version>
   <description>The DSI utilities are a mishmash of classes accumulated during the last twenty years in projects developed at the DSI (Dipartimento di Scienze dell'Informazione, i.e., Information Sciences Department), now DI (Dipartimento di Informatica, i.e., Informatics Department), of the Universita` degli Studi di Milano.</description>
   <url>http://dsiutils.di.unimi.it/</url>
   <licenses>
