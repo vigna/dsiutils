@@ -27,9 +27,9 @@ To build:
 ./mvnw clean verify
 ```
 
-To "quick-build" (produce all artifacts but skip all test execution -- `-Dtest=` makes no UT/IT to match):
+To "quick-build" (produce all artifacts but skip all test execution -- `-Dtest=void` matches no UT/IT to run):
 ```
-./mvnw clean verify -Dtest= -P vigna-release
+./mvnw clean verify -Dtest=void -P vigna-release
 ```
 
 To build with slow tests:
