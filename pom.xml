@@ -22,8 +22,21 @@
   </licenses>
   <scm>
     <connection>scm:git://github.com/vigna/dsiutils.git</connection>
+    <developerConnection>scm:git://github.com/vigna/dsiutils.git</developerConnection>
     <url>https://github.com/vigna/dsiutils</url>
   </scm>
+  <distributionManagement>
+    <repository>
+      <id>sonatype.releases</id>
+      <name>Sonatype oss.sonatype.org Staging</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+    <snapshotRepository>
+      <id>sonatype.snapshots</id>
+      <name>Sonatype oss.sonatype.org Snapshots</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
   <developers>
     <developer>
       <id>boldi</id>
