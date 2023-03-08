@@ -192,7 +192,6 @@
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>3.5.0</version>
           <configuration>
-            <encoding>UTF-8</encoding>
             <windowtitle>dsiutil ${project.version}</windowtitle>
             <javadocDirectory>src/</javadocDirectory>
             <overview>overview.html</overview>
