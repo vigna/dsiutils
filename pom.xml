@@ -123,12 +123,6 @@
   </dependencies>
 
   <build>
-    <!-- non standard layout -->
-    <sourceDirectory>src/</sourceDirectory>
-    <resources><resource><directory>src-rsrc/</directory></resource></resources>
-    <testSourceDirectory>test/</testSourceDirectory>
-    <testResources><testResource><directory>test-rsrc/</directory></testResource></testResources>
-
     <!-- lock down used plugin versions: makes build reproducible/independent of used Maven versions (ABC ordered) -->
     <pluginManagement>
       <plugins>
@@ -163,11 +157,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-gpg-plugin</artifactId>
           <version>3.0.1</version>
-          <configuration>
-            <gpgArguments>
-              <arg>--digest-algo=SHA512</arg>
-            </gpgArguments>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -178,38 +167,16 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.3.0</version>
-          <configuration>
-            <archive>
-              <manifest>
-                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              </manifest>
-            </archive>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>3.5.0</version>
-          <configuration>
-            <windowtitle>dsiutil ${project.version}</windowtitle>
-            <javadocDirectory>src/</javadocDirectory>
-            <overview>overview.html</overview>
-            <addStylesheets>
-              <stylesheet>stylesheet.css</stylesheet>
-            </addStylesheets>
-            <additionalOptions>-breakiterator -tag "apiNote:a:API Notes:" -tag "implSpec:a:Implementation Specification:" -tag "implNote:a:Implementation Notes:"</additionalOptions>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
           <version>3.0.0-M7</version>
-          <configuration>
-            <useReleaseProfile>false</useReleaseProfile>
-            <goals>deploy</goals>
-            <releaseProfiles>vigna-release</releaseProfiles>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -225,9 +192,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>3.0.0-M9</version>
-          <configuration>
-            <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -237,11 +201,6 @@
 
         <!-- non ASF plugins -->
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <version>3.3.0</version>
-        </plugin>
-        <plugin>
           <groupId>biz.aQute.bnd</groupId>
           <artifactId>bnd-maven-plugin</artifactId>
           <version>6.4.0</version>
@@ -249,6 +208,7 @@
       </plugins>
     </pluginManagement>
 
+    <!-- configure plugins and bind those needs it -->
     <plugins>
       <plugin>
         <groupId>biz.aQute.bnd</groupId>
@@ -261,7 +221,7 @@
               <goal>bnd-process</goal>
             </goals>
             <configuration>
-              <bndfile>dsiutils.bnd</bndfile>
+              <bndfile>src/main/bnd/dsiutils.bnd</bndfile>
             </configuration>
           </execution>
         </executions>
@@ -297,6 +257,36 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+        </configuration>
+        <executions>
+          <execution>
+            <id>default-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <exclude>**/*SlowTest.java</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <useReleaseProfile>false</useReleaseProfile>
+          <goals>deploy</goals>
+          <releaseProfiles>vigna-release</releaseProfiles>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -307,19 +297,19 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
             <executions>
               <execution>
-                <id>add-slow-test-source</id>
-                <phase>process-resources</phase>
+                <id>slow-test</id>
+                <phase>test</phase>
                 <goals>
-                  <goal>add-test-source</goal>
+                  <goal>test</goal>
                 </goals>
                 <configuration>
-                  <sources>
-                    <source>slow</source>
-                  </sources>
+                  <includes>
+                    <include>**/*SlowTest.java</include>
+                  </includes>
                 </configuration>
               </execution>
             </executions>
@@ -354,6 +344,13 @@
                 <goals>
                   <goal>jar</goal>
                 </goals>
+                <configuration>
+                  <windowtitle>dsiutil ${project.version}</windowtitle>
+                  <addStylesheets>
+                    <stylesheet>stylesheet.css</stylesheet>
+                  </addStylesheets>
+                  <additionalOptions>-breakiterator -tag "apiNote:a:API Notes:" -tag "implSpec:a:Implementation Specification:" -tag "implNote:a:Implementation Notes:"</additionalOptions>
+                </configuration>
               </execution>
             </executions>
           </plugin>
@@ -368,6 +365,9 @@
                 </goals>
                 <configuration>
                   <useAgent>true</useAgent>
+                  <gpgArguments>
+                    <arg>--digest-algo=SHA512</arg>
+                  </gpgArguments>
                 </configuration>
               </execution>
             </executions>
