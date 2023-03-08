@@ -2,4 +2,4 @@ Automatic-Module-Name: it.unimi.dsi.dsiutils
 Bundle-Name: it.unimi.dsi.dsiutils
 Bundle-SymbolicName: it.unimi.dsi.dsiutils
 Export-Package: it.unimi.dsi.*
-Bundle-Version: ${version}
+Bundle-Version: ${project.version}
