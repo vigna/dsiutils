@@ -19,22 +19,22 @@ seba (<mailto:sebastiano.vigna@unimi.it>)
 Alt Building
 ------------
 
-Uses [Apache Maven](https://maven.apache.org/) but you need Java 1.8+ only, project uses Maven Wrapper.
-(My own preferred way to install Java and Maven as well is [SDKMAN](https://sdkman.io/)).
+Uses [Apache Maven](https://maven.apache.org/) but you need Java 1.8+ only, project uses Maven Wrapper (no need to install anything).
+Btw, my own preferred way to install Java and Maven as well is [SDKMAN](https://sdkman.io/).
 
 To build:
 ```
 ./mvnw clean verify
 ```
 
+To build with slow tests also:
+```
+./mvnw clean verify -P slow
+```
+
 To "quick-build" (produce all artifacts but skip all test execution -- `-Dtest=void` matches no UT/IT to run):
 ```
 ./mvnw clean verify -Dtest=void -P vigna-release
-```
-
-To build with slow tests:
-```
-./mvnw clean verify -P slow
 ```
 
 Available profiles:
