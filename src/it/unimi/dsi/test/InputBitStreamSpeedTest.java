@@ -19,81 +19,42 @@
 
 package it.unimi.dsi.test;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.commons.math3.distribution.ZipfDistribution;
+
+import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
 import it.unimi.dsi.io.InputBitStream;
 import it.unimi.dsi.io.OutputBitStream;
 import it.unimi.dsi.logging.ProgressLogger;
+import it.unimi.dsi.util.XoShiRo256PlusRandomGenerator;
 
 public class InputBitStreamSpeedTest  {
 
 	private InputBitStreamSpeedTest() {}
 
-    public static void main(final String[] arg) throws IOException {
-		int k;
-		final int n = Integer.parseInt(arg[0]);
-		int i;
-		final java.util.Random r = new java.util.Random();
+	@SuppressWarnings("resource")
+	public static void main(final String[] arg) throws IOException {
+		final XoShiRo256PlusRandomGenerator r = new XoShiRo256PlusRandomGenerator(0);
 		final ProgressLogger pl = new ProgressLogger();
-		final int data1[] = new int[1000000];
-		final int data2[] = new int[1000000];
-		i = 1000000;
-		while(i-- != 0) data2[i] = (data1[i] = r.nextInt(100)) + 1;
+		final ZipfDistribution zipf = new ZipfDistribution(r, 1_000_000_000, 2);
+		final int data[] = new int[1000000];
+		for (int i = 0; i < data.length; i++) data[i] = zipf.sample() - 1;
 
-
-		k = 10;
-		while(k-- != 0) {
-
-			i = n;
-			pl.start();
-			final OutputBitStream bos = new OutputBitStream(new FileOutputStream("test "), 16*1024);
-			while(i-- != 0) bos.writeGamma(data1[i % 1000000]);
-			bos.close();
-			pl.done();
-
-			System.err.println("Written " + n + " integers on OutputBitStream in " + pl.millis() + " ms (" + (1000.0 * n) / pl.millis() + " int/s)");
-
+		for (int k = 10; k-- != 0;) {
 
 			pl.start();
-			final InputBitStream bis = new InputBitStream(new FileInputStream("test "), 16*1024);
-			i = n;
-			while(i-- != 0) bis.readGamma();
-			bis.close();
-			pl.stop();
+			final FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
+			final OutputBitStream obs = new OutputBitStream(fbaos);
+			for (final int x : data) obs.writeGamma(x);
+			obs.flush();
+			pl.done(data.length);
 
-			System.err.println("Read " + n + " integers from InputBitStream in " + pl.millis() + " ms (" + (1000.0 * n) / pl.millis() + " int/s)");
-
+			final InputBitStream ibs = new InputBitStream(fbaos.array);
+			pl.start();
+			for (int i = data.length; i-- != 0;) ibs.readGamma();
+			pl.done(data.length);
 		}
-
-/*		k = 10;
-		while(k-- != 0) {
-
-			i = n;
-			pl.reset();
-			pl.start();
-			BitOutputStream bos = new BitOutputStream(new FileOutputStream("test "));
-			while(i-- != 0) bos.writeGamma(data2[i % 1000000]);
-			bos.close();
-			pl.stop();
-
-			System.err.println("Written " + n + " integers on BitOutputStream in " + pl.millis() + " ms (" + (1000.0 * n) / pl.millis() + " int/s)");
-
-
-			pl.reset();
-			pl.start();
-			BitInputStream bis = new BitInputStream(new FileInputStream("test "));
-			i = n;
-			while(i-- != 0) bis.readGamma();
-			bis.close();
-			pl.stop();
-
-			System.err.println("Read " + n + " integers from BitInputStream in " + pl.millis() + " ms (" + (1000.0 * n) / pl.millis() + " int/s)");
-
-		}*/
-    }
-
-
+	}
 }
 
