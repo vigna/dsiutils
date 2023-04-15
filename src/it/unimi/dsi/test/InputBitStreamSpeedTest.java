@@ -35,26 +35,49 @@ public class InputBitStreamSpeedTest  {
 
 	@SuppressWarnings("resource")
 	public static void main(final String[] arg) throws IOException {
+		final int n = Integer.parseInt(arg[0]);
 		final XoShiRo256PlusRandomGenerator r = new XoShiRo256PlusRandomGenerator(0);
 		final ProgressLogger pl = new ProgressLogger();
 		final ZipfDistribution zipf = new ZipfDistribution(r, 1_000_000_000, 2);
-		final int data[] = new int[1000000];
-		for (int i = 0; i < data.length; i++) data[i] = zipf.sample() - 1;
+		final int data[] = new int[n];
+
+		final FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
+		InputBitStream ibs;
+		OutputBitStream obs;
+		long u = 0;
 
 		for (int k = 10; k-- != 0;) {
-
-			pl.start();
-			final FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
-			final OutputBitStream obs = new OutputBitStream(fbaos);
-			for (final int x : data) obs.writeGamma(x);
+			fbaos.reset();
+			obs = new OutputBitStream(fbaos);
+			pl.start("Writing ɣ...");
+			for (final int x : data)
+				obs.writeLongGamma(x);
 			obs.flush();
-			pl.done(data.length);
+			pl.done(n);
 
-			final InputBitStream ibs = new InputBitStream(fbaos.array);
-			pl.start();
-			for (int i = data.length; i-- != 0;) ibs.readGamma();
-			pl.done(data.length);
+			ibs = new InputBitStream(fbaos.array);
+			pl.start("Reading ɣ...");
+			for (int i = n; i-- != 0;)
+				u += ibs.readLongGamma();
+			pl.done(n);
+
+			fbaos.reset();
+			obs = new OutputBitStream(fbaos);
+			pl.start("Writing δ..");
+			for (final int x : data)
+				obs.writeLongDelta(x);
+			obs.flush();
+			pl.done(n);
+
+			ibs = new InputBitStream(fbaos.array);
+			pl.start("Reading δ...");
+			for (int i = n; i-- != 0;)
+				u += ibs.readLongDelta();
+			pl.done(n);
 		}
-	}
-}
 
+		if (u == 0)
+			System.err.println();
+	}
+
+}
