@@ -38,8 +38,15 @@ public class InputBitStreamSpeedTest  {
 		final int n = Integer.parseInt(arg[0]);
 		final XoShiRo256PlusRandomGenerator r = new XoShiRo256PlusRandomGenerator(0);
 		final ProgressLogger pl = new ProgressLogger();
-		final ZipfDistribution zipf = new ZipfDistribution(r, 1_000_000_000, 2);
-		final int data[] = new int[n];
+		final ZipfDistribution zipf2 = new ZipfDistribution(r, 1_000_000_000, 2);
+		final int data2[] = new int[n];
+		for(int i = 0; i < n; i++) 
+			data2[i] = zipf2.sample() - 1;
+
+		final ZipfDistribution zipf12 = new ZipfDistribution(r, 1_000_000_000, 1.2);
+		final int data12[] = new int[n];
+		for (int i = 0; i < n; i++)
+			data12[i] = zipf12.sample() - 1;
 
 		final FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
 		InputBitStream ibs;
@@ -50,7 +57,7 @@ public class InputBitStreamSpeedTest  {
 			fbaos.reset();
 			obs = new OutputBitStream(fbaos);
 			pl.start("Writing ɣ...");
-			for (final int x : data)
+			for (final int x : data2)
 				obs.writeLongGamma(x);
 			obs.flush();
 			pl.done(n);
@@ -64,7 +71,7 @@ public class InputBitStreamSpeedTest  {
 			fbaos.reset();
 			obs = new OutputBitStream(fbaos);
 			pl.start("Writing δ..");
-			for (final int x : data)
+			for (final int x : data2)
 				obs.writeLongDelta(x);
 			obs.flush();
 			pl.done(n);
@@ -73,6 +80,20 @@ public class InputBitStreamSpeedTest  {
 			pl.start("Reading δ...");
 			for (int i = n; i-- != 0;)
 				u += ibs.readLongDelta();
+			pl.done(n);
+
+			fbaos.reset();
+			obs = new OutputBitStream(fbaos);
+			pl.start("Writing ζ..");
+			for (final int x : data12)
+				obs.writeLongZeta(x, 3);
+			obs.flush();
+			pl.done(n);
+
+			ibs = new InputBitStream(fbaos.array);
+			pl.start("Reading ζ...");
+			for (int i = n; i-- != 0;)
+				u += ibs.readLongZeta(3);
 			pl.done(n);
 		}
 
