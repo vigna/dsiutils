@@ -24,6 +24,7 @@ import java.io.IOException;
 import org.apache.commons.math3.distribution.ZipfDistribution;
 
 import it.unimi.dsi.bits.Fast;
+import it.unimi.dsi.fastutil.doubles.DoubleArrays;
 import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
 import it.unimi.dsi.io.InputBitStream;
 import it.unimi.dsi.io.OutputBitStream;
@@ -39,10 +40,12 @@ public class InputBitStreamSpeedTest  {
 	private static double[] delta_distr = new double[DELTA_DISTR_SIZE];
 	static {
 		double s = 0;
-        for(int x = 1; x < DELTA_DISTR_SIZE; x++) {
-            s += 1 / (2 * (x + 3) * (Fast.log2(x) + 2)*(Fast.log2(x) + 2));
-            delta_distr[x] = s;
+		for (int i = 1; i < DELTA_DISTR_SIZE; i++) {
+			s += 1 / (2 * (i + 3) * (Fast.log2(i) + 2) * (Fast.log2(i) + 2));
+			delta_distr[i] = s;
         }
+
+		for (int i = 1; i < DELTA_DISTR_SIZE; i++) delta_distr[i] /= s;
 	}
 
 	@SuppressWarnings("resource")
@@ -50,6 +53,7 @@ public class InputBitStreamSpeedTest  {
 		final int n = Integer.parseInt(arg[0]);
 		final XoShiRo256PlusRandomGenerator r = new XoShiRo256PlusRandomGenerator(0);
 		final ProgressLogger pl = new ProgressLogger();
+
 		final ZipfDistribution zipf2 = new ZipfDistribution(r, 1_000_000_000, 2);
 		final int data2[] = new int[n];
 		for(int i = 0; i < n; i++)
@@ -60,12 +64,34 @@ public class InputBitStreamSpeedTest  {
 		for (int i = 0; i < n; i++)
 			data12[i] = zipf12.sample() - 1;
 
+		final int dataDelta[] = new int[n];
+		for (int i = 0; i < n; i++) {
+			int p = DoubleArrays.binarySearch(delta_distr, r.nextDouble());
+			if (p < 0) p = -p - 2;
+			dataDelta[i] = p;
+		}
+
+		final int dataUnary[] = new int[n];
+		for (int i = 0; i < n; i++) dataUnary[i] = Long.numberOfTrailingZeros(r.nextLong());
+
 		final FastByteArrayOutputStream fbaos = new FastByteArrayOutputStream();
 		InputBitStream ibs;
 		OutputBitStream obs;
 		long u = 0;
 
 		for (int k = 10; k-- != 0;) {
+			fbaos.reset();
+			obs = new OutputBitStream(fbaos);
+			pl.start("Writing unary...");
+			for (final int x : dataUnary) obs.writeLongUnary(x);
+			pl.done(n);
+			obs.flush();
+
+			ibs = new InputBitStream(fbaos.array);
+			pl.start("Reading unary...");
+			for (int i = n; i-- != 0;) u += ibs.readLongUnary();
+			pl.done(n);
+
 			fbaos.reset();
 			obs = new OutputBitStream(fbaos);
 			pl.start("Writing ɣ...");
@@ -83,7 +109,7 @@ public class InputBitStreamSpeedTest  {
 			fbaos.reset();
 			obs = new OutputBitStream(fbaos);
 			pl.start("Writing δ..");
-			for (final int x : data2)
+			for (final int x : dataDelta)
 				obs.writeLongDelta(x);
 			pl.done(n);
 			obs.flush();
