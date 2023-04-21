@@ -23,6 +23,7 @@ import java.io.IOException;
 
 import org.apache.commons.math3.distribution.ZipfDistribution;
 
+import it.unimi.dsi.bits.Fast;
 import it.unimi.dsi.fastutil.io.FastByteArrayOutputStream;
 import it.unimi.dsi.io.InputBitStream;
 import it.unimi.dsi.io.OutputBitStream;
@@ -33,6 +34,17 @@ public class InputBitStreamSpeedTest  {
 
 	private InputBitStreamSpeedTest() {}
 
+	private static final int DELTA_DISTR_SIZE = 1000000;
+
+	private static double[] delta_distr = new double[DELTA_DISTR_SIZE];
+	static {
+		double s = 0;
+        for(int x = 1; x < DELTA_DISTR_SIZE; x++) {
+            s += 1 / (2 * (x + 3) * (Fast.log2(x) + 2)*(Fast.log2(x) + 2));
+            delta_distr[x] = s;
+        }
+	}
+
 	@SuppressWarnings("resource")
 	public static void main(final String[] arg) throws IOException {
 		final int n = Integer.parseInt(arg[0]);
@@ -40,7 +52,7 @@ public class InputBitStreamSpeedTest  {
 		final ProgressLogger pl = new ProgressLogger();
 		final ZipfDistribution zipf2 = new ZipfDistribution(r, 1_000_000_000, 2);
 		final int data2[] = new int[n];
-		for(int i = 0; i < n; i++) 
+		for(int i = 0; i < n; i++)
 			data2[i] = zipf2.sample() - 1;
 
 		final ZipfDistribution zipf12 = new ZipfDistribution(r, 1_000_000_000, 1.2);
@@ -59,8 +71,8 @@ public class InputBitStreamSpeedTest  {
 			pl.start("Writing ɣ...");
 			for (final int x : data2)
 				obs.writeLongGamma(x);
-			obs.flush();
 			pl.done(n);
+			obs.flush();
 
 			ibs = new InputBitStream(fbaos.array);
 			pl.start("Reading ɣ...");
@@ -73,8 +85,8 @@ public class InputBitStreamSpeedTest  {
 			pl.start("Writing δ..");
 			for (final int x : data2)
 				obs.writeLongDelta(x);
-			obs.flush();
 			pl.done(n);
+			obs.flush();
 
 			ibs = new InputBitStream(fbaos.array);
 			pl.start("Reading δ...");
@@ -87,8 +99,8 @@ public class InputBitStreamSpeedTest  {
 			pl.start("Writing ζ..");
 			for (final int x : data12)
 				obs.writeLongZeta(x, 3);
-			obs.flush();
 			pl.done(n);
+			obs.flush();
 
 			ibs = new InputBitStream(fbaos.array);
 			pl.start("Reading ζ...");
