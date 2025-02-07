@@ -124,7 +124,7 @@ public final class Fast {
 	 */
 
 	public static int nat2int(final int x) {
-		return (x >> 1) ^ ~((x & 1) - 1);
+		return (x >> 1) ^ -(x & 1);
 	}
 
 	/** Maps longs bijectively into long natural numbers.
@@ -157,7 +157,7 @@ public final class Fast {
 	 */
 
 	public static long nat2int(final long x) {
-		return (x >> 1) ^ ~((x & 1) - 1);
+		return (x >> 1) ^ -(x & 1);
 	}
 
 	/** Returns the base-two logarithm of the argument.

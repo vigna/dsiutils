@@ -1,3 +1,11 @@
+2.7.4
+
+- Fast.nat2int() methods have a possibly slightly faster implementation
+  taken from Google's protobuf, whose ZigZag encoding is exactly
+  Fast.int2nat()/Fast.nat2int(). In Rust the compiler generates exactly
+  the same assembly for the old and the new implementation, but it 
+  is not guaranteed that all JVMs will do the same.
+
 2.7.3
 
 - Mapping an empty file with ByteBufferInputStream would have caused
