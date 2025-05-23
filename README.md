@@ -22,14 +22,15 @@ Then, run `ant ivy-setupjars jar`.
 
 * A [paper](http://vigna.di.unimi.it/papers.php#BoVMSJ) about the
   high-performance reimplementation of strings provided by the versatile
-  class [`MutableString`](docs/it/unimi/dsi/lang/MutableString.html), and
-  *compact approximators*, the randomised data structure used in
-  [`TextPattern`](docs/it/unimi/dsi/util/TextPattern.html) to represent
-  bad-character shifts.
+  class
+  [`MutableString`](https://github.com/vigna/dsiutils/blob/master/src/it/unimi/dsi/lang/MutableString.java),
+  and _compact approximators_, the randomized data structure used in
+  [`TextPattern`](https://github.com/vigna/dsiutils/blob/master/src/it/unimi/dsi/util/TextPattern.java)
+  to represent bad-character shifts.
 
 * A [paper](http://vigna.di.unimi.it/papers.php#VigBIRSQ) about the
   broadword implementation of select queries implemented in
-  `Fast.select()`.
+  [`Fast.select()`](https://github.com/vigna/dsiutils/blob/master/src/it/unimi/dsi/bits/Fast.java).
 
 * Papers about the [pseudorandom number
   generators](http://prng.di.unimi.it/) included can be found
