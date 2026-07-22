@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2010-2023 Sebastiano Vigna
+ * Copyright (C) 2010-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -61,6 +61,25 @@ public class MappedFrontCodedStringBigListTest {
 					assertEquals(Integer.toString(i), c.get(i), s.toString());
 				}
 			}
+		}
+
+		new File(basename + MappedFrontCodedStringBigList.PROPERTIES_EXTENSION).delete();
+		new File(basename + MappedFrontCodedStringBigList.BYTE_ARRAY_EXTENSION).delete();
+		new File(basename + MappedFrontCodedStringBigList.POINTERS_EXTENSION).delete();
+	}
+
+	@Test
+	public void testSurrogatePairsNotAtEnd() throws IOException, ConfigurationException {
+		// Regression test: a supplementary character not at the end of a term used to make
+		// countUTF8Chars() undercount, crashing get().
+		final String basename = File.createTempFile(this.getClass().getName(), ".basename").toString();
+		final List<String> c = Arrays.asList(new String[] { "𐌂x", "a𐌃b", "z" });
+		MappedFrontCodedStringBigList.build(basename, 4, c.stream().map(x -> x.getBytes(StandardCharsets.UTF_8)).iterator());
+		final MappedFrontCodedStringBigList mfcl = MappedFrontCodedStringBigList.load(basename);
+		for (int i = 0; i < mfcl.size64(); i++) {
+			assertEquals(Integer.toString(i), c.get(i), mfcl.get(i).toString());
+			assertEquals(Integer.toString(i), c.get(i), mfcl.getString(i));
+			assertEquals(Integer.toString(i), c.get(i), new String(mfcl.getArray(i), StandardCharsets.UTF_8));
 		}
 
 		new File(basename + MappedFrontCodedStringBigList.PROPERTIES_EXTENSION).delete();

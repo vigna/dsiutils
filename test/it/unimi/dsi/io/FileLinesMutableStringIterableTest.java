@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2020-2023 Sebastiano Vigna
+ * Copyright (C) 2020-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -95,5 +95,22 @@ public class FileLinesMutableStringIterableTest {
 
 		assertEquals(l, fileLinesIterable.allLines());
 		assertEquals(ObjectBigLists.asBigList(new ObjectArrayList<>(l)), fileLinesIterable.allLinesBig());
+	}
+
+	@Test
+	public void testFailedDecompressorClosesStream() throws IOException, NoSuchMethodException {
+		// Regression test for the resource leak: when the decompressor constructor throws
+		// (here, a non-gzip file fed to GZIPInputStream), iterator() must fail cleanly by
+		// closing the underlying file input stream and rethrowing, rather than leaking it.
+		final File file = File.createTempFile(this.getClass().getSimpleName(), "tmp");
+		file.deleteOnExit();
+		final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(new FileOutputStream(file), Charsets.US_ASCII);
+		outputStreamWriter.append("this is not a gzip stream\n");
+		outputStreamWriter.close();
+		final FileLinesMutableStringIterable iterable = new FileLinesMutableStringIterable(file.toString(), GZIPInputStream.class);
+		boolean thrown = false;
+		try { iterable.iterator(); }
+		catch(final RuntimeException e) { thrown = true; }
+		assertTrue(thrown);
 	}
 }

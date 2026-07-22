@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2005-2023 Sebastiano Vigna
+ * Copyright (C) 2005-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -682,7 +682,7 @@ public class BulletParser {
 					}
 				}
 				else {
-					if (parseTags && ! callback.startElement(currentElement, attrMap)) break;
+					if (parseTags && ! callback.startElement(currentElement, attrMap)) return;
 					if (attrMap != null) attrMap.clear();
 
 					if (currentElement == Element.SCRIPT || currentElement == Element.STYLE) {
@@ -703,7 +703,7 @@ public class BulletParser {
 
 			case STATE_IN_END_TAG:
 				while (pos < end && text[pos] != '>') pos++;
-				if (parseTags && currentElement != null && ! callback.endElement(currentElement)) break;
+				if (parseTags && currentElement != null && ! callback.endElement(currentElement)) return;
 				state = STATE_TEXT;
 				pos++;
 				break;

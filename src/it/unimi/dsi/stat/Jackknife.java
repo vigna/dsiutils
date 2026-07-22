@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2011-2023 Sebastiano Vigna
+ * Copyright (C) 2011-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -82,7 +82,7 @@ public class Jackknife {
 	@Override
 	public String toString() {
 		final StringBuilder s = new StringBuilder();
-		for(int i = estimate.length; i++ != 0;) s.append(estimate[i]).append('\t').append(standardError[i]).append(System.getProperty("\n"));
+		for(int i = 0; i < estimate.length; i++) s.append(estimate[i]).append('\t').append(standardError[i]).append(System.getProperty("line.separator"));
 		return s.toString();
 	}
 

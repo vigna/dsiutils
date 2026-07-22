@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2010-2023 Sebastiano Vigna
+ * Copyright (C) 2010-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -364,5 +364,27 @@ public class LongArrayBitVectorTest {
 		assertEquals(-1, bv.previousZero(Integer.MAX_VALUE + 1L));
 		assertEquals(Integer.MAX_VALUE + 1L, bv.previousZero(Integer.MAX_VALUE + 2L));
 		assertEquals(Integer.MAX_VALUE + 1L, bv.previousZero(Integer.MAX_VALUE + 69L));
+	}
+
+	@Test
+	public void testPreviousZeroWordBoundary() {
+		// Regression test: previousZero()/lastZero() used to return wrong results when
+		// the search started at a positive multiple of 64, because of shift-count wraparound.
+		for(final int length: new int[] { 63, 64, 65, 100, 128, 192, 200 }) {
+			final LongArrayBitVector v = LongArrayBitVector.ofLength(length);
+			final SplitMix64Random random = new SplitMix64Random(length);
+			for(int t = 0; t < 4; t++) {
+				// t == 0: all zeroes; t > 0: random content.
+				for(int i = 0; i < length; i++) v.set(i, t != 0 && random.nextBoolean());
+				for(int index = 0; index <= length; index++) {
+					long expected = -1;
+					for(int p = index; p-- != 0;) if (! v.getBoolean(p)) { expected = p; break; }
+					assertEquals("length " + length + ", index " + index, expected, v.previousZero(index));
+				}
+				long expectedLast = -1;
+				for(int p = length; p-- != 0;) if (! v.getBoolean(p)) { expectedLast = p; break; }
+				assertEquals("length " + length, expectedLast, v.lastZero());
+			}
+		}
 	}
 }

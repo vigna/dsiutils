@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2011-2023 Sebastiano Vigna
+ * Copyright (C) 2011-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -20,6 +20,7 @@
 package it.unimi.dsi.stat;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
@@ -37,5 +38,18 @@ public class JackknifeTest {
 		final Jackknife average = Jackknife.compute(samples, Jackknife.IDENTITY);
 		assertEquals(2, average.estimate[0], 1E-30);
 		assertEquals(Math.sqrt(((1 - 2) * (1 - 2) + (3 - 2) * (3 - 2)) / 6.), average.standardError[0], 1E-30);
+	}
+
+	@Test
+	public void testToString() {
+		// Regression test: toString() used to throw an ArrayIndexOutOfBoundsException on
+		// any non-empty result (the index loop ran off the end of the array).
+		final ArrayList<double[]> samples = new ArrayList<>();
+		samples.add(new double[] { 1 });
+		samples.add(new double[] { 2 });
+		samples.add(new double[] { 3 });
+		final Jackknife average = Jackknife.compute(samples, Jackknife.IDENTITY);
+		final String s = average.toString();
+		assertTrue(s, s.contains("2.0"));
 	}
 }

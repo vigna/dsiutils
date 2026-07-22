@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2011-2023 Sebastiano Vigna
+ * Copyright (C) 2011-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -21,7 +21,10 @@ package it.unimi.dsi.io;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.junit.Test;
@@ -125,5 +128,27 @@ public class OutputBitStreamTest {
 			ibs.readDeltas(a, l);
 			for(int p = 0; p < l; p++) assertEquals(random.nextInt(10000), a[p]);
 		}
+	}
+
+	@Test
+	public void testTestForPosition() throws IOException {
+		final File file = File.createTempFile(this.getClass().getName(), ".tmp");
+		file.deleteOnExit();
+		// Regression test: the (OutputStream, boolean) constructor used to ignore
+		// testForPosition and always run the reflective getChannel() probe. With
+		// testForPosition = false, position() must be unsupported even though the
+		// underlying FileOutputStream exposes a FileChannel.
+		OutputBitStream obs = new OutputBitStream(new FileOutputStream(file), false);
+		obs.writeInt(0, 32);
+		boolean unsupported = false;
+		try { obs.position(0); }
+		catch(final UnsupportedOperationException e) { unsupported = true; }
+		assertTrue(unsupported);
+		obs.close();
+		// With testForPosition = true, position() is supported.
+		obs = new OutputBitStream(new FileOutputStream(file), true);
+		obs.writeInt(0, 32);
+		obs.position(0);
+		obs.close();
 	}
 }

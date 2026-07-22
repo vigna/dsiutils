@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2002-2023 Sebastiano Vigna
+ * Copyright (C) 2002-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -30,6 +30,7 @@ import org.junit.Test;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrays;
 import it.unimi.dsi.fastutil.longs.LongBigArrays;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.util.SplitMix64Random;
 import it.unimi.dsi.util.XoRoShiRo128PlusPlusRandom;
 
@@ -169,5 +170,22 @@ public class UtilTest {
 			Util.composePermutationsInPlace(shuffle, shuffle2);
 			assertArrayEquals(result, shuffle2);
 		}
+	}
+
+	@Test
+	public void testRandomSeedBytes() {
+		// Regression test: randomSeedBytes() used to shift by the byte index instead of
+		// the byte index times eight, keeping only ~15 bits of entropy. With full 64-bit
+		// entropy a large sample of reconstructed seeds must contain no collisions.
+		final int n = 100000;
+		final LongOpenHashSet seen = new LongOpenHashSet();
+		for(int i = 0; i < n; i++) {
+			final byte[] s = Util.randomSeedBytes();
+			assertEquals(8, s.length);
+			long v = 0;
+			for(int j = 0; j < 8; j++) v |= (s[j] & 0xFFL) << j * 8;
+			seen.add(v);
+		}
+		assertEquals(n, seen.size());
 	}
 }

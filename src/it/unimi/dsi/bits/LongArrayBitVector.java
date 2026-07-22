@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2007-2023 Sebastiano Vigna
+ * Copyright (C) 2007-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -609,8 +609,12 @@ public class LongArrayBitVector extends AbstractBitVector implements Cloneable, 
 		if (index == 0) return -1;
 		final long[] bits = this.bits;
 		final int from = word(index - 1);
-		long maskedFirstWord = bits[from] | -1L << index;
-		if (from == word(length - 1)) maskedFirstWord |= -1L << length;
+		final long mask = 1L << index - 1;
+		long maskedFirstWord = bits[from] | ~(mask | mask - 1);
+		if (from == word(length - 1)) {
+			final long lengthMask = 1L << length - 1;
+			maskedFirstWord |= ~(lengthMask | lengthMask - 1);
+		}
 		if (maskedFirstWord != 0xFFFFFFFFFFFFFFFFL) return bits(from) + Fast.mostSignificantBit(~maskedFirstWord);
 
 		for (int i = from; i-- != 0;) if (bits[i] != 0xFFFFFFFFFFFFFFFFL) return bits(i) + Fast.mostSignificantBit(~bits[i]);

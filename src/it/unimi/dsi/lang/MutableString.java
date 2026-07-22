@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2002-2023 Paolo Boldi and Sebastiano Vigna
+ * Copyright (C) 2002-2026 Paolo Boldi and Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -901,8 +901,8 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 				getChars(separator, 0, separatorLength, array, l + m);
 				m += separatorLength;
 			}
-			getChars(a[i], 0, a[i + offset].length(), array, l + m);
-			m += a[i].length();
+			getChars(a[i + offset], 0, a[i + offset].length(), array, l + m);
+			m += a[i + offset].length();
 		}
 		if (hashLength < 0) hashLength = -1;
 		else hashLength = l + m;
@@ -930,7 +930,7 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 	 */
 	public final MutableString append(final Object[] a, final int offset, final int length, final CharSequence separator) {
 		final String s[] = new String[a.length];
-		for(int i = 0; i < length; i++) s[i] = a[offset + i].toString();
+		for(int i = 0; i < length; i++) s[offset + i] = a[offset + i].toString();
 		return append(s, offset, length, separator);
 	}
 
@@ -2738,7 +2738,7 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 	 */
 
 	public int indexOfAnyBut(final CharSet s) {
-		return indexOfAnyOf(s, 0);
+		return indexOfAnyBut(s, 0);
 	}
 
 
@@ -2806,7 +2806,7 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 	 */
 
 	public int indexOfAnyBut(final char[] c) {
-		return indexOfAnyOf(c, 0);
+		return indexOfAnyBut(c, 0);
 	}
 
 
@@ -3221,7 +3221,7 @@ public class MutableString implements Serializable, CharSequence, Appendable, Co
 	 */
 
 	public int lastIndexOfAnyBut(final char[] c) {
-		return lastIndexOfAnyBut(c, 0);
+		return lastIndexOfAnyBut(c, length());
 	}
 
 	/** Spans a segment of this mutable string made of the specified characters.

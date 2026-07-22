@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2002-2023 Sebastiano Vigna
+ * Copyright (C) 2002-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -195,7 +195,7 @@ public class OutputBitStream implements Flushable, Closeable {
 	 * in case <code>os</code> does not support {@link RepositionableStream} will not be performed.
 	 */
 	public OutputBitStream(final OutputStream os, final boolean testForPosition) {
-		this(os, DEFAULT_BUFFER_SIZE);
+		this(os, DEFAULT_BUFFER_SIZE, testForPosition);
 	}
 
 

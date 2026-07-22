@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2010-2023 Sebastiano Vigna
+ * Copyright (C) 2010-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -62,5 +62,19 @@ public class FrontCodedStringListTest {
 			}
 	}
 
-
+	@Test
+	public void testSurrogatePairsNotAtEnd() {
+		// Regression test: a supplementary character not at the end of a term used to make
+		// countUTF8Chars() undercount, crashing get() (only the UTF-8 encoding is affected).
+		final List<String> c = Arrays.asList(new String[] { "𐌂x", "a𐌃b", "𐌂𐌃z" });
+		for(int ratio = 1; ratio < 8; ratio++) {
+			final FrontCodedStringList fcl = new FrontCodedStringList(c.iterator(), ratio, true);
+			final MutableString s = new MutableString();
+			for(int i = 0; i < fcl.size(); i++) {
+				assertEquals(Integer.toString(i), c.get(i), fcl.get(i).toString());
+				fcl.get(i, s);
+				assertEquals(Integer.toString(i), c.get(i), s.toString());
+			}
+		}
+	}
 }

@@ -1,9 +1,45 @@
+2.7.5
+
+- Fixed LongArrayBitVector.previousZero()/lastZero(), which returned
+  wrong results when the search started at a positive multiple of 64
+  because of shift-count wraparound.
+
+- Fixed the no-argument MutableString.indexOfAnyBut()/lastIndexOfAnyBut()
+  convenience overloads, which returned the complement of the intended
+  result (or scanned only the first character).
+
+- Fixed MutableString.append(a, offset, length, separator) for arrays of
+  character sequences and of objects: a nonzero offset was ignored, which
+  could cause wrong results or exceptions.
+
+- The UTF-8 char counter of FrontCodedStringList, FrontCodedStringBigList
+  and MappedFrontCodedStringBigList miscounted supplementary (non-BMP)
+  characters that were not the last character of a term, crashing get().
+
+- Util.randomSeedBytes() was shifting by the byte index instead of the
+  byte index times eight, keeping only about fifteen bits of entropy.
+
+- Fixed Jackknife.toString(), which threw an ArrayIndexOutOfBoundsException
+  on any non-empty result.
+
+- A BulletParser callback returning false to stop the parser would send
+  it into an infinite loop instead.
+
+- The OutputBitStream(OutputStream, boolean) constructor ignored its
+  testForPosition argument and always performed the reflective probe.
+
+- FileLinesByteArrayIterable and FileLinesMutableStringIterable leaked the
+  underlying file input stream when the decompressor constructor threw.
+
+- ByteBufferInputStream.skip() now skips zero bytes on a negative argument
+  instead of moving backward or throwing an exception.
+
 2.7.4
 
 - Fast.nat2int() methods have a possibly slightly faster implementation
   taken from Google's protobuf, whose ZigZag encoding is exactly
   Fast.int2nat()/Fast.nat2int(). In Rust the compiler generates exactly
-  the same assembly for the old and the new implementation, but it 
+  the same assembly for the old and the new implementation, but it
   is not guaranteed that all JVMs will do the same.
 
 2.7.3

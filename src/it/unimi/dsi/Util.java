@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2002-2023 Sebastiano Vigna
+ * Copyright (C) 2002-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -259,7 +259,7 @@ public final class Util {
 	public static byte[] randomSeedBytes() {
 		final long seed = Util.randomSeed();
 		final byte[] s = new byte[8];
-		for(int i = Long.SIZE / Byte.SIZE; i-- != 0;) s[i] = (byte)(seed >>> i);
+		for(int i = Long.SIZE / Byte.SIZE; i-- != 0;) s[i] = (byte)(seed >>> i * Byte.SIZE);
 		return s;
 	}
 

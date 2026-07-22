@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2020-2023 Sebastiano Vigna
+ * Copyright (C) 2020-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -304,10 +304,13 @@ public class FileLinesMutableStringIterable implements Iterable<MutableString>, 
 
 	@Override
 	public FileLinesIterator iterator() {
+		FileInputStream fileInputStream = null;
 		try {
-			final InputStream inputStream = decompressor == null ? new FileInputStream(filename) : decompressor.newInstance(new FileInputStream(filename));
+			fileInputStream = new FileInputStream(filename);
+			final InputStream inputStream = decompressor == null ? fileInputStream : decompressor.newInstance(fileInputStream);
 			return new FileLinesIterator(new FastBufferedReader(new InputStreamReader(inputStream, encoding)));
 		} catch (final Exception e) {
+			if (fileInputStream != null) try { fileInputStream.close(); } catch (final IOException e2) {}
 			throw new RuntimeException(e);
 		}
 	}

@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2002-2023 Sebastiano Vigna
+ * Copyright (C) 2002-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -216,7 +216,7 @@ public class FrontCodedStringBigList extends AbstractObjectBigList<MutableString
 			} else {
 				// Surrogate pair (yuck!)
 				result += 2;
-				i += 4;
+				i += 3;
 			}
 		}
 

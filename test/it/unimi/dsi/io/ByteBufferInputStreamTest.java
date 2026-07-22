@@ -1,7 +1,7 @@
 /*
  * DSI utilities
  *
- * Copyright (C) 2010-2023 Sebastiano Vigna
+ * Copyright (C) 2010-2026 Sebastiano Vigna
  *
  * This program and the accompanying materials are made available under the
  * terms of the GNU Lesser General Public License v2.1 or later,
@@ -162,5 +162,24 @@ public class ByteBufferInputStreamTest {
 		assertEquals(0, t.skip(1));
 		assertEquals(0, t.length());
 		assertEquals(0, t.position());
+	}
+
+	@Test
+	public void testNegativeSkip() throws IOException {
+		final File f = File.createTempFile(ByteBufferInputStreamTest.class.getName(), "tmp");
+		f.deleteOnExit();
+		final FileOutputStream fos = new FileOutputStream(f);
+		for(int i = 0; i < 100; i++) fos.write(i);
+		fos.close();
+		final FileChannel channel = new FileInputStream(f).getChannel();
+		final ByteBufferInputStream bis = ByteBufferInputStream.map(channel, MapMode.READ_ONLY);
+		// Regression test: a negative argument used to move the position backward or throw
+		// ArrayIndexOutOfBoundsException; it must skip zero bytes and leave the position alone.
+		assertEquals(0, bis.skip(-1));
+		assertEquals(0, bis.position());
+		bis.position(10);
+		assertEquals(0, bis.skip(-5));
+		assertEquals(10, bis.position());
+		channel.close();
 	}
 }
