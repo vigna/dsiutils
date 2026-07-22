@@ -52,7 +52,7 @@
 
 	<!-- defined maven staging repository id and url -->
 	<property name="maven-staging-repository-id" value="sonatype-nexus-staging" />
-	<property name="maven-staging-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
+	<property name="maven-staging-repository-url" value="https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/" />
 
 	<!-- OSGi manifest generation -->
 	<target name="resolve" description="run Ivy to fetch jars">
