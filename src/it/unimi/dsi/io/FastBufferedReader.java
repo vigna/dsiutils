@@ -434,6 +434,7 @@ public class FastBufferedReader extends Reader implements WordReader {
 
 	@Override
 	public long skip(long n) throws IOException {
+		if (n < 0) throw new IllegalArgumentException("The number of characters to skip must be nonnegative: " + n);
 		if (n <= avail) {
 			pos += ((int)n);
 			avail -= ((int)n);
