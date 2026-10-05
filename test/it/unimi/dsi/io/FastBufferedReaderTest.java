@@ -132,4 +132,25 @@ public class FastBufferedReaderTest {
 		file.delete();
 
 	}
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNegativeSkipBeforeReading() throws IOException {
+        try (FastBufferedReader reader = new FastBufferedReader(new StringReader("abc"))) {
+            reader.skip(-1);
+        }
+    }
+
+    @Test
+    public void testNegativeSkipDoesNotChangeBufferedPosition() throws IOException {
+        try (FastBufferedReader reader = new FastBufferedReader(new StringReader("abc"))) {
+            assertEquals('a', reader.read());
+            try {
+                reader.skip(-1);
+                org.junit.Assert.fail("Expected IllegalArgumentException");
+            } catch (IllegalArgumentException expected) {
+                assertEquals('b', reader.read());
+            }
+        }
+    }
+
 }
